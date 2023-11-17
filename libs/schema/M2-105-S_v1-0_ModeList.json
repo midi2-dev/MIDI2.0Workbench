@@ -1,0 +1,74 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-105-S_v1-0_ModeList.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Modes Available",
+  "description": "List all the Modes available on the Device.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "modeId": {
+        "title": "Mode Id",
+        "description": "The identifier for the Mode",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 36
+      },
+      "title": {
+        "title": "Title",
+        "description": "Current name for the Mode.",
+        "type": "string",
+        "minLength": 1
+      },
+      "description": {
+        "title": "Description",
+        "description": "The description for the Mode",
+        "type": "string",
+        "format": "commonmark"
+      },
+      "links": {
+        "type": "array",
+        "description": "Resources that return an object or an array of objects may provide links to other related Resources.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "resource": {
+              "type": "string",
+              "description": "This is the Resource to be linked.",
+              "minLength": 3,
+              "maxLength": 36
+            },
+            "resId": {
+              "type": "string",
+              "description": "Resource Id, the identifier used to select the desired Payload Data entry.",
+              "maxLength": 36
+            },
+            "title": {
+              "type": "string",
+              "description": "This is the human readable title for this link. Fall back to using the \"title\" Property in ResourceList if not supplied."
+            },
+            "role": {
+              "type": "string",
+              "description": "This is the role for this linked resource.",
+              "minLength": 1,
+              "maxLength": 32
+            }
+          },
+          "required": [
+            "resource"
+          ]
+        }
+      }
+    },
+    "required": [
+      "modeId",
+      "title"
+    ],
+    "additionalProperties": false,
+    "patternProperties": {
+      "^x-": {
+        "description": "Any property starting with x- is valid."
+      }
+    }
+  }
+}

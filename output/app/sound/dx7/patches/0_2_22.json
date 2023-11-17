@@ -1,0 +1,209 @@
+{
+  "algorithm": 8,
+  "feedback": 7,
+  "oscKeySync": true,
+  "operators": [
+    {
+      "rates": [
+        74,
+        85,
+        27,
+        70
+      ],
+      "levels": [
+        99,
+        95,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 4
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 4,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        99,
+        99,
+        75,
+        60
+      ],
+      "levels": [
+        99,
+        74,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 7,
+      "volume": 85,
+      "oscMode": "fixed",
+      "freq": 23.67
+    },
+    {
+      "rates": [
+        78,
+        87,
+        22,
+        75
+      ],
+      "levels": [
+        99,
+        92,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 34,
+        "depthL": 9,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 3
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 4,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        81,
+        87,
+        22,
+        75
+      ],
+      "levels": [
+        99,
+        92,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 4
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 4,
+      "volume": 82,
+      "oscMode": "ratio",
+      "freq": 3
+    },
+    {
+      "rates": [
+        99,
+        43,
+        55,
+        65
+      ],
+      "levels": [
+        99,
+        0,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 35,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 3,
+      "volume": 74,
+      "oscMode": "ratio",
+      "freq": 14
+    },
+    {
+      "rates": [
+        19,
+        76,
+        56,
+        65
+      ],
+      "levels": [
+        99,
+        85,
+        56,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 40,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 3,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 2.7199999999999998
+    }
+  ],
+  "name": "JAZZ GUIT2",
+  "lfoSpeed": 34,
+  "lfoDelay": 57,
+  "lfoPitchModDepth": 1,
+  "lfoAmpModDepth": 3,
+  "lfoPitchModSens": 2,
+  "lfoWaveform": "sine",
+  "lfoSync": false,
+  "pitchEnvelope": {
+    "rates": [
+      98,
+      98,
+      75,
+      60
+    ],
+    "levels": [
+      49,
+      50,
+      50,
+      50
+    ]
+  },
+  "transpose": 24,
+  "chorus": {
+    "on": false,
+    "depth": 0.01,
+    "rate": 8.31
+  },
+  "delay": {
+    "on": true,
+    "delayTime": 0.47,
+    "feedback": 0.49,
+    "mix": 0.31
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-103-S_v1-0_ResourceList.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ResourceList",
+  "description": "MIDI-CI Property Exchange ResourceList schema.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "resource": {
+        "title": "Resource",
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 36,
+        "description": "This is the Resource name. Manufacturer custom Resource names always start with \"X-\"."
+      },
+      "canGet": {
+        "title": "Inquiry: Get Property Data",
+        "type": "boolean",
+        "description": "Declares whether this Resource is retrievable by an Inquiry: Get Property Data message. For example, a firmware upload Resource may set this to false.",
+        "default": true
+      },
+      "canSet": {
+        "title": "Inquiry: Set Property Data",
+        "type": "string",
+        "description": "Declares the supported use of Inquiry: Set Property Data message on this Resource. When set to \"partial\", \"full\" is also supported.",
+        "enum": [
+          "none",
+          "full",
+          "partial"
+        ],
+        "default": "none"
+      },
+      "canSubscribe": {
+        "title": "Subscription",
+        "type": "boolean",
+        "description": "Declares whether subscription can be used on this Resource.",
+        "default": false
+      },
+      "requireResId": {
+        "title": "Require Resource Id",
+        "type": "boolean",
+        "description": "Inquiry shall contain resId Property in the Header Data."
+      },
+      "mediaTypes": {
+        "title": "Media Types",
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Media Types as defined by RFC-6838. This is used to declare the type of data. For example, one Resource might allow MIDI files, but another allows images or audio data only.",
+        "minItems": 1,
+        "default": [
+          "application/json"
+        ]
+      },
+      "encodings": {
+        "title": "Encodings",
+        "type": "array",
+        "description": "This is the list of encodings the Resource supports.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "ASCII",
+            "Mcoded7",
+            "zlib+Mcoded7"
+          ]
+        },
+        "minItems": 1,
+        "default": [
+          "ASCII"
+        ]
+      },
+      "schema": {
+        "title": "JSON Schema",
+        "description": "Usually only used with Manufacturer Specific Resources.",
+        "anyOf": [
+          {
+            "$ref": "http://json-schema.org/draft-04/schema#"
+          },
+          {
+            "$ref": "http://json-schema.org/draft-06/schema#"
+          },
+          {
+            "$ref": "http://json-schema.org/draft-07/schema#"
+          }
+        ],
+        "required": [
+          "title"
+        ]
+      },
+      "canPaginate": {
+        "title": "List Pagination",
+        "type": "boolean",
+        "description": "If the Resource returns an array of objects, then the Resource shall declared whether pagination is supported.",
+        "default": false
+      },
+      "columns": {
+        "title": "List Columns",
+        "type": "array",
+        "description": "This is an optional array of data to know which Properties, and in what order, to display in a table.",
+        "items": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "property": {
+                  "title": "Column Property Value",
+                  "type": "string",
+                  "description": "This is the Property to use for this column in the table."
+                },
+                "title": {
+                  "title": "Title",
+                  "type": "string",
+                  "description": "This is the title for each column in the table."
+                }
+              },
+              "required": [
+                "property"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "link": {
+                  "title": "Column Link",
+                  "type": "string",
+                  "description": "This is the Link to use for this column in the table."
+                },
+                "title": {
+                  "title": "Title",
+                  "type": "string",
+                  "description": "This is the title for each column in the table."
+                }
+              },
+              "required": [
+                "link"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "required": [
+      "resource"
+    ],
+    "additionalProperties": false,
+    "patternProperties": {
+      "^x-": {
+        "description": "Any property starting with x- is valid."
+      }
+    },
+    "uniqueItems": true
+  }
+}

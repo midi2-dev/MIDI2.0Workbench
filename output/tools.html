@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tools</title>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-3.3.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/jsonformat.css" >
+    <script src="js/bootstrap.min.js"></script>
+    <link href="fa/css/all.css" rel="stylesheet">
+    <script>if (window.module) module = window.module;</script>
+
+    <script src="app/tools.js"></script>
+    <style>
+        .umpvalnum{
+            display: inline-block;
+            width: 90px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid" style="position: relative;">
+    <div class="row bg-primary text-white">
+        <div class="col-sm-12">
+            Tools
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">MIDI 1.0 To UMP</h5>
+                        <div class="card-text">
+                            <div class="input-group " id="midiToUMPConvert">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"  style="width:100px;">MIDI 1.0</span>
+                                </div>
+                                <input type="text" min="0" max="127" step="1" class="form-control hexinput7" placeholder="hex"/>
+                                <input type="text" min="0" max="127" step="1" class="form-control hexinput7" placeholder="hex"/>
+                                <input type="text" min="0" max="127" step="1" class="form-control hexinput7" placeholder="hex"/>
+
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"  style="width:100px;">UMP Out</span>
+                                </div>
+                                <select class="form-control" style="width:200px;">
+                                    <option selected value="1">MIDI 1.0 CVM</option>
+                                    <option value="2">MIDI 2.0 CVM</option>
+                                </select>
+                            </div>
+                            <div>UMP Out:</div>
+                            <div id="midiToUMPConvertOut" style="font-family: monospace; white-space: pre;"></div>
+
+                            <div class="input-group" id="sysexToUMPConvert">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"  style="width:200px;">MIDI 1.0 SysEx</span>
+                                </div>
+                                <input type="text" min="0" max="127" step="1" class="form-control hexinput7text" placeholder="0xF0 0xnn 0xmm ... 0xF7"/>
+
+
+                            </div>
+                            <div>UMP Out:</div>
+                            <div id="sysexToUMPConvertOut" style="font-family: monospace; white-space: pre;"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ************** -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Bit Scaling</h5>
+                        <p class="card-text">
+                        <div class="input-group" id="BitScale">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"  style="width:100px;">Input. Val</span>
+                            </div>
+                            <input type="number" min="0"   step="1"  value="127"  class="form-control"/>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"  style="width:100px;">Input Bits</span>
+                            </div>
+                            <input type="number" min="1" max="32" step="1" value="7" class="form-control"/>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" style="width:100px;">Output Bits</span>
+                            </div>
+                            <input type="number" min="1" max="32" value="32" step="1" class="form-control"/>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"  style="width:100px;">Output Val.</span>
+                            </div>
+                            <input type="number"class="form-control" readonly disabled/>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+                <!-- ************** -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Number to Bytes</h5>
+                        <p class="card-text">
+                        <div class="input-group" id="NumToBytes">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"  style="width:100px;">Input. Val</span>
+                            </div>
+                            <input type="number" min="0" step="1" class="form-control" style="max-width: 100px;"/>
+
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"  style="width:100px;">Byte Length</span>
+                            </div>
+                            <input type="number" min="0" step="1" max="8" value="4" class="form-control" style="max-width: 100px;"/>
+
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >Output Bytes (LSB first)</span>
+                            </div>
+                            <input type="text" class="form-control" readonly disabled/>
+
+
+                        </div>
+                        </p>
+                    </div>
+                </div>
+                <!-- ************** -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Text to Mcoded7</h5>
+                        <p class="card-text">
+                        <div class="input-group" id="TextToMcoded7">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"  style="width:100px;">Text</span>
+                            </div>
+                            <input class="form-control input"/>
+
+
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >Output Bytes</span>
+                            </div>
+                            <input type="text" class="form-control" readonly disabled/>
+
+
+                        </div>
+
+                        <div class="input-group" id="mcoded7ToText">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Bytes</span>
+                            </div>
+                            <input type="text" class="form-control hexinput7text" placeholder="0xF0 0xnn 0xmm ... 0xF7"/>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >Output Text</span>
+                            </div>
+                            <input type="text" class="form-control" readonly disabled/>
+
+                        </div>
+                        </p>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

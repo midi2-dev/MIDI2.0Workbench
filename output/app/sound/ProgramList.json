@@ -1,0 +1,524 @@
+[
+  {
+    "id": "0_0_0",
+    "title": "PIANO   4 ",
+    "bankPC": [
+      0,
+      0,
+      0
+    ],
+    "category": [
+      "Piano"
+    ],
+    "tags": [
+      "alg18"
+    ]
+  },
+  {
+    "id": "0_0_1",
+    "title": "PIANO   5 ",
+    "bankPC": [
+      0,
+      0,
+      1
+    ],
+    "category": [
+      "Piano"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_2",
+    "title": "E.PIANO 2 ",
+    "bankPC": [
+      0,
+      0,
+      2
+    ],
+    "category": [
+      "Piano",
+      "Keys"
+    ],
+    "tags": [
+      "alg12"
+    ]
+  },
+  {
+    "id": "0_0_3",
+    "title": "E.PIANO 3 ",
+    "bankPC": [
+      0,
+      0,
+      3
+    ],
+    "category": [
+      "Piano",
+      "Keys"
+    ],
+    "tags": [
+      "alg5"
+    ]
+  },
+  {
+    "id": "0_0_4",
+    "title": "E.PIANO 4 ",
+    "bankPC": [
+      0,
+      0,
+      4
+    ],
+    "category": [
+      "Piano",
+      "Keys"
+    ],
+    "tags": [
+      "alg5"
+    ]
+  },
+  {
+    "id": "0_0_5",
+    "title": "PIANO 5THS",
+    "bankPC": [
+      0,
+      0,
+      5
+    ],
+    "category": [
+      "Piano"
+    ],
+    "tags": [
+      "alg5"
+    ]
+  },
+  {
+    "id": "0_0_6",
+    "title": "CELESTE   ",
+    "bankPC": [
+      0,
+      0,
+      6
+    ],
+    "category": [
+      "Percussion"
+    ],
+    "tags": [
+      "alg31"
+    ]
+  },
+  {
+    "id": "0_0_7",
+    "title": "TOY PIANO ",
+    "bankPC": [
+      0,
+      0,
+      7
+    ],
+    "category": [
+      "Piano"
+    ],
+    "tags": [
+      "alg30"
+    ]
+  },
+  {
+    "id": "0_0_8",
+    "title": "HARPSICH 2",
+    "bankPC": [
+      0,
+      0,
+      8
+    ],
+    "category": [
+      "Piano"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_9",
+    "title": "HARPSICH 3",
+    "bankPC": [
+      0,
+      0,
+      9
+    ],
+    "category": [
+      "Piano"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_10",
+    "title": "CLAV    2 ",
+    "bankPC": [
+      0,
+      0,
+      10
+    ],
+    "category": [
+      "Percussion"
+    ],
+    "tags": [
+      "alg4"
+    ]
+  },
+  {
+    "id": "0_0_11",
+    "title": "CLAV    3 ",
+    "bankPC": [
+      0,
+      0,
+      11
+    ],
+    "category": [
+      "Percussion"
+    ],
+    "tags": [
+      "alg4"
+    ]
+  },
+  {
+    "id": "0_0_12",
+    "title": "E.ORGAN 2 ",
+    "bankPC": [
+      0,
+      0,
+      12
+    ],
+    "category": [
+      "Organ"
+    ],
+    "tags": [
+      "alg29"
+    ]
+  },
+  {
+    "id": "0_0_13",
+    "title": "E.ORGAN 3 ",
+    "bankPC": [
+      0,
+      0,
+      13
+    ],
+    "category": [
+      "Organ"
+    ],
+    "tags": [
+      "alg29"
+    ]
+  },
+  {
+    "id": "0_0_14",
+    "title": "E.ORGAN 4 ",
+    "bankPC": [
+      0,
+      0,
+      14
+    ],
+    "category": [
+      "Organ"
+    ],
+    "tags": [
+      "alg5"
+    ]
+  },
+  {
+    "id": "0_0_15",
+    "title": "E.ORGAN 5 ",
+    "bankPC": [
+      0,
+      0,
+      15
+    ],
+    "category": [
+      "Organ"
+    ],
+    "tags": [
+      "alg29"
+    ]
+  },
+  {
+    "id": "0_0_16",
+    "title": "PIPES   2 ",
+    "bankPC": [
+      0,
+      0,
+      16
+    ],
+    "category": [
+      "Percussion"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_17",
+    "title": "PIPES   3 ",
+    "bankPC": [
+      0,
+      0,
+      17
+    ],
+    "category": [
+      "Percussion"
+    ],
+    "tags": [
+      "alg25"
+    ]
+  },
+  {
+    "id": "0_0_18",
+    "title": "PIPES   4 ",
+    "bankPC": [
+      0,
+      0,
+      18
+    ],
+    "category": [
+      "Percussion"
+    ],
+    "tags": [
+      "alg6"
+    ]
+  },
+  {
+    "id": "0_0_19",
+    "title": "CALIOPE   ",
+    "bankPC": [
+      0,
+      0,
+      19
+    ],
+    "category": [
+      "Percussion"
+    ],
+    "tags": [
+      "alg16"
+    ]
+  },
+  {
+    "id": "0_0_20",
+    "title": "ACCORDION ",
+    "bankPC": [
+      0,
+      0,
+      20
+    ],
+    "category": [
+      "Organ"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_21",
+    "title": "SITAR     ",
+    "bankPC": [
+      0,
+      0,
+      21
+    ],
+    "category": [
+      "Guitar"
+    ],
+    "tags": [
+      "alg8"
+    ]
+  },
+  {
+    "id": "0_0_22",
+    "title": "GUITAR  3 ",
+    "bankPC": [
+      0,
+      0,
+      22
+    ],
+    "category": [
+      "Guitar"
+    ],
+    "tags": [
+      "alg14"
+    ]
+  },
+  {
+    "id": "0_0_23",
+    "title": "GUITAR  4 ",
+    "bankPC": [
+      0,
+      0,
+      23
+    ],
+    "category": [
+      "Guitar"
+    ],
+    "tags": [
+      "alg14"
+    ]
+  },
+  {
+    "id": "0_0_24",
+    "title": "GUITAR  5 ",
+    "bankPC": [
+      0,
+      0,
+      24
+    ],
+    "category": [
+      "Guitar"
+    ],
+    "tags": [
+      "alg14"
+    ]
+  },
+  {
+    "id": "0_0_25",
+    "title": "GUITAR  6 ",
+    "bankPC": [
+      0,
+      0,
+      25
+    ],
+    "category": [
+      "Guitar"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_26",
+    "title": "LUTE      ",
+    "bankPC": [
+      0,
+      0,
+      26
+    ],
+    "category": [
+      "Guitar"
+    ],
+    "tags": [
+      "alg14"
+    ]
+  },
+  {
+    "id": "0_0_27",
+    "title": "BANJO     ",
+    "bankPC": [
+      0,
+      0,
+      27
+    ],
+    "category": [
+      "Guitar"
+    ],
+    "tags": [
+      "alg8"
+    ]
+  },
+  {
+    "id": "0_0_28",
+    "title": "HARP    1 ",
+    "bankPC": [
+      0,
+      0,
+      28
+    ],
+    "category": [
+      "Strings"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_29",
+    "title": "HARP    2 ",
+    "bankPC": [
+      0,
+      0,
+      29
+    ],
+    "category": [
+      "Strings"
+    ],
+    "tags": [
+      "alg3"
+    ]
+  },
+  {
+    "id": "0_0_30",
+    "title": "BASS    3 ",
+    "bankPC": [
+      0,
+      0,
+      30
+    ],
+    "category": [
+      "Bass"
+    ],
+    "tags": [
+      "alg17"
+    ]
+  },
+  {
+    "id": "0_0_31",
+    "title": "BASS    4 ",
+    "bankPC": [
+      0,
+      0,
+      31
+    ],
+    "category": [
+      "Bass"
+    ],
+    "tags": [
+      "alg17"
+    ]
+  },
+  {
+   "title": "Standard Jazz Upper 1",
+    "bankPC": [0,1,0],
+    "category": ["Keys"],
+    "tags": ["organ"]
+  },
+  {
+
+    "title": "Standard Jazz Upper 2",
+    "bankPC": [
+      0,
+      1,
+      1
+    ],
+    "category": ["Keys"],
+    "tags": ["organ"]
+  },
+  {
+
+    "title": "Standard Jazz Lower 1",
+    "bankPC": [
+      0,
+      1,
+      2
+    ],
+    "category": ["Keys"],
+    "tags": ["organ"]
+  },
+  {
+    "id": "0_1_3",
+    "title": "Standard Jazz Lower 2",
+    "bankPC": [
+      0,
+      1,
+      3
+    ],
+    "category": ["Keys"],
+    "tags": ["organ"]
+  }
+]

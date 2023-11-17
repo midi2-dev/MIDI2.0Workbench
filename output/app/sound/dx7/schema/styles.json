@@ -1,0 +1,10 @@
+[
+  {"styleId": "root", "bgColor": "#444444FF", "textColor": "#FFFFFFFF", "textAlign": "left", "textSize": 6},
+  {"styleId": "operators", "bgColor": "#AAAAAAFF"},
+  {"styleId": "opTitle", "textSize": 4, "textAlign": "left"},
+  {"styleId": "center", "textAlign": "center"},
+  {"styleId": "smText", "textSize": 2},
+  {"styleId": "whiteText", "textColor": "#FFFFFFFF"},
+  {"styleId": "chor", "bgColor": "#ff444444", "textSize": "5"},
+  {"styleId": "del", "bgColor": "#44ff4444", "textSize": "5"}
+]

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug</title>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-3.3.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/jsonformat.css" >
+    <script src="js/bootstrap.min.js"></script>
+    <link href="fa/css/all.css" rel="stylesheet">
+    <script>if (window.module) module = window.module;</script>
+
+    <script src="app/debug.js"></script>
+    <style>
+        .umpvalnum{
+            display: inline-block;
+            width: 90px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid" style="position: relative;">
+    <div class="row bg-primary text-white">
+        <div class="col-sm-12">
+            Debug
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="sysex-tab" data-toggle="tab" href="#sysex" role="tab"
+                       aria-selected="true">SysEx7</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="ump-tab" data-toggle="tab" href="#ump" role="tab" aria-selected="false">
+                        UMP
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pe-tab" data-toggle="tab" href="#pe" role="tab" aria-selected="false">
+                        Property Exchange
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="warn-tab" data-toggle="tab" href="#warn" role="tab" aria-selected="false">
+                        Warnings <span id="warnNotif" class="badge badge-warning"></span>
+
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="error-tab" data-toggle="tab" href="#error" role="tab" aria-selected="false">
+                        Errors <span  id="errNotif" class="badge badge-danger"></span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-ipcmsg="getDebugFile"  href="#" style="right: 80px; position: absolute;"
+                       aria-selected="false">Download Log</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" id="help" href="#" style="right: 0; position: absolute;"
+                       data-ipcmsg="showHelp" data-xdata="debug" aria-selected="false">Help</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="sysex" role="tabpanel" >
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Device</th>
+                            <th scope="col">Group</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">i/o</th>
+                            <th scope="col">
+                                <div style="text-align: right">
+                                    <button type="button"
+                                            class="bg-white btn btn-alert btn-sm emptyTable"
+                                            style=""
+                                            data-logtype="sysex"
+                                    >Clear</button>
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="ump" role="tabpanel" >
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Device</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">i/o</th>
+                            <th scope="col"><div style="text-align: right">
+                                <button type="button"
+                                        class="bg-white btn btn-alert btn-sm emptyTable"
+                                        style=""
+                                        data-logtype="ump"
+                                >Clear</button>
+                            </div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="midi1" role="tabpanel">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Device</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">i/o</th>
+                            <th scope="col"><div style="text-align: right">
+                                <button type="button"
+                                        class="bg-white btn btn-alert btn-sm emptyTable"
+                                        style=""
+                                        data-logtype="midi1"
+                                >Clear</button>
+                            </div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="pe" role="tabpanel">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Device</th>
+                            <th scope="col">Group</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">i/o</th>
+                            <th scope="col"><div style="text-align: right">
+                                <button type="button"
+                                        class="bg-white btn btn-alert btn-sm emptyTable"
+                                        style=""
+                                        data-logtype="pe"
+                                >Clear</button>
+                            </div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade" id="warn" role="tabpanel">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Device</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">i/o</th>
+                            <th scope="col"><div style="text-align: right">
+                                <button type="button"
+                                        class="bg-white btn btn-alert btn-sm emptyTable"
+                                        style=""
+                                        data-logtype="warn"
+                                >Clear</button>
+                            </div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade" id="error" role="tabpanel">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Device</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">i/o</th>
+                            <th scope="col"><div style="text-align: right">
+                                <button type="button"
+                                        class="bg-white btn btn-alert btn-sm emptyTable"
+                                        style=""
+                                        data-logtype="error"
+                                >Clear</button>
+                            </div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+{
+  "layout": "horizontalLayout",
+  "heading": "DX7",
+  "bgColor": "#444444",
+  "textColor": "#FFFFFF",
+  "align": "Left",
+  "elements": [
+
+    {
+      "layout": "horizontalLayout",
+      "heading": "Parts",
+      "repeat":{
+        "min":4,
+        "max":4,
+        "key":"part",
+        "textOffset":1,
+        "prgPath": "/parts/"
+      },
+
+      "elements": [
+        {
+          "layout": "horizontalLayout",
+          "heading": "{part}",
+          "text":"Part {part}",
+          "bgColor": "#666666",
+          "elements": [
+            {
+              "layout": "verticalLayout",
+              "elements": [
+
+                {
+                  "layout": "control",
+                  "text": "Active.",
+                  "prgPath": "/parts/{part}/active",
+                  "display": "switch"
+                },
+                {
+                  "layout": "control",
+                  "text": "Program",
+                  "prgPath": "/parts/{part}/bankPC",
+                  "display": "programSelect",
+                  "allowEdit":true,
+                  "banks":["DX7_0","DX7_1","DX7_2"]
+                },
+                {
+                  "layout": "control",
+                  "text": "Volume",
+                  "prgPath": "/parts/{part}/vol",
+                  "prgMin": 0,
+                  "prgMax": 127,
+                  "display": "knob"
+                },
+                {
+                  "layout": "control",
+                  "text": "Pan",
+                  "prgPath": "/parts/{part}/pan",
+                  "prgMin": 0,
+                  "prgMax": 127,
+                  "display": "pan"
+                },
+                {
+                  "layout": "control",
+                  "text": "Transpose",
+                  "prgPath": "/parts/{part}/transpose",
+                  "prgMin": -127,
+                  "prgMax": 127,
+                  "display": "pan"
+                }
+              ]
+            },
+            {
+              "layout": "keyRange",
+              "keys":[
+                {
+                  "prgPath": "/parts/{part}/keyRange/0",
+                  "text":"Start",
+                  "prgMin": 0,
+                  "prgMax": 127,
+                  "default":0
+                },
+                {
+                  "prgPath": "/parts/{part}/keyRange/1",
+                  "text":"End",
+                  "prgMin": 0,
+                  "prgMax": 127,
+                  "default":127
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

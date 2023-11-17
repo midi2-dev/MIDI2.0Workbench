@@ -1,0 +1,43 @@
+[
+    {
+      "id": "pitchBend",
+      "name":"Pitch Bend",
+      "description":"+- 2 semitones",
+      "type":"pitchbend",
+      "priority":1
+    },
+    {
+      "id": "op0depthR",
+      "name":"Operator 1 Depth R",
+      "description":"This makes it sound awesome",
+      "type":"cc",
+      "controller":[57],
+      "priority":2,
+      "prgTransform":"LIN"
+    },
+    {
+      "id": "lfoWaveform",
+      "name":"LFO Wave Form",
+      "type":"cc",
+      "controller":[16],
+      "priority":3,
+      "list":[
+        {"value":0,"prgValue":"triangle","title":"Triangle"}
+        ,{"value":1,"prgValue":"sawDown","title":"Saw Down"}
+        ,{"value":2,"prgValue":"sawUp","title":"Saw Up"}
+        ,{"value":3,"prgValue":"square","title":"Square"}
+        ,{"value":4,"prgValue":"sine","title":"Sine"}
+        ,{"value":5,"prgValue":"sampleHold","title":"Sample and Hold"}
+      ]
+    },
+    {
+      "id": "op1freq",
+      "name":"Operator 2 Frequency",
+      "description":"This makes it sound weird",
+      "type":"NRPN",
+      "controller":[30,81],
+      "priority":2,
+      "prgTransform":"LIN",
+      "max":3199
+    }
+  ]

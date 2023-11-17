@@ -1,0 +1,176 @@
+{
+  "$id": "midi://schema/dx7Program",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf":[
+    {"$ref":"#/definitions/pitchEnv"}
+  ,{
+      "properties": {
+        "algorithm": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":31
+        },
+        "feedback": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":7
+        },
+        "name": {
+          "type": "string",
+          "maxLength":10
+        },
+        "oscKeySync": {
+          "type": "boolean"
+        },
+        "lfoSpeed": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":99
+        },
+        "lfoDelay": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":99
+        },
+        "lfoPitchModDepth": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":99
+        },
+        "lfoAmpModDepth": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":99
+        },
+
+        "lfoWaveform": {
+          "type": "string",
+          "enum":["triangle", "sawDown", "sawUp", "square","sine","sampleHold"]
+        },
+        "lfoSync": {
+          "type": "boolean"
+        },
+        "lfoPitchModSens": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":7
+        },
+        "transpose": {
+          "type": "integer",
+          "minimum":0,
+          "maximum":48
+        },
+
+        "operators": {
+          "type": "array",
+          "maxItems": 6,
+          "minItems": 6,
+          "items": {
+            "allOf":[
+              {"$ref":"#/definitions/pitchEnv"}
+            ,{
+                "type": "object",
+                "properties": {
+                  "keyScale":{
+                    "type": "object",
+                    "properties": {
+                      "breakpoint": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 99
+                      },
+                      "depthL": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 99
+                      },
+                      "depthR": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 99
+                      },
+                      "curveL": {
+                        "type": "string",
+                        "enum":["-LIN", "-EXP", "+EXP", "+LIN"]
+                      },
+                      "curveR": {
+                        "type": "string",
+                        "enum":["-LIN", "-EXP", "+EXP", "+LIN"]
+                      },
+                      "rate": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 7
+                      }
+                    }
+                  },
+
+
+                  "lfoAmpModSens": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3
+                  },
+                  "velocitySens": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 7
+                  },
+                  "volume": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 99
+                  },
+                  "oscMode": {
+                    "type": "string",
+                    "enum":["ratio", "fixed"]
+                  },
+                  "freq": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 31.99,
+                    "multipleOf":0.01
+                  },
+                  "detune": {
+                    "type": "integer",
+                    "minimum": -7,
+                    "maximum": 7
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "required":["name"]
+    }
+  ],
+  "definitions":{
+    "pitchEnv":{
+      "type": "object",
+      "properties": {
+        "rates":{
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99
+          }
+        },
+        "levels":{
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "integer",
+            "minimum":0,
+            "maximum":99
+          }
+        }
+      }
+    }
+  }
+}

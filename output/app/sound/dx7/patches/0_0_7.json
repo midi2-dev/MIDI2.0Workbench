@@ -1,0 +1,209 @@
+{
+  "algorithm": 30,
+  "feedback": 7,
+  "oscKeySync": true,
+  "operators": [
+    {
+      "rates": [
+        99,
+        99,
+        36,
+        41
+      ],
+      "levels": [
+        99,
+        99,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 0
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        99,
+        71,
+        30,
+        42
+      ],
+      "levels": [
+        99,
+        70,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 0
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 98,
+      "oscMode": "ratio",
+      "freq": 2.01
+    },
+    {
+      "rates": [
+        99,
+        71,
+        39,
+        42
+      ],
+      "levels": [
+        99,
+        70,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 0
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 4.11
+    },
+    {
+      "rates": [
+        99,
+        99,
+        29,
+        30
+      ],
+      "levels": [
+        99,
+        99,
+        99,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 5
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 68,
+      "oscMode": "ratio",
+      "freq": 12.05
+    },
+    {
+      "rates": [
+        99,
+        99,
+        99,
+        42
+      ],
+      "levels": [
+        99,
+        99,
+        99,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 0
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 66,
+      "oscMode": "ratio",
+      "freq": 12.01
+    },
+    {
+      "rates": [
+        99,
+        99,
+        36,
+        41
+      ],
+      "levels": [
+        99,
+        99,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 0
+      },
+      "detune": 0,
+      "lfoAmpModSens": 1,
+      "velocitySens": 0,
+      "volume": 85,
+      "oscMode": "ratio",
+      "freq": 1.04
+    }
+  ],
+  "name": "TOY PIANO ",
+  "lfoSpeed": 36,
+  "lfoDelay": 0,
+  "lfoPitchModDepth": 0,
+  "lfoAmpModDepth": 0,
+  "lfoPitchModSens": 3,
+  "lfoWaveform": "sine",
+  "lfoSync": true,
+  "pitchEnvelope": {
+    "rates": [
+      99,
+      98,
+      75,
+      60
+    ],
+    "levels": [
+      50,
+      50,
+      50,
+      50
+    ]
+  },
+  "transpose": 24,
+  "chorus": {
+    "on": true,
+    "depth": 0.13,
+    "rate": 7.84
+  },
+  "delay": {
+    "on": false,
+    "delayTime": 0.52,
+    "feedback": 0.84,
+    "mix": 0.46
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "root":{
+    "bgColor": "#444444FF",
+    "textColor": "#FFFFFFFF",
+    "textAlign": "left",
+    "textSize":6
+  },
+  "operators":{
+    "bgColor": "#AAAAAAFF"
+  },
+  "opTitle":{
+    "textSize":4,
+    "textAlign":"left"
+  },
+  "center": {
+    "textAlign":"center",
+    "controlColor":"#a11b1bFF"
+  },
+  "smText": {
+    "textSize":2
+  }
+}

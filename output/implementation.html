@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>MIDI Implementation Chart</title>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="js/jquery.js"></script>
+
+    <script src="js/popper.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <script src="js/bootstrap.min.js"></script>
+<!--    <script src="../libs/common.js"></script>-->
+    <link href="fa/css/all.css" rel="stylesheet">
+
+
+    <script>if (window.module) module = window.module;</script>
+
+    <script src="app/project.js"></script>
+    <style>
+        hr{
+            page-break-before: always;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container-fluid mt-5 pt-4" style="position: relative;">
+
+    <div class="row">
+        <div class="col-sm-12 maincol">
+            <h2>MIDI Implementation Chart v. 2.0</h2>
+            <div>
+                <b>Manufacturer:</b> <span data-pathText="/manufacturer"></span>
+                <b>Model:</b> <span data-pathText="/model"></span>
+                <b>Version:</b> <span data-pathText="/version"></span>
+                <b>Date:</b> <span data-pathText="/releaseDate"></span>
+            </div>
+            <table class="table table-striped table-bordered table-sm">
+                <thead>
+                <tr>
+                    <th scope="col" colspan="2"></th>
+                    <th scope="col">Transmit/Export</th>
+                    <th scope="col">Recognize/Import</th>
+                    <th scope="col">Remarks</th>
+                </tr>
+                </thead>
+                <tbody id="implbody"></tbody>
+            </table>
+            <hr/>
+            <div>
+                <b>Manufacturer:</b> <span data-pathText="/manufacturer"></span>
+                <b>Model:</b> <span data-pathText="/model"></span>
+                <b>Version:</b> <span data-pathText="/version"></span>
+                <b>Date:</b> <span data-pathText="/releaseDate"></span>
+            </div>
+            <table class="table table-striped table-bordered table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Control #</th>
+                    <th scope="col">Function</th>
+                    <th scope="col">Transmit/Export</th>
+                    <th scope="col">Recognize/Import</th>
+                    <th scope="col">Remarks</th>
+                </tr>
+                </thead>
+                <tbody id="ccbody"></tbody>
+            </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>

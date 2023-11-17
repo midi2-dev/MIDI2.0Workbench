@@ -1,0 +1,607 @@
+{
+
+  "classes":{
+    "root":{
+      "bgColor": "#444444FF",
+      "textColor": "#FFFFFFFF",
+      "textAlign": "left"
+    },
+    "title":{
+      "textSize":6
+    },
+    "operators":{
+      "bgColor": "#666666FF"
+    },
+    "opTitle":{
+      "textSize":4
+    },
+    "center": {
+      "textAlign":"center",
+      "controlColor":"#a11b1bFF"
+    }
+  },
+  "controlMessages": [
+    {
+      "docPath": "/operator/0/volume",
+      "type":"CC",
+      "controlNo": [12]
+    }, {
+      "docPath": "/operator/0/velocitySens",
+      "type":"CC",
+      "controlNo": [13]
+    }, {
+      "docPath": "/operator/0/lfoAmpModSens",
+      "type":"CC",
+      "controlNo": [14]
+    }, {
+      "docPath": "/operator/0/detune",
+      "type":"CC",
+      "controlNo": [15]
+    },
+    {
+      "docPath": "/operator/1/volume",
+      "type":"CC",
+      "controlNo": [16]
+    }, {
+      "docPath": "/operator/1/velocitySens",
+      "type":"CC",
+      "controlNo": [17]
+    }, {
+      "docPath": "/operator/1/lfoAmpModSens",
+      "type":"CC",
+      "controlNo": [18]
+    }, {
+      "docPath": "/operator/1/detune",
+      "type":"CC",
+      "controlNo": [19]
+    },
+    {
+      "docPath": "/operator/2/volume",
+      "type":"CC",
+      "controlNo": [20]
+    }, {
+      "docPath": "/operator/2/velocitySens",
+      "type":"CC",
+      "controlNo": [21]
+    }, {
+      "docPath": "/operator/2/lfoAmpModSens",
+      "type":"CC",
+      "controlNo": [22]
+    }, {
+      "docPath": "/operator/2/detune",
+      "type":"CC",
+      "controlNo": [23]
+    },
+    {
+      "docPath": "/operator/3/volume",
+      "type":"CC",
+      "controlNo": [24]
+    }, {
+      "docPath": "/operator/3/velocitySens",
+      "type":"CC",
+      "controlNo": [25]
+    }, {
+      "docPath": "/operator/3/lfoAmpModSens",
+      "type":"CC",
+      "controlNo": [26]
+    }, {
+      "docPath": "/operator/3/detune",
+      "type":"CC",
+      "controlNo": [27]
+    },
+    {
+      "docPath": "/operator/4/volume",
+      "type":"CC",
+      "controlNo": [28]
+    }, {
+      "docPath": "/operator/4/velocitySens",
+      "type":"CC",
+      "controlNo": [29]
+    }, {
+      "docPath": "/operator/4/lfoAmpModSens",
+      "type":"CC",
+      "controlNo": [30]
+    }, {
+      "docPath": "/operator/4/detune",
+      "type":"CC",
+      "controlNo": [31]
+    },
+    {
+      "docPath": "/operator/5/volume",
+      "type":"CC",
+      "controlNo": [33]
+    }, {
+      "docPath": "/operator/5/velocitySens",
+      "type":"CC",
+      "controlNo": [34]
+    }, {
+      "docPath": "/operator/5/lfoAmpModSens",
+      "type":"CC",
+      "controlNo": [35]
+    }, {
+      "docPath": "/operator/5/detune",
+      "type":"CC",
+      "controlNo": [36]
+    }
+
+  , {
+      "docPath": "/algorithm",
+      "type":"CC",
+      "controlNo": [37],
+      "ranges": [
+        {"range": [0,31]}
+      ]
+    }, {
+      "docPath": "/feedback",
+      "type":"CC",
+      "controlNo": [38]
+    }, {
+      "docPath": "/lfoSync",
+      "type":"CC",
+      "controlNo": [39],
+      "ranges": [
+        {"range": [0,63],
+          "title": "off"
+        },
+        {"range": [64,127],
+          "title": "on"
+        }
+      ]
+    }, {
+      "docPath": "/lfoSpeed",
+    "type":"CC",
+    "controlNo": [40]
+    }, {
+      "docPath": "/lfoDelay",
+      "type":"CC",
+      "controlNo": [41]
+    }, {
+      "docPath": "/lfoPitchModDepth",
+      "type":"CC",
+      "controlNo": [42]
+    }
+  , {
+      "docPath": "/lfoAmpModDepth",
+      "type":"CC",
+      "controlNo": [43]
+    }
+
+  ],
+  "rootElement":{
+    "type": "verticalLayout",
+    "classes":["root"],
+    "colGridSizes":[14],
+    "elements": [
+      {
+        "type": "horizontalLayout",
+        "elements": [
+          {
+            "type": "text",
+            "text": "6 Op FM",
+            "classes":["title"],
+            "gridSize":[14,4]
+          },
+          {
+            "type": "horizontalLayout",
+            "repeat":{
+              "length":[6,6],
+              "indexKey":"op",
+              "docPath": "/operators/",
+              "textOffset":true
+            },
+
+            "elements": [
+              {
+                "type": "verticalLayout",
+                "classes":["operators"],
+                "colGridSizes":[2,1,1,1,4,5],
+                "elements": [
+                  {
+                    "type": "horizontalLayout",
+                    "elements": [
+                      {
+                        "text":"Operator {op}",
+                        "type":"text",
+                        "gridSize":[2,1],
+                        "classes":["opTitle"]
+                      },
+                      {
+                        "text": "Frequency",
+                        "textPosition":"above",
+                        "type":"number",
+                        "docPath": "/operators/{op}/freq",
+                        "range":[0,31.99],
+                        "step":0.01
+                      },
+                      {
+                        "text": "Osc Mode",
+                        "textPosition":"above",
+                        "gridSize":[2,1],
+                        "docPath": "/operators/{op}/oscMode",
+                        "type": "select",
+                        "list":[
+                          {"value":"ratio","title":"Ratio"}
+                        ,{"value":"fixed","title":"Fixed"}
+                        ]
+                      },
+                      {
+                        "type": "pan",
+                        "text": "Detune",
+                        "textPosition":"above",
+                        "docPath": "/operators/{op}/detune",
+                        "range":[-7,7],
+                        "gridSize":[2,1]
+                      }
+                    ]
+                  },
+
+                  {
+                    "type": "sliderV",
+                    "text": "Vol.",
+                    "classes":["center"],
+                    "docPath": "/operators/{op}/volume",
+                    "range":[0,99],
+                    "gridSize":[1,6]
+                  },
+                  {
+                    "text": "Velo. Sens.",
+                    "docPath": "/operators/{op}/velocitySens",
+                    "range":[0,7],
+                    "classes":["center"],
+                    "gridSize":[1,6],
+                    "type": "sliderV"
+                  },
+                  {
+                    "text": "LFO Mod Sens",
+                    "docPath": "/operators/{op}/lfoAmpModSens",
+                    "gridSize":[1,5],
+                    "textGridSize":2,
+                    "classes":["center"],
+                    "type": "sliderV",
+                    "range":[0,7]
+                  },
+                  {
+                    "type": "envelope",
+                    "gridSize":[4,6],
+                    "text":"Envelope",
+                    "points":[
+                      {
+                        "rate":{
+                          "docPath": "/operators/{op}/rates/0",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/operators/{op}/levels/0",
+                          "range":[0,99]
+                        }
+                      }
+                    ,{
+                        "rate":{
+                          "docPath": "/operators/{op}/rates/1",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/operators/{op}/levels/1",
+                          "range":[0,99]
+                        }
+                      },
+                      {
+                        "rate":{
+                          "docPath": "/operators/{op}/rates/2",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/operators/{op}/levels/2",
+                          "range":[0,99]
+                        }
+                      },
+                      {
+                        "rate":{
+                          "docPath": "/operators/{op}/rates/3",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/operators/{op}/levels/3",
+                          "range":[0,99]
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "horizontalLayout",
+                    "elements": [
+                      {
+                        "text":"Key Scale",
+                        "type":"text",
+                        "gridSize":[5,1]
+                      }
+                    ,{
+                        "type": "verticalLayout",
+                        "colGridSizes":[2,1,2],
+                        "elements": [
+                          {
+                            "type": "horizontalLayout",
+                            "elements":[
+                              {
+                                "text": "Depth Left",
+                                "docPath": "/operators/{op}/keyScale/depthL",
+                                "range":[0,99],
+                                "type": "knob",
+                                "gridSize":[2,2]
+                              },
+                              {
+                                "gridSize":[2,1],
+                                "text": "Curve Left",
+                                "docPath": "/operators/{op}/keyScale/curveL",
+                                "type": "select",
+                                "list":[
+                                  {"value":"-LIN","title":"-LIN"}
+                                ,{"value":"-EXP","title":"-EXP"}
+                                ,{"value":"+EXP","title":"+EXP"}
+                                ,{"value":"+LIN","title":"+LIN"}
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "gridSize":[1,4],
+                            "text": "Rate",
+                            "docPath": "/operators/{op}/keyScale/rate",
+                            "classes": ["center"],
+                            "range":[0,99],
+                            "type": "sliderV"
+                          }
+                        ,
+                          {
+                            "type": "horizontalLayout",
+                            "elements":[
+                              {
+                                "text": "Depth Right",
+                                "docPath": "/operators/{op}/keyScale/depthR",
+                                "range":[0,99],
+                                "type": "knob",
+                                "gridSize":[2,2]
+                              },
+                              {
+                                "gridSize":[2,1],
+                                "text": "Curve Right",
+                                "docPath": "/operators/{op}/keyScale/curveR",
+                                "type": "select",
+                                "list":[
+                                  {"value":"-LIN","title":"-LIN"}
+                                  ,{"value":"-EXP","title":"-EXP"}
+                                  ,{"value":"+EXP","title":"+EXP"}
+                                  ,{"value":"+LIN","title":"+LIN"}
+                                ]
+                              }
+
+                            ]
+                          }
+                        ]
+                      }
+                    ,{
+                        "text": "Breakpoint",
+                        "textPosition":"left",
+                        "textGridSize":2,
+                        "docPath": "/operators/{op}/keyScale/breakpoint",
+                        "type": "select",
+                        "list": [{"value":0,"title":"A-1"},{"value":1,"title":"A#-1"},{"value":2,"title":"B-1"},{"value":3,"title":"C0"},{"value":4,"title":"C#0"},{"value":5,"title":"D0"},{"value":6,"title":"D#0"},{"value":7,"title":"E0"},{"value":8,"title":"F0"},{"value":9,"title":"F#0"},{"value":10,"title":"G0"},{"value":11,"title":"G#0"},{"value":12,"title":"A0"},{"value":13,"title":"A#0"},{"value":14,"title":"B0"},{"value":15,"title":"C1"},{"value":16,"title":"C#1"},{"value":17,"title":"D1"},{"value":18,"title":"D#1"},{"value":19,"title":"E1"},{"value":20,"title":"F1"},{"value":21,"title":"F#1"},{"value":22,"title":"G1"},{"value":23,"title":"G#1"},{"value":24,"title":"A1"},{"value":25,"title":"A#1"},{"value":26,"title":"B1"},{"value":27,"title":"C2"},{"value":28,"title":"C#2"},{"value":29,"title":"D2"},{"value":30,"title":"D#2"},{"value":31,"title":"E2"},{"value":32,"title":"F2"},{"value":33,"title":"F#2"},{"value":34,"title":"G2"},{"value":35,"title":"G#2"},{"value":36,"title":"A2"},{"value":37,"title":"A#2"},{"value":38,"title":"B2"},{"value":39,"title":"C3"},{"value":40,"title":"C#3"},{"value":41,"title":"D3"},{"value":42,"title":"D#3"},{"value":43,"title":"E3"},{"value":44,"title":"F3"},{"value":45,"title":"F#3"},{"value":46,"title":"G3"},{"value":47,"title":"G#3"},{"value":48,"title":"A3"},{"value":49,"title":"A#3"},{"value":50,"title":"B3"},{"value":51,"title":"C4"},{"value":52,"title":"C#4"},{"value":53,"title":"D4"},{"value":54,"title":"D#4"},{"value":55,"title":"E4"},{"value":56,"title":"F4"},{"value":57,"title":"F#4"},{"value":58,"title":"G4"},{"value":59,"title":"G#4"},{"value":60,"title":"A4"},{"value":61,"title":"A#4"},{"value":62,"title":"B4"},{"value":63,"title":"C5"},{"value":64,"title":"C#5"},{"value":65,"title":"D5"},{"value":66,"title":"D#5"},{"value":67,"title":"E5"},{"value":68,"title":"F5"},{"value":69,"title":"F#5"},{"value":70,"title":"G5"},{"value":71,"title":"G#5"},{"value":72,"title":"A5"},{"value":73,"title":"A#5"},{"value":74,"title":"B5"},{"value":75,"title":"C6"},{"value":76,"title":"C#6"},{"value":77,"title":"D6"},{"value":78,"title":"D#6"},{"value":79,"title":"E6"},{"value":80,"title":"F6"},{"value":81,"title":"F#6"},{"value":82,"title":"G6"},{"value":83,"title":"G#6"},{"value":84,"title":"A6"},{"value":85,"title":"A#6"},{"value":86,"title":"B6"},{"value":87,"title":"C7"},{"value":88,"title":"C#7"},{"value":89,"title":"D7"},{"value":90,"title":"D#7"},{"value":91,"title":"E7"},{"value":92,"title":"F7"},{"value":93,"title":"F#7"},{"value":94,"title":"G7"},{"value":95,"title":"G#7"},{"value":96,"title":"A7"},{"value":97,"title":"A#7"},{"value":98,"title":"B7"},{"value":99,"title":"C8"}]
+                      }
+
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ,{
+            "type": "verticalLayout",
+            "colGridSizes":[3,1,4,6],
+            "elements": [
+              {
+                "type": "horizontalLayout",
+                "elements": [
+                  {
+                    "type": "text",
+                    "text": "Common"
+                  },
+                  {
+                    "textPosition": "above",
+                    "text": "Patch Name",
+                    "docPath": "/name",
+                    "type":"input"
+                  },
+                  {
+                    "text": "Algorithm",
+                    "docPath": "/algorithm",
+                    "type":"select",
+                    "gridSize":[3,3],
+                    "list":[
+                      {"value":0,"title":"ALG 1","img":""}
+                      ,{"value":1,"title":"ALG 2","img":""}
+                      ,{"value":2,"title":"ALG 3","img":""}
+                      ,{"value":3,"title":"ALG 4","img":""}
+                      ,{"value":4,"title":"ALG 5","img":""}
+                      ,{"value":5,"title":"ALG 6","img":""}
+                      ,{"value":6,"title":"ALG 7","img":""}
+                      ,{"value":7,"title":"ALG 8","img":""}
+                      ,{"value":8,"title":"ALG 9","img":""}
+                      ,{"value":9,"title":"ALG 10","img":""}
+                      ,{"value":10,"title":"ALG 11","img":""}
+                      ,{"value":11,"title":"ALG 12","img":""}
+                      ,{"value":12,"title":"ALG 13","img":""}
+                      ,{"value":13,"title":"ALG 14","img":""}
+                      ,{"value":14,"title":"ALG 15","img":""}
+                      ,{"value":15,"title":"ALG 16","img":""}
+                      ,{"value":16,"title":"ALG 17","img":""}
+                      ,{"value":17,"title":"ALG 18","img":""}
+                      ,{"value":18,"title":"ALG 19","img":""}
+                      ,{"value":19,"title":"ALG 20","img":""}
+                      ,{"value":20,"title":"ALG 21","img":""}
+                      ,{"value":21,"title":"ALG 22","img":""}
+                      ,{"value":22,"title":"ALG 23","img":""}
+                      ,{"value":23,"title":"ALG 24","img":""}
+                      ,{"value":24,"title":"ALG 25","img":""}
+                      ,{"value":25,"title":"ALG 26","img":""}
+                      ,{"value":26,"title":"ALG 27","img":""}
+                      ,{"value":27,"title":"ALG 28","img":""}
+                      ,{"value":28,"title":"ALG 29","img":""}
+                      ,{"value":29,"title":"ALG 30","img":""}
+                      ,{"value":30,"title":"ALG 31","img":""}
+                      ,{"value":31,"title":"ALG 32","img":""}
+                    ]
+                  }
+                ]
+              },
+              {
+                "gridSize":[1,6],
+                "text": "FB",
+                "classes":["center"],
+                "docPath": "/feedback",
+                "range": [0,7],
+                "type": "sliderV"
+              },
+              {
+                "type": "horizontalLayout",
+                "elements": [
+                  {
+                    "type": "text",
+                    "text": "LFO",
+                    "gridSize":[4,1]
+                  },
+                  {
+                    "gridSize":[2,1],
+                    "text": "Wave Form",
+                    "textPosition":"left",
+                    "textGridSize":2,
+                    "docPath": "/lfoWaveform",
+                    "type": "select",
+                    "list":[
+                      {"value":"triangle","title":"Triangle"}
+                      ,{"value":"sawDown","title":"Saw Down"}
+                      ,{"value":"sawUp","title":"Saw Up"}
+                      ,{"value":"square","title":"Square"}
+                      ,{"value":"sine","title":"Sine"}
+                      ,{"value":"sampleHold","title":"Sample and Hold"}
+                    ]
+                  },
+                  {
+                    "textPosition":"left",
+                    "textGridSize":3,
+                    "text": "Sync",
+                    "docPath": "/lfoSync",
+                    "type": "switch"
+                  },
+                  {
+                    "type": "verticalLayout",
+                    "colGridSizes":[1,1,1,1],
+                    "classes":["center"],
+                    "elements": [
+                      {
+                        "type": "sliderV",
+                        "text": "Speed",
+                        "docPath": "/lfoSpeed",
+                        "range": [0,99]
+                      },
+                      {
+                        "type": "sliderV",
+                        "text": "Delay",
+                        "docPath": "/lfoDelay",
+                        "range": [0,99]
+                      },
+                      {
+                        "type": "sliderV",
+                        "text": "Pitch Mod. Dpth",
+                        "docPath": "/lfoPitchModDepth",
+                        "range": [0,99]
+                      },
+                      {
+                        "type": "sliderV",
+                        "text": "Pitch Amp. Dpth",
+                        "docPath": "/lfoAmpModDepth",
+                        "range": [0,99]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "horizontalLayout",
+                "elements": [
+                  {
+                    "gridSize":[2,1],
+                    "text": "Transpose",
+                    "textPosition":"left",
+                    "textGridSize":4,
+                    "docPath": "/transpose",
+                    "type": "select",
+                    "list":[{"value":0,"title":"C1"},{"value":1,"title":"C#1"},{"value":2,"title":"D1"},{"value":3,"title":"D#1"},{"value":4,"title":"E1"},{"value":5,"title":"F1"},{"value":6,"title":"F#1"},{"value":7,"title":"G1"},{"value":8,"title":"G#1"},{"value":9,"title":"A1"},{"value":10,"title":"A#1"},{"value":11,"title":"B1"},{"value":12,"title":"C2"},{"value":13,"title":"C#2"},{"value":14,"title":"D2"},{"value":15,"title":"D#2"},{"value":16,"title":"E2"},{"value":17,"title":"F2"},{"value":18,"title":"F#2"},{"value":19,"title":"G2"},{"value":20,"title":"G#2"},{"value":21,"title":"A2"},{"value":22,"title":"A#2"},{"value":23,"title":"B2"},{"value":24,"title":"C3"},{"value":25,"title":"C#3"},{"value":26,"title":"D3"},{"value":27,"title":"D#3"},{"value":28,"title":"E3"},{"value":29,"title":"F3"},{"value":30,"title":"F#3"},{"value":31,"title":"G3"},{"value":32,"title":"G#3"},{"value":33,"title":"A3"},{"value":34,"title":"A#3"},{"value":35,"title":"B3"},{"value":36,"title":"C4"},{"value":37,"title":"C#4"},{"value":38,"title":"D4"},{"value":39,"title":"D#4"},{"value":40,"title":"E4"},{"value":41,"title":"F4"},{"value":42,"title":"F#4"},{"value":43,"title":"G4"},{"value":44,"title":"G#4"},{"value":45,"title":"A4"},{"value":46,"title":"A#4"},{"value":47,"title":"B4"},{"value":48,"title":"C5"},{"value":49,"title":"C#5"},{"value":50,"title":"D5"},{"value":51,"title":"D#5"},{"value":52,"title":"E5"},{"value":53,"title":"F5"},{"value":54,"title":"F#5"},{"value":55,"title":"G5"},{"value":56,"title":"G#5"},{"value":57,"title":"A5"},{"value":58,"title":"A#5"},{"value":59,"title":"B5"},{"value":60,"title":"C6"},{"value":61,"title":"C#6"},{"value":62,"title":"D6"},{"value":63,"title":"D#6"},{"value":64,"title":"E6"},{"value":65,"title":"F6"},{"value":66,"title":"F#6"},{"value":67,"title":"G6"},{"value":68,"title":"G#6"},{"value":69,"title":"A6"},{"value":70,"title":"A#6"},{"value":71,"title":"B6"},{"value":72,"title":"C7"},{"value":73,"title":"C#7"},{"value":74,"title":"D7"},{"value":75,"title":"D#7"},{"value":76,"title":"E7"},{"value":77,"title":"F7"},{"value":78,"title":"F#7"},{"value":79,"title":"G7"},{"value":80,"title":"G#7"},{"value":81,"title":"A7"},{"value":82,"title":"A#7"},{"value":83,"title":"B7"},{"value":84,"title":"C8"},{"value":85,"title":"C#8"},{"value":86,"title":"D8"},{"value":87,"title":"D#8"},{"value":88,"title":"E8"},{"value":89,"title":"F8"},{"value":90,"title":"F#8"},{"value":91,"title":"G8"},{"value":92,"title":"G#8"},{"value":93,"title":"A8"},{"value":94,"title":"A#8"},{"value":95,"title":"B8"},{"value":96,"title":"C9"},{"value":97,"title":"C#9"},{"value":98,"title":"D9"},{"value":99,"title":"D#9"}]
+                  }
+                ,{
+                    "type": "switch",
+                    "text": "Osc. Key Sync",
+                    "docPath": "/oscKeySync",
+                    "gridSize":[2,1],
+                    "textPosition":"left",
+                    "textGridSize":4
+                  },
+                  {
+                    "type": "envelope",
+                    "gridSize":[6,4],
+                    "text":"Pitch Envelope",
+                    "points":[
+                      {
+                        "rate":{
+                          "docPath": "/pitchEnvelope/rates/0",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/pitchEnvelope/levels/0",
+                          "range":[0,99]
+                        }
+                      }
+                    ,{
+                        "rate":{
+                          "docPath": "/pitchEnvelope/rates/1",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/pitchEnvelope/levels/1",
+                          "range":[0,99]
+                        }
+                      },
+                      {
+                        "rate":{
+                          "docPath": "/pitchEnvelope/rates/2",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/pitchEnvelope/levels/2",
+                          "range":[0,99]
+                        }
+                      },
+                      {
+                        "rate":{
+                          "docPath": "/pitchEnvelope/rates/3",
+                          "range":[0,99]
+                        },
+                        "level":{
+                          "docPath": "/pitchEnvelope/levels/3",
+                          "range":[0,99]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+}
+}
+
+
+
+

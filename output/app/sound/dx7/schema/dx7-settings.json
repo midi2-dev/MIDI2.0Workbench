@@ -1,0 +1,41 @@
+{
+  "$id": "midi://schema/dx7Settings",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "localOn": {
+      "type": "boolean",
+      "description": "Local Keyboard On"
+    },
+    "rxChannel": {
+      "type": "integer",
+      "minimum":1,
+      "maximum":16,
+      "description": "Receive Channel"
+    },
+    "txChannel": {
+      "type": "integer",
+      "minimum":1,
+      "maximum":16,
+      "description": "Transmit Channel"
+    },
+    "rxPc": {
+      "type": "boolean",
+      "description": "Receive Program change"
+    },
+    "txPc": {
+      "type": "boolean",
+      "description": "Transmit Program change"
+    },
+    "deviceId": {
+      "type": "integer",
+      "minimum":1,
+      "maximum":16,
+      "description": "Device ID"
+    }
+  },
+  "required":["name"],
+  "definitions":{
+
+  }
+}

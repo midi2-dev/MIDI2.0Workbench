@@ -1,0 +1,140 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-105-S_v1-1_ChannelList.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Channel List",
+  "description": "MIDI-CI Property Exchange ChannelList schema.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "title": "Title",
+        "description": "The name of the Channel being described.",
+        "type": "string",
+        "minLength": 1
+      },
+      "channel": {
+        "title": "MIDI Channel",
+        "description": "This is the Channel being described by this entry in the list of Channels. Channel numbering starts on the first channel on the first Group in the Function Block and continues across Groups in the Function Block. For example, if a Function Block contains 3 Groups it has Channels 1-48\nAn optional Cluster may exist, associated with the \"channel\".",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 256
+      },
+      "programTitle": {
+        "title": "Program Title",
+        "description": "The name of the Program currently active on this Channel.",
+        "type": "string"
+      },
+      "bankPC": {
+        "title": "Bank MSB, LSB and Program Change",
+        "description": "This is a 3 item array containing the Bank MSB, Bank LSB and Program Change [MSB, LSB, PC] for the current Program.",
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127
+        }
+      },
+      "clusterChannelStart": {
+        "title": "Start of the Channel Cluster",
+        "type": "integer",
+        "description": "This is the starting Channel of The Cluster. Channel Cluster is always described by the lowest Channel.",
+        "minimum": 1,
+        "maximum": 256
+      },
+      "clusterLength": {
+        "title": "Length of the Channel Cluster",
+        "type": "integer",
+        "description": "This is the length of the Channel Cluster including the \"clusterChannelStart\".",
+        "minimum": 1,
+        "maximum": 256
+      },
+      "clusterMidiMode": {
+        "title": "Channel Cluster Basic Channel",
+        "description": "This is the MIDI Mode of the Cluster",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 4
+      },
+      "clusterType": {
+        "title": "Cluster Type",
+        "description": "Declare the type of Channel Cluster. This aids in identifying basic, global and manager channels. ",
+        "type": "string",
+        "enum": [
+          "other",
+          "profile",
+          "mpe1"
+        ]
+      },
+      "links": {
+        "type": "array",
+        "description": "Resources that return an object or an array of objects may provide links to other related Resources.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "resource": {
+              "type": "string",
+              "description": "The Resource to be linked.",
+              "minLength": 3,
+              "maxLength": 36
+            },
+            "resId": {
+              "type": "string",
+              "description": "Resource Id, the identifier used to select the desired Payload Data entry.",
+              "maxLength": 36
+            },
+            "title": {
+              "type": "string",
+              "description": "This is the human-readable title for this link. Fall back to using the \"title\" Property in ResourceList if not supplied."
+            },
+            "role": {
+              "type": "string",
+              "description": "This is the role for this linked resource.",
+              "minLength": 1,
+              "maxLength": 32
+            }
+          },
+          "required": [
+            "resource"
+          ]
+        }
+      },
+      "channelClusterId": {
+        "title": "Channel Cluster Id (deprecated)",
+        "type": "integer",
+        "description": "If the Channel is a member of a Channel Cluster then this is the id of the Channel Cluster."
+      },
+      "clusterBasicChannel": {
+        "title": "Channel Cluster Basic Channel (deprecated)",
+        "description": "This declares if this is the Basic Channel for the Channel Cluster. If the Device is operating on multiple Channels which belong to the Channel Cluster, then MIDI messages sent to this channel set some parameters across multiple channels of the Channel Cluster which belong to the same.",
+        "type": "boolean"
+      },
+      "deviceBasicChannel": {
+        "title": "Device Basic Channel (deprecated)",
+        "type": "boolean",
+        "description": "This declares if this is the Basic Channel for the Device."
+      },
+      "mpeZone": {
+        "title": "MPE Zone (deprecated)",
+        "description": "If the Device is using MPE, then this Property declares if the Channel is art of the Upper Zone or Lower Zone.",
+        "type": "string",
+        "enum": [
+          "upper",
+          "lower"
+        ]
+      }
+    },
+    "required": [
+      "title",
+      "channel"
+    ],
+    "additionalProperties": false,
+    "patternProperties": {
+      "^x-": {
+        "description": "Any property starting with x- is valid."
+      }
+    }
+  }
+}

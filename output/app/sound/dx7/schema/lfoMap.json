@@ -1,0 +1,8 @@
+[
+  {"value": "triangle", "title": "Triangle"},
+  {"value": "sawDown", "title": "Saw Down"},
+  {"value": "sawUp", "title": "Saw Up"},
+  {"value": "square", "title": "Square"},
+  {"value": "sine", "title": "Sine"},
+  {"value": "sampleHold", "title": "Sample and Hold"}
+]

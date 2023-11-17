@@ -1,0 +1,209 @@
+{
+  "algorithm": 14,
+  "feedback": 4,
+  "oscKeySync": false,
+  "operators": [
+    {
+      "rates": [
+        98,
+        33,
+        49,
+        49
+      ],
+      "levels": [
+        99,
+        0,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 37,
+        "depthL": 98,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "+EXP",
+        "rate": 3
+      },
+      "detune": 5,
+      "lfoAmpModSens": 0,
+      "velocitySens": 3,
+      "volume": 81,
+      "oscMode": "ratio",
+      "freq": 8
+    },
+    {
+      "rates": [
+        98,
+        40,
+        20,
+        15
+      ],
+      "levels": [
+        99,
+        0,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 25,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+EXP",
+        "curveR": "+EXP",
+        "rate": 3
+      },
+      "detune": 5,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 92,
+      "oscMode": "ratio",
+      "freq": 6
+    },
+    {
+      "rates": [
+        75,
+        31,
+        20,
+        40
+      ],
+      "levels": [
+        99,
+        80,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 25,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+EXP",
+        "curveR": "+EXP",
+        "rate": 3
+      },
+      "detune": -4,
+      "lfoAmpModSens": 0,
+      "velocitySens": 1,
+      "volume": 84,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        91,
+        25,
+        17,
+        50
+      ],
+      "levels": [
+        99,
+        27,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 20,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-EXP",
+        "rate": 3
+      },
+      "detune": -4,
+      "lfoAmpModSens": 0,
+      "velocitySens": 1,
+      "volume": 78,
+      "oscMode": "ratio",
+      "freq": 4
+    },
+    {
+      "rates": [
+        99,
+        20,
+        18,
+        50
+      ],
+      "levels": [
+        96,
+        79,
+        89,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 42,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-EXP",
+        "rate": 3
+      },
+      "detune": -4,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 60,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        91,
+        29,
+        19,
+        42
+      ],
+      "levels": [
+        99,
+        52,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 10,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 3
+      },
+      "detune": -4,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 79,
+      "oscMode": "ratio",
+      "freq": 5
+    }
+  ],
+  "name": "GUITAR  5 ",
+  "lfoSpeed": 39,
+  "lfoDelay": 85,
+  "lfoPitchModDepth": 1,
+  "lfoAmpModDepth": 0,
+  "lfoPitchModSens": 1,
+  "lfoWaveform": "sine",
+  "lfoSync": false,
+  "pitchEnvelope": {
+    "rates": [
+      99,
+      98,
+      75,
+      60
+    ],
+    "levels": [
+      50,
+      50,
+      50,
+      50
+    ]
+  },
+  "transpose": 12,
+  "chorus": {
+    "on": true,
+    "depth": 0.1,
+    "rate": 1.97
+  },
+  "delay": {
+    "on": true,
+    "delayTime": 0.41,
+    "feedback": 0.7,
+    "mix": 0.41
+  }
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "title": "Frequency",
+    "rect": [3, 1, 2, 1],
+    "ui": "number",
+    "paramPath": "/freq",
+    "minMax": [0, 31.99], "precision": 0.01, "titleRect": [0, 1, 3, 1]
+  },
+  {
+    "ui": "valueSelect",
+    "rect": [2, 2, 3, 1],
+    "paramPath": "/oscMode",
+    "title": "Osc Mode", "titleRect": [0, 2, 2, 1],
+    "controlMapId": "oscModeMap"
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 3, 3, 1],
+    "bipolar": true,
+    "paramPath": "/detune", "minMax": [-7, 7],
+    "title": "Detune", "titleRect": [0, 3, 2, 1]
+  },
+
+  {"ui": "slider", "rect": [5, 0, 1, 3], "styleIds": ["center"],
+    "paramPath": "/volume", "minMax": [0, 99], "title": "Vol", "titleRect": [5, 3, 1, 1]},
+
+  {
+    "ui": "slider",
+    "rect": [6, 0, 1, 3],
+    "paramPath": "/velocitySens", "minMax": [0, 7],
+    "title": "Velo Sens", "titleRect": [6, 3, 1, 1], "styleIds": ["center"]
+  },
+
+  {
+    "ui": "slider",
+    "rect": [7, 0, 1, 3],
+    "paramPath": "/lfoAmpModSens", "minMax": [0, 7],
+    "title": "LFO Amp Mod Sens", "titleRect": [7, 3, 1, 1], "styleIds": ["center", "smText"]
+  },
+  {
+    "ui": "envelope",
+    "rect": [8, 0, 10, 4],
+    "title": "Pitch Envelope",
+    "paramPath": "",
+    "labelXAxis": "Rate",
+    "labelYAxis": "Level",
+    "pointsX": [
+      {"paramPath": "/rates/0", "minMax": [0, 99]},
+      {"paramPath": "/rates/1", "minMax": [0, 99]},
+      {"paramPath": "/rates/2", "minMax": [0, 99]},
+      {"paramPath": "/rates/3", "minMax": [0, 99]}
+    ],
+    "pointsY": [
+      {"paramPath": "/levels/0", "minMax": [0, 99]},
+      {"paramPath": "/levels/1", "minMax": [0, 99]},
+      {"paramPath": "/levels/2", "minMax": [0, 99]},
+      {"paramPath": "/levels/3", "minMax": [0, 99]}
+    ]
+  },
+
+  {"ui": "block", "rect": [18, 0, 6, 4], "title": "KeyScale",
+    "paramPath": "/keyScale",
+    "subUIListId": "keyScale"
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "ui": "knob",
+    "rect": [2, 0, 1, 1],
+    "paramPath": "/depthL", "minMax": [0, 99],
+    "title": "Depth Left", "titleRect": [0, 0, 2, 1], "styleIds": ["centerSmall"]
+  },
+  {
+    "ui": "knob",
+    "rect": [5, 0, 1, 1],
+    "paramPath": "/depthR", "minMax": [0, 99],
+    "title": "Depth Right", "titleRect": [3, 0, 2, 1], "styleIds": ["centerSmall"]
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 1, 4, 1],
+    "paramPath": "/rate", "minMax": [0, 99],
+    "title": "Rate", "titleRect": [0, 1, 2, 1], "styleIds": ["centerSmall"]
+  },
+  {
+    "ui": "valueSelect",
+    "rect": [1, 2, 2, 1],
+    "paramPath": "/curveL",
+    "title": "Curve Left",
+    "controlMapId": "curvesMap", "titleRect": [0, 2, 1, 1], "styleIds": ["smText"]
+  },
+  {
+    "ui": "valueSelect",
+    "rect": [4, 2, 2, 1],
+    "paramPath": "/curveR",
+    "title": "Curve Right",
+    "controlMapId": "curvesMap", "titleRect": [3, 2, 1, 1], "styleIds": ["smText"]
+  },
+  {
+    "ui": "valueSelect",
+    "rect": [3, 3, 3, 1],
+    "paramPath": "/breakpoint",
+    "title": "Breakpoint", "titleRect": [0, 3, 3, 1], "styleIds": ["centerSmall"],
+    "controlMapId": "breakpointMap"
+  }
+]

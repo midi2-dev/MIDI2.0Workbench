@@ -1,0 +1,29 @@
+[
+  {"ui": "slider", "rect": [2, 0, 4, 1], "title": "Feedback", "styleIds": ["whiteText"],
+    "paramPath": "/feedback", "minMax": [0, 7], "titleRect": [0, 0, 2, 1]},
+  {"ui": "valueSelect", "rect": [2, 1, 4, 1], "title": "Transpose", "paramPath": "/transpose",
+    "controlMapId": "transposeMap", "titleRect": [0, 1, 2, 1], "styleIds": ["whiteText"]},
+  {"ui": "switch", "rect": [2, 2, 4, 1], "title": "Osc. Key Sync", "titleRect": [0, 2, 2, 1], "paramPath": "/oscKeySync", "styleIds": ["whiteText"]},
+  {"ui": "block", "rect": [6, 0, 8, 4], "title": "LFO", "titleRect": [6, 0, 3, 1],
+    "paramPath": "/lfo", "subUIListId": "lfo",  "styleIds": ["whiteText"]},
+  {
+    "ui": "envelope",
+    "rect": [14, 0, 10, 4],
+    "title": "Pitch Envelope",
+    "paramPath": "/pitchEnvelope",
+    "labelXAxis": "Rate",
+    "labelYAxis": "Level",
+    "pointsX": [
+      {"paramPath": "/rates/0", "minMax": [0, 99]},
+      {"paramPath": "/rates/1", "minMax": [0, 99]},
+      {"paramPath": "/rates/2", "minMax": [0, 99]},
+      {"paramPath": "/rates/3", "minMax": [0, 99]}
+    ],
+    "pointsY": [
+      {"paramPath": "/levels/0", "minMax": [0, 99]},
+      {"paramPath": "/levels/1", "minMax": [0, 99]},
+      {"paramPath": "/levels/2", "minMax": [0, 99]},
+      {"paramPath": "/levels/3", "minMax": [0, 99]}
+    ]
+  }
+]

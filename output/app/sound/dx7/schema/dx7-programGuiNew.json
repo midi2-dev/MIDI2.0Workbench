@@ -1,0 +1,1397 @@
+[
+  {"ui": "range", "ranges": [{"title": "Fixed", "value": "fixed"}, {"title": "Ratio", "value": "ratio"}], "title": "oscMode"},
+  {
+    "ui": "range",
+    "ranges": [
+      {"value": 0, "title": "A-1"},
+      {"value": 1, "title": "A#-1"},
+      {"value": 2, "title": "B-1"},
+      {"value": 3, "title": "C0"},
+      {"value": 4, "title": "C#0"},
+      {"value": 5, "title": "D0"},
+      {"value": 6, "title": "D#0"},
+      {"value": 7, "title": "E0"},
+      {"value": 8, "title": "F0"},
+      {"value": 9, "title": "F#0"},
+      {"value": 10, "title": "G0"},
+      {"value": 11, "title": "G#0"},
+      {"value": 12, "title": "A0"},
+      {"value": 13, "title": "A#0"},
+      {"value": 14, "title": "B0"},
+      {"value": 15, "title": "C1"},
+      {"value": 16, "title": "C#1"},
+      {"value": 17, "title": "D1"},
+      {"value": 18, "title": "D#1"},
+      {"value": 19, "title": "E1"},
+      {"value": 20, "title": "F1"},
+      {"value": 21, "title": "F#1"},
+      {"value": 22, "title": "G1"},
+      {"value": 23, "title": "G#1"},
+      {"value": 24, "title": "A1"},
+      {"value": 25, "title": "A#1"},
+      {"value": 26, "title": "B1"},
+      {"value": 27, "title": "C2"},
+      {"value": 28, "title": "C#2"},
+      {"value": 29, "title": "D2"},
+      {"value": 30, "title": "D#2"},
+      {"value": 31, "title": "E2"},
+      {"value": 32, "title": "F2"},
+      {"value": 33, "title": "F#2"},
+      {"value": 34, "title": "G2"},
+      {"value": 35, "title": "G#2"},
+      {"value": 36, "title": "A2"},
+      {"value": 37, "title": "A#2"},
+      {"value": 38, "title": "B2"},
+      {"value": 39, "title": "C3"},
+      {"value": 40, "title": "C#3"},
+      {"value": 41, "title": "D3"},
+      {"value": 42, "title": "D#3"},
+      {"value": 43, "title": "E3"},
+      {"value": 44, "title": "F3"},
+      {"value": 45, "title": "F#3"},
+      {"value": 46, "title": "G3"},
+      {"value": 47, "title": "G#3"},
+      {"value": 48, "title": "A3"},
+      {"value": 49, "title": "A#3"},
+      {"value": 50, "title": "B3"},
+      {"value": 51, "title": "C4"},
+      {"value": 52, "title": "C#4"},
+      {"value": 53, "title": "D4"},
+      {"value": 54, "title": "D#4"},
+      {"value": 55, "title": "E4"},
+      {"value": 56, "title": "F4"},
+      {"value": 57, "title": "F#4"},
+      {"value": 58, "title": "G4"},
+      {"value": 59, "title": "G#4"},
+      {"value": 60, "title": "A4"},
+      {"value": 61, "title": "A#4"},
+      {"value": 62, "title": "B4"},
+      {"value": 63, "title": "C5"},
+      {"value": 64, "title": "C#5"},
+      {"value": 65, "title": "D5"},
+      {"value": 66, "title": "D#5"},
+      {"value": 67, "title": "E5"},
+      {"value": 68, "title": "F5"},
+      {"value": 69, "title": "F#5"},
+      {"value": 70, "title": "G5"},
+      {"value": 71, "title": "G#5"},
+      {"value": 72, "title": "A5"},
+      {"value": 73, "title": "A#5"},
+      {"value": 74, "title": "B5"},
+      {"value": 75, "title": "C6"},
+      {"value": 76, "title": "C#6"},
+      {"value": 77, "title": "D6"},
+      {"value": 78, "title": "D#6"},
+      {"value": 79, "title": "E6"},
+      {"value": 80, "title": "F6"},
+      {"value": 81, "title": "F#6"},
+      {"value": 82, "title": "G6"},
+      {"value": 83, "title": "G#6"},
+      {"value": 84, "title": "A6"},
+      {"value": 85, "title": "A#6"},
+      {"value": 86, "title": "B6"},
+      {"value": 87, "title": "C7"},
+      {"value": 88, "title": "C#7"},
+      {"value": 89, "title": "D7"},
+      {"value": 90, "title": "D#7"},
+      {"value": 91, "title": "E7"},
+      {"value": 92, "title": "F7"},
+      {"value": 93, "title": "F#7"},
+      {"value": 94, "title": "G7"},
+      {"value": 95, "title": "G#7"},
+      {"value": 96, "title": "A7"},
+      {"value": 97, "title": "A#7"},
+      {"value": 98, "title": "B7"},
+      {"value": 99, "title": "C8"}
+    ],
+    "title": "breakpoint"
+  },
+  {
+    "ui": "range",
+    "ranges": [
+      {"value": "-LIN", "title": "-LIN"},
+      {"value": "-EXP", "title": "-EXP"},
+      {"value": "+EXP", "title": "+EXP"},
+      {"value": "+LIN", "title": "+LIN"}
+    ],
+    "title": "curves"
+  },
+  {
+    "ui": "range",
+    "ranges": [
+      {"value": 0, "title": "C1"},
+      {"value": 1, "title": "C#1"},
+      {"value": 2, "title": "D1"},
+      {"value": 3, "title": "D#1"},
+      {"value": 4, "title": "E1"},
+      {"value": 5, "title": "F1"},
+      {"value": 6, "title": "F#1"},
+      {"value": 7, "title": "G1"},
+      {"value": 8, "title": "G#1"},
+      {"value": 9, "title": "A1"},
+      {"value": 10, "title": "A#1"},
+      {"value": 11, "title": "B1"},
+      {"value": 12, "title": "C2"},
+      {"value": 13, "title": "C#2"},
+      {"value": 14, "title": "D2"},
+      {"value": 15, "title": "D#2"},
+      {"value": 16, "title": "E2"},
+      {"value": 17, "title": "F2"},
+      {"value": 18, "title": "F#2"},
+      {"value": 19, "title": "G2"},
+      {"value": 20, "title": "G#2"},
+      {"value": 21, "title": "A2"},
+      {"value": 22, "title": "A#2"},
+      {"value": 23, "title": "B2"},
+      {"value": 24, "title": "C3"},
+      {"value": 25, "title": "C#3"},
+      {"value": 26, "title": "D3"},
+      {"value": 27, "title": "D#3"},
+      {"value": 28, "title": "E3"},
+      {"value": 29, "title": "F3"},
+      {"value": 30, "title": "F#3"},
+      {"value": 31, "title": "G3"},
+      {"value": 32, "title": "G#3"},
+      {"value": 33, "title": "A3"},
+      {"value": 34, "title": "A#3"},
+      {"value": 35, "title": "B3"},
+      {"value": 36, "title": "C4"},
+      {"value": 37, "title": "C#4"},
+      {"value": 38, "title": "D4"},
+      {"value": 39, "title": "D#4"},
+      {"value": 40, "title": "E4"},
+      {"value": 41, "title": "F4"},
+      {"value": 42, "title": "F#4"},
+      {"value": 43, "title": "G4"},
+      {"value": 44, "title": "G#4"},
+      {"value": 45, "title": "A4"},
+      {"value": 46, "title": "A#4"},
+      {"value": 47, "title": "B4"},
+      {"value": 48, "title": "C5"},
+      {"value": 49, "title": "C#5"},
+      {"value": 50, "title": "D5"},
+      {"value": 51, "title": "D#5"},
+      {"value": 52, "title": "E5"},
+      {"value": 53, "title": "F5"},
+      {"value": 54, "title": "F#5"},
+      {"value": 55, "title": "G5"},
+      {"value": 56, "title": "G#5"},
+      {"value": 57, "title": "A5"},
+      {"value": 58, "title": "A#5"},
+      {"value": 59, "title": "B5"},
+      {"value": 60, "title": "C6"},
+      {"value": 61, "title": "C#6"},
+      {"value": 62, "title": "D6"},
+      {"value": 63, "title": "D#6"},
+      {"value": 64, "title": "E6"},
+      {"value": 65, "title": "F6"},
+      {"value": 66, "title": "F#6"},
+      {"value": 67, "title": "G6"},
+      {"value": 68, "title": "G#6"},
+      {"value": 69, "title": "A6"},
+      {"value": 70, "title": "A#6"},
+      {"value": 71, "title": "B6"},
+      {"value": 72, "title": "C7"},
+      {"value": 73, "title": "C#7"},
+      {"value": 74, "title": "D7"},
+      {"value": 75, "title": "D#7"},
+      {"value": 76, "title": "E7"},
+      {"value": 77, "title": "F7"},
+      {"value": 78, "title": "F#7"},
+      {"value": 79, "title": "G7"},
+      {"value": 80, "title": "G#7"},
+      {"value": 81, "title": "A7"},
+      {"value": 82, "title": "A#7"},
+      {"value": 83, "title": "B7"},
+      {"value": 84, "title": "C8"},
+      {"value": 85, "title": "C#8"},
+      {"value": 86, "title": "D8"},
+      {"value": 87, "title": "D#8"},
+      {"value": 88, "title": "E8"},
+      {"value": 89, "title": "F8"},
+      {"value": 90, "title": "F#8"},
+      {"value": 91, "title": "G8"},
+      {"value": 92, "title": "G#8"},
+      {"value": 93, "title": "A8"},
+      {"value": 94, "title": "A#8"},
+      {"value": 95, "title": "B8"},
+      {"value": 96, "title": "C9"},
+      {"value": 97, "title": "C#9"},
+      {"value": 98, "title": "D9"},
+      {"value": 99, "title": "D#9"}
+    ],
+    "title": "transpose"
+  },
+  {
+    "ui": "range",
+    "ranges": [
+      {"value": "triangle", "title": "Triangle"},
+      {"value": "sawDown", "title": "Saw Down"},
+      {"value": "sawUp", "title": "Saw Up"},
+      {"value": "square", "title": "Square"},
+      {"value": "sine", "title": "Sine"},
+      {"value": "sampleHold", "title": "Sample and Hold"}
+    ],
+    "title": "lfos"
+  },
+  {
+    "ui": "range",
+    "rect": [0, 0, 2, 2],
+    "title": "algos",
+    "ranges": [
+      {"value": 0, "title": "ALG 1"},
+      {"value": 1, "title": "ALG 2"},
+      {"value": 2, "title": "ALG 3"},
+      {"value": 3, "title": "ALG 4"},
+      {"value": 4, "title": "ALG 5"},
+      {"value": 5, "title": "ALG 6"},
+      {"value": 6, "title": "ALG 7"},
+      {"value": 7, "title": "ALG 8"},
+      {"value": 8, "title": "ALG 9"},
+      {"value": 9, "title": "ALG 10"},
+      {"value": 10, "title": "ALG 11"},
+      {"value": 11, "title": "ALG 12"},
+      {"value": 12, "title": "ALG 13"},
+      {"value": 13, "title": "ALG 14"},
+      {"value": 14, "title": "ALG 15"},
+      {"value": 15, "title": "ALG 16"},
+      {"value": 16, "title": "ALG 17"},
+      {"value": 17, "title": "ALG 18"},
+      {"value": 18, "title": "ALG 19"},
+      {"value": 19, "title": "ALG 20"},
+      {"value": 20, "title": "ALG 21"},
+      {"value": 21, "title": "ALG 22"},
+      {"value": 22, "title": "ALG 23"},
+      {"value": 23, "title": "ALG 24"},
+      {"value": 24, "title": "ALG 25"},
+      {"value": 25, "title": "ALG 26"},
+      {"value": 26, "title": "ALG 27"},
+      {"value": 27, "title": "ALG 28"},
+      {"value": 28, "title": "ALG 29"},
+      {"value": 29, "title": "ALG 30"},
+      {"value": 30, "title": "ALG 31"},
+      {"value": 31, "title": "ALG 32"}
+    ]
+  },
+  {"ui": "style", "title": "root", "style": {"bgColor": "#444444FF", "textColor": "#FFFFFFFF", "textAlign": "left", "textSize": 6}},
+  {"ui": "style", "title": "operators", "style": {"bgColor": "#AAAAAAFF"}},
+  {"ui": "style", "title": "opTitle", "style": {"textSize": 4, "textAlign": "left"}},
+  {"ui": "style", "title": "center", "style": {"textAlign": "center"}},
+  {"ui": "style", "title": "smText", "style": {"textSize": 2}},
+  {"ui": "block", "classes": ["root"], "rect": [0, 0, 24, 30]},
+  {"ui": "label", "rect": [1, 0, 10, 2], "title": "6 Operator FM Synth", "classes": ["root"]},
+  {"ui": "block", "classes": ["operators"], "rect": [0, 2, 24, 4], "title": "Operator 1", "group": {"id": "op1"}},
+  {"ui": "label", "rect": [0, 2, 5, 1], "classes": ["opTitle"], "title": "Operator 1", "group": {"idParent": "op1"}},
+  {"ui": "label", "rect": [0, 3, 2, 1], "title": "Freq.", "group": {"idParent": "op1"}},
+  {
+    "title": "Frequency",
+    "rect": [2, 3, 2, 1],
+    "ui": "number",
+    "doc": {"path": "/operators/0/freq", "range": [0, 31.99], "multipleOf": 0.01},
+    "cm": {"control": "NRPN", "controlNo": [0, 1], "ranges": [{"range": [0, 3199]}]},
+    "group": {"idParent": "op1"}
+  },
+  {"ui": "label", "rect": [4, 3, 1, 1], "title": "Hz"},
+  {"ui": "label", "rect": [0, 4, 2, 1], "title": "Osc."},
+  {
+    "ui": "select",
+    "rect": [2, 4, 3, 1],
+    "doc": {"path": "/operators/0/oscMode"},
+    "group": {"idParent": "op1"},
+    "title": "Osc Mode",
+    "rangeList": "oscMode"
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 5, 3, 1],
+    "bipolar": true,
+    "doc": {"path": "/operators/0/detune", "range": [-7, 7]},
+    "cm": {"control": "CC", "controlNo": [13]},
+    "title": "Detune",
+    "group": {"idParent": "op1"}
+  },
+  {"ui": "label", "rect": [0, 5, 2, 1], "title": "Detune"},
+  {"ui": "slider", "rect": [5, 2, 1, 3], "doc": {"path": "/operators/0/volume", "range": [0, 99]}, "title": "Volume", "group": {"idParent": "op1"}},
+  {"ui": "label", "rect": [5, 5, 1, 1], "classes": ["center"], "title": "Vol."},
+  {
+    "ui": "slider",
+    "rect": [6, 2, 1, 3],
+    "doc": {"path": "/operators/0/velocitySens", "range": [0, 7]},
+    "title": "Velocity Sens",
+    "group": {"idParent": "op1"}
+  },
+  {"ui": "label", "rect": [6, 5, 1, 1], "classes": ["center"], "title": "Velo."},
+  {
+    "ui": "slider",
+    "rect": [7, 2, 1, 3],
+    "doc": {"path": "/operators/0/lfoAmpModSens", "range": [0, 7]},
+    "group": {"idParent": "op1"},
+    "title": "LFO Mod"
+  },
+  {"ui": "label", "rect": [7, 5, 1, 1], "classes": ["center", "smText"], "title": "LFO mod sen"},
+  {"ui": "block", "rect": [8, 2, 10, 4], "title": "Pitch Envelope", "group": {"idParent": "op1", "id": "op1env", "role": "envelope"}},
+  {"ui": "label", "rect": [8, 2, 2, 2], "title": "Rates", "group": {"idParent": "op1env"}},
+  {"ui": "label", "rect": [8, 4, 2, 2], "title": "Levels", "group": {"idParent": "op1env"}},
+  {
+    "ui": "knob",
+    "rect": [10, 2, 2, 2],
+    "doc": {"path": "/operators/0/rates/0", "range": [0, 99]},
+    "title": "Rate 1",
+    "group": {"idParent": "op1env", "role": "x", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [10, 4, 2, 2],
+    "doc": {"path": "/operators/0/levels/0", "range": [0, 99]},
+    "title": "Level 1",
+    "group": {"idParent": "op1env", "role": "y", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 2, 2, 2],
+    "doc": {"path": "/operators/0/rates/1", "range": [0, 99]},
+    "title": "Rate 2",
+    "group": {"idParent": "op1env", "role": "x", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 4, 2, 2],
+    "doc": {"path": "/operators/0/levels/1", "range": [0, 99]},
+    "title": "Level 2",
+    "group": {"idParent": "op1env", "role": "y", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 2, 2, 2],
+    "doc": {"path": "/operators/0/rates/2", "range": [0, 99]},
+    "title": "Rate 3",
+    "group": {"idParent": "op1env", "role": "x", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 4, 2, 2],
+    "doc": {"path": "/operators/0/levels/2", "range": [0, 99]},
+    "title": "Level 3",
+    "group": {"idParent": "op1env", "role": "y", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 2, 2, 2],
+    "doc": {"path": "/operators/0/rates/3", "range": [0, 99]},
+    "title": "Rate 4",
+    "group": {"idParent": "op1env", "role": "x", "point": 3}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 4, 2, 2],
+    "doc": {"path": "/operators/0/levels/3", "range": [0, 99]},
+    "title": "Level 4",
+    "group": {"idParent": "op1env", "role": "y", "point": 3}
+  },
+  {"ui": "block", "rect": [18, 2, 6, 4], "title": "KeyScale", "group": {"idParent": "op1", "id": "op1keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [20, 2, 1, 1],
+    "doc": {"path": "/operators/0/keyScale/depthL", "range": [0, 99]},
+    "title": "Depth Left",
+    "group": {"idParent": "op1keyScale"}
+  },
+  {"ui": "label", "rect": [18, 2, 2, 1], "classes": ["centerSmall"], "title": "Dpth L", "group": {"idParent": "op1keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [23, 2, 1, 1],
+    "doc": {"path": "/operators/0/keyScale/depthR", "range": [0, 99]},
+    "title": "Depth Right",
+    "group": {"idParent": "op1keyScale"}
+  },
+  {"ui": "label", "rect": [21, 2, 2, 1], "classes": ["centerSmall"], "title": "Dpth R", "group": {"idParent": "op1keyScale"}},
+  {
+    "ui": "slider",
+    "rect": [20, 3, 4, 1],
+    "doc": {"path": "/operators/0/keyScale/rate", "range": [0, 99]},
+    "title": "Rate",
+    "group": {"idParent": "op1keyScale"}
+  },
+  {"ui": "label", "rect": [18, 3, 2, 1], "classes": ["centerSmall"], "title": "Rate", "group": {"idParent": "op1keyScale"}},
+  {
+    "ui": "select",
+    "rect": [19, 4, 2, 1],
+    "doc": {"path": "/operators/0/keyScale/curveL", "range": [0, 99]},
+    "title": "Curve Left",
+    "group": {"idParent": "op1keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [18, 4, 1, 1], "classes": ["smText"], "title": "Curve Left", "group": {"idParent": "op1keyScale"}},
+  {
+    "ui": "select",
+    "rect": [22, 4, 2, 1],
+    "doc": {"path": "/operators/0/keyScale/curveR", "range": [0, 99]},
+    "title": "Curve Right",
+    "group": {"idParent": "op1keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [21, 4, 1, 1], "classes": ["smText"], "title": "Curve Right", "group": {"idParent": "op1keyScale"}},
+  {
+    "ui": "select",
+    "rect": [21, 5, 3, 1],
+    "doc": {"path": "/operators/0/keyScale/breakpoint", "range": [0, 99]},
+    "title": "Breakpoint",
+    "group": {"idParent": "op1keyScale"},
+    "rangeList": "breakpoint"
+  },
+  {"ui": "label", "rect": [18, 5, 3, 1], "classes": ["centerSmall"], "title": "Breakpoint", "group": {"idParent": "op1keyScale"}},
+  {"ui": "block", "classes": ["operators"], "rect": [0, 6, 24, 4], "title": "Operator 2", "group": {"id": "op2"}},
+  {"ui": "label", "rect": [0, 6, 5, 1], "classes": ["opTitle"], "title": "Operator 2", "group": {"idParent": "op2"}},
+  {"ui": "label", "rect": [0, 7, 2, 1], "title": "Freq.", "group": {"idParent": "op2"}},
+  {
+    "title": "Frequency",
+    "rect": [2, 7, 2, 1],
+    "ui": "number",
+    "doc": {"path": "/operators/1/freq", "range": [0, 31.99], "multipleOf": 0.01},
+    "cm": {"control": "NRPN", "controlNo": [0, 2], "ranges": [{"range": [0, 3199]}]},
+    "group": {"idParent": "op2"}
+  },
+  {"ui": "label", "rect": [4, 7, 1, 1], "title": "Hz"},
+  {"ui": "label", "rect": [0, 9, 2, 1], "title": "Osc."},
+  {
+    "ui": "select",
+    "rect": [2, 9, 3, 1],
+    "doc": {"path": "/operators/1/oscMode"},
+    "links": [{"resource": "X-GetRange", "id": "oscMode", "role": "range"}],
+    "group": {"idParent": "op2"},
+    "title": "Osc Mode",
+    "rangeList": "oscMode"
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 8, 3, 1],
+    "bipolar": true,
+    "doc": {"path": "/operators/1/detune", "range": [-7, 7]},
+    "cm": {"control": "CC", "controlNo": [14]},
+    "title": "Detune",
+    "group": {"idParent": "op2"}
+  },
+  {"ui": "label", "rect": [0, 8, 2, 1], "title": "Detune"},
+  {"ui": "slider", "rect": [5, 6, 1, 3], "doc": {"path": "/operators/1/volume", "range": [0, 99]}, "title": "Volume", "group": {"idParent": "op2"}},
+  {"ui": "label", "rect": [5, 9, 1, 1], "classes": ["center"], "title": "Vol."},
+  {
+    "ui": "slider",
+    "rect": [6, 6, 1, 3],
+    "doc": {"path": "/operators/1/velocitySens", "range": [0, 7]},
+    "title": "Velocity Sens",
+    "group": {"idParent": "op2"}
+  },
+  {"ui": "label", "rect": [6, 9, 1, 1], "classes": ["center"], "title": "Velo."},
+  {
+    "ui": "slider",
+    "rect": [7, 6, 1, 3],
+    "doc": {"path": "/operators/1/lfoAmpModSens", "range": [0, 7]},
+    "group": {"idParent": "op2"},
+    "title": "LFO Mod"
+  },
+  {"ui": "label", "rect": [7, 9, 1, 1], "classes": ["center", "smText"], "title": "LFO mod sen"},
+  {"ui": "block", "rect": [8, 6, 10, 4], "title": "Pitch Envelope", "group": {"idParent": "op2", "id": "op2env", "role": "envelope"}},
+  {"ui": "label", "rect": [8, 6, 2, 2], "title": "Rates", "group": {"idParent": "op2env"}},
+  {"ui": "label", "rect": [8, 8, 2, 2], "title": "Levels", "group": {"idParent": "op2env"}},
+  {
+    "ui": "knob",
+    "rect": [10, 6, 2, 2],
+    "doc": {"path": "/operators/1/rates/0", "range": [0, 99]},
+    "title": "Rate 1",
+    "group": {"idParent": "op2env", "role": "x", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [10, 8, 2, 2],
+    "doc": {"path": "/operators/1/levels/0", "range": [0, 99]},
+    "title": "Level 1",
+    "group": {"idParent": "op2env", "role": "y", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 6, 2, 2],
+    "doc": {"path": "/operators/1/rates/1", "range": [0, 99]},
+    "title": "Rate 2",
+    "group": {"idParent": "op2env", "role": "x", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 8, 2, 2],
+    "doc": {"path": "/operators/1/levels/1", "range": [0, 99]},
+    "title": "Level 2",
+    "group": {"idParent": "op2env", "role": "y", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 6, 2, 2],
+    "doc": {"path": "/operators/1/rates/2", "range": [0, 99]},
+    "title": "Rate 3",
+    "group": {"idParent": "op2env", "role": "x", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 8, 2, 2],
+    "doc": {"path": "/operators/1/levels/2", "range": [0, 99]},
+    "title": "Level 3",
+    "group": {"idParent": "op2env", "role": "y", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 6, 2, 2],
+    "doc": {"path": "/operators/1/rates/3", "range": [0, 99]},
+    "title": "Rate 4",
+    "group": {"idParent": "op2env", "role": "x", "point": 3}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 8, 2, 2],
+    "doc": {"path": "/operators/1/levels/3", "range": [0, 99]},
+    "title": "Level 4",
+    "group": {"idParent": "op2env", "role": "y", "point": 3}
+  },
+  {"ui": "block", "rect": [18, 5, 6, 4], "title": "KeyScale", "group": {"idParent": "op2", "id": "op2keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [20, 6, 1, 1],
+    "doc": {"path": "/operators/1/keyScale/depthL", "range": [0, 99]},
+    "title": "Depth Left",
+    "group": {"idParent": "op2keyScale"}
+  },
+  {"ui": "label", "rect": [18, 6, 2, 1], "classes": ["centerSmall"], "title": "Dpth L", "group": {"idParent": "op2keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [23, 6, 1, 1],
+    "doc": {"path": "/operators/1/keyScale/depthR", "range": [0, 99]},
+    "title": "Depth Right",
+    "group": {"idParent": "op2keyScale"}
+  },
+  {"ui": "label", "rect": [21, 6, 2, 1], "classes": ["centerSmall"], "title": "Dpth R", "group": {"idParent": "op2keyScale"}},
+  {
+    "ui": "slider",
+    "rect": [20, 7, 4, 1],
+    "doc": {"path": "/operators/1/keyScale/rate", "range": [0, 99]},
+    "title": "Rate",
+    "group": {"idParent": "op2keyScale"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [18, 7, 2, 1], "classes": ["centerSmall"], "title": "Rate", "group": {"idParent": "op2keyScale"}},
+  {
+    "ui": "select",
+    "rect": [19, 8, 2, 1],
+    "doc": {"path": "/operators/1/keyScale/curveL", "range": [0, 99]},
+    "title": "Curve Left",
+    "group": {"idParent": "op2keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [18, 8, 1, 1], "classes": ["smText"], "title": "Curve Left", "group": {"idParent": "op2keyScale"}},
+  {
+    "ui": "select",
+    "rect": [22, 8, 2, 1],
+    "doc": {"path": "/operators/1/keyScale/curveR", "range": [0, 99]},
+    "title": "Curve Right",
+    "group": {"idParent": "op2keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [21, 8, 1, 1], "classes": ["smText"], "title": "Curve Right", "group": {"idParent": "op2keyScale"}},
+  {
+    "ui": "select",
+    "rect": [21, 9, 3, 1],
+    "doc": {"path": "/operators/1/keyScale/breakpoint", "range": [0, 99]},
+    "title": "Breakpoint",
+    "group": {"idParent": "op2keyScale"},
+    "rangeList": "breakpoint"
+  },
+  {"ui": "label", "rect": [18, 9, 3, 1], "classes": ["centerSmall"], "title": "Breakpoint", "group": {"idParent": "op2keyScale"}},
+  {"ui": "block", "classes": ["operators"], "rect": [0, 10, 24, 4], "title": "Operator 3", "group": {"id": "op3"}},
+  {"ui": "label", "rect": [0, 10, 5, 1], "classes": ["opTitle"], "title": "Operator 3", "group": {"idParent": "op3"}},
+  {"ui": "label", "rect": [0, 11, 2, 1], "title": "Freq.", "group": {"idParent": "op3"}},
+  {
+    "title": "Frequency",
+    "rect": [2, 11, 2, 1],
+    "ui": "number",
+    "doc": {"path": "/operators/2/freq", "range": [0, 31.99], "multipleOf": 0.01},
+    "cm": {"control": "NRPN", "controlNo": [0, 3], "ranges": [{"range": [0, 3199]}]},
+    "group": {"idParent": "op3"}
+  },
+  {"ui": "label", "rect": [4, 11, 1, 1], "title": "Hz"},
+  {"ui": "label", "rect": [0, 13, 2, 1], "title": "Osc."},
+  {
+    "ui": "select",
+    "rect": [2, 13, 3, 1],
+    "doc": {"path": "/operators/2/oscMode"},
+    "links": [{"resource": "X-GetRange", "id": "oscMode", "role": "range"}],
+    "group": {"idParent": "op3"},
+    "title": "Osc Mode",
+    "rangeList": "oscMode"
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 12, 3, 1],
+    "bipolar": true,
+    "doc": {"path": "/operators/2/detune", "range": [-7, 7]},
+    "cm": {"control": "CC", "controlNo": [15]},
+    "title": "Detune",
+    "group": {"idParent": "op3"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [0, 12, 2, 1], "title": "Detune"},
+  {
+    "ui": "slider",
+    "rect": [5, 10, 1, 3],
+    "doc": {"path": "/operators/2/volume", "range": [0, 99]},
+    "title": "Volume",
+    "group": {"idParent": "op3"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [5, 13, 1, 1], "classes": ["center"], "title": "Vol."},
+  {
+    "ui": "slider",
+    "rect": [6, 10, 1, 3],
+    "doc": {"path": "/operators/2/velocitySens", "range": [0, 7]},
+    "title": "Velocity Sens",
+    "group": {"idParent": "op3"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [6, 13, 1, 1], "classes": ["center"], "title": "Velo."},
+  {
+    "ui": "slider",
+    "rect": [7, 10, 1, 3],
+    "doc": {"path": "/operators/2/lfoAmpModSens", "range": [0, 7]},
+    "group": {"idParent": "op3"},
+    "title": "LFO Mod",
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [7, 13, 1, 1], "classes": ["center", "smText"], "title": "LFO mod sen"},
+  {"ui": "block", "rect": [8, 10, 10, 4], "title": "Pitch Envelope", "group": {"idParent": "op3", "id": "op3env", "role": "envelope"}},
+  {"ui": "label", "rect": [8, 10, 2, 2], "title": "Rates", "group": {"idParent": "op3env"}},
+  {"ui": "label", "rect": [8, 12, 2, 2], "title": "Levels", "group": {"idParent": "op3env"}},
+  {
+    "ui": "knob",
+    "rect": [10, 10, 2, 2],
+    "doc": {"path": "/operators/2/rates/0", "range": [0, 99]},
+    "title": "Rate 1",
+    "group": {"idParent": "op3env", "role": "x", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [10, 12, 2, 2],
+    "doc": {"path": "/operators/2/levels/0", "range": [0, 99]},
+    "title": "Level 1",
+    "group": {"idParent": "op3env", "role": "y", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 10, 2, 2],
+    "doc": {"path": "/operators/2/rates/1", "range": [0, 99]},
+    "title": "Rate 2",
+    "group": {"idParent": "op3env", "role": "x", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 12, 2, 2],
+    "doc": {"path": "/operators/2/levels/1", "range": [0, 99]},
+    "title": "Level 2",
+    "group": {"idParent": "op3env", "role": "y", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 10, 2, 2],
+    "doc": {"path": "/operators/2/rates/2", "range": [0, 99]},
+    "title": "Rate 3",
+    "group": {"idParent": "op3env", "role": "x", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 12, 2, 2],
+    "doc": {"path": "/operators/2/levels/2", "range": [0, 99]},
+    "title": "Level 3",
+    "group": {"idParent": "op3env", "role": "y", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 10, 2, 2],
+    "doc": {"path": "/operators/2/rates/3", "range": [0, 99]},
+    "title": "Rate 4",
+    "group": {"idParent": "op3env", "role": "x", "point": 3}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 12, 2, 2],
+    "doc": {"path": "/operators/2/levels/3", "range": [0, 99]},
+    "title": "Level 4",
+    "group": {"idParent": "op3env", "role": "y", "point": 3}
+  },
+  {"ui": "block", "rect": [18, 10, 6, 4], "title": "KeyScale", "group": {"idParent": "op3", "id": "op3keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [20, 10, 1, 1],
+    "doc": {"path": "/operators/2/keyScale/depthL", "range": [0, 99]},
+    "title": "Depth Left",
+    "group": {"idParent": "op3keyScale"}
+  },
+  {"ui": "label", "rect": [18, 10, 2, 1], "classes": ["centerSmall"], "title": "Dpth L", "group": {"idParent": "op3keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [23, 10, 1, 1],
+    "doc": {"path": "/operators/2/keyScale/depthR", "range": [0, 99]},
+    "title": "Depth Right",
+    "group": {"idParent": "op3keyScale"}
+  },
+  {"ui": "label", "rect": [21, 10, 2, 1], "classes": ["centerSmall"], "title": "Dpth R", "group": {"idParent": "op3keyScale"}},
+  {
+    "ui": "slider",
+    "rect": [20, 11, 4, 1],
+    "doc": {"path": "/operators/2/keyScale/rate", "range": [0, 99]},
+    "title": "Rate",
+    "group": {"idParent": "op3keyScale"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [18, 11, 2, 1], "classes": ["centerSmall"], "title": "Rate", "group": {"idParent": "op3keyScale"}},
+  {
+    "ui": "select",
+    "rect": [19, 12, 2, 1],
+    "doc": {"path": "/operators/2/keyScale/curveL", "range": [0, 99]},
+    "title": "Curve Left",
+    "group": {"idParent": "op3keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [18, 12, 1, 1], "classes": ["smText"], "title": "Curve Left", "group": {"idParent": "op3keyScale"}},
+  {
+    "ui": "select",
+    "rect": [22, 12, 2, 1],
+    "doc": {"path": "/operators/2/keyScale/curveR", "range": [0, 99]},
+    "title": "Curve Right",
+    "group": {"idParent": "op3keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [21, 12, 1, 1], "classes": ["smText"], "title": "Curve Right", "group": {"idParent": "op3keyScale"}},
+  {
+    "ui": "select",
+    "rect": [21, 13, 3, 1],
+    "doc": {"path": "/operators/2/keyScale/breakpoint", "range": [0, 99]},
+    "title": "Breakpoint",
+    "group": {"idParent": "op3keyScale"},
+    "rangeList": "breakpoint"
+  },
+  {"ui": "label", "rect": [18, 13, 3, 1], "classes": ["centerSmall"], "title": "Breakpoint", "group": {"idParent": "op3keyScale"}},
+  {"ui": "block", "classes": ["operators"], "rect": [0, 14, 24, 4], "title": "Operator 4", "group": {"id": "op4"}},
+  {"ui": "label", "rect": [0, 14, 5, 1], "classes": ["opTitle"], "title": "Operator 4", "group": {"idParent": "op4"}},
+  {"ui": "label", "rect": [0, 15, 2, 1], "title": "Freq.", "group": {"idParent": "op4"}},
+  {
+    "title": "Frequency",
+    "rect": [2, 15, 2, 1],
+    "ui": "number",
+    "doc": {"path": "/operators/3/freq", "range": [0, 31.99], "multipleOf": 0.01},
+    "cm": {"control": "NRPN", "controlNo": [0, 5], "ranges": [{"range": [0, 3199]}]},
+    "group": {"idParent": "op4"}
+  },
+  {"ui": "label", "rect": [4, 15, 1, 1], "title": "Hz"},
+  {"ui": "label", "rect": [0, 17, 2, 1], "title": "Osc."},
+  {
+    "ui": "select",
+    "rect": [2, 17, 3, 1],
+    "doc": {"path": "/operators/3/oscMode"},
+    "links": [{"resource": "X-GetRange", "id": "oscMode", "role": "range"}],
+    "group": {"idParent": "op4"},
+    "title": "Osc Mode",
+    "rangeList": "oscMode"
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 16, 3, 1],
+    "bipolar": true,
+    "doc": {"path": "/operators/3/detune", "range": [-7, 7]},
+    "cm": {"control": "CC", "controlNo": [16]},
+    "title": "Detune",
+    "group": {"idParent": "op4"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [0, 16, 2, 1], "title": "Detune"},
+  {
+    "ui": "slider",
+    "rect": [5, 14, 1, 3],
+    "doc": {"path": "/operators/3/volume", "range": [0, 99]},
+    "title": "Volume",
+    "group": {"idParent": "op4"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [5, 17, 1, 1], "classes": ["center"], "title": "Vol."},
+  {
+    "ui": "slider",
+    "rect": [6, 14, 1, 3],
+    "doc": {"path": "/operators/3/velocitySens", "range": [0, 7]},
+    "title": "Velocity Sens",
+    "group": {"idParent": "op4"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [6, 17, 1, 1], "classes": ["center"], "title": "Velo."},
+  {
+    "ui": "slider",
+    "rect": [7, 14, 1, 3],
+    "doc": {"path": "/operators/3/lfoAmpModSens", "range": [0, 7]},
+    "group": {"idParent": "op4"},
+    "title": "LFO Mod",
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [7, 17, 1, 1], "classes": ["center", "smText"], "title": "LFO mod sen"},
+  {"ui": "block", "rect": [8, 14, 10, 4], "title": "Pitch Envelope", "group": {"idParent": "op4", "id": "op4env", "role": "envelope"}},
+  {"ui": "label", "rect": [8, 14, 2, 2], "title": "Rates", "group": {"idParent": "op4env"}},
+  {"ui": "label", "rect": [8, 16, 2, 2], "title": "Levels", "group": {"idParent": "op4env"}},
+  {
+    "ui": "knob",
+    "rect": [10, 14, 2, 2],
+    "doc": {"path": "/operators/3/rates/0", "range": [0, 99]},
+    "title": "Rate 1",
+    "group": {"idParent": "op4env", "role": "x", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [10, 16, 2, 2],
+    "doc": {"path": "/operators/3/levels/0", "range": [0, 99]},
+    "title": "Level 1",
+    "group": {"idParent": "op4env", "role": "y", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 14, 2, 2],
+    "doc": {"path": "/operators/3/rates/1", "range": [0, 99]},
+    "title": "Rate 2",
+    "group": {"idParent": "op4env", "role": "x", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 16, 2, 2],
+    "doc": {"path": "/operators/3/levels/1", "range": [0, 99]},
+    "title": "Level 2",
+    "group": {"idParent": "op4env", "role": "y", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 14, 2, 2],
+    "doc": {"path": "/operators/3/rates/2", "range": [0, 99]},
+    "title": "Rate 3",
+    "group": {"idParent": "op4env", "role": "x", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 16, 2, 2],
+    "doc": {"path": "/operators/3/levels/2", "range": [0, 99]},
+    "title": "Level 3",
+    "group": {"idParent": "op4env", "role": "y", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 14, 2, 2],
+    "doc": {"path": "/operators/3/rates/3", "range": [0, 99]},
+    "title": "Rate 4",
+    "group": {"idParent": "op4env", "role": "x", "point": 3}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 16, 2, 2],
+    "doc": {"path": "/operators/3/levels/3", "range": [0, 99]},
+    "title": "Level 4",
+    "group": {"idParent": "op4env", "role": "y", "point": 3}
+  },
+  {"ui": "block", "rect": [18, 14, 6, 4], "title": "KeyScale", "group": {"idParent": "op4", "id": "op4keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [20, 14, 1, 1],
+    "doc": {"path": "/operators/3/keyScale/depthL", "range": [0, 99]},
+    "title": "Depth Left",
+    "group": {"idParent": "op4keyScale"}
+  },
+  {"ui": "label", "rect": [18, 14, 2, 1], "classes": ["centerSmall"], "title": "Dpth L", "group": {"idParent": "op4keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [23, 14, 1, 1],
+    "doc": {"path": "/operators/3/keyScale/depthR", "range": [0, 99]},
+    "title": "Depth Right",
+    "group": {"idParent": "op4keyScale"}
+  },
+  {"ui": "label", "rect": [21, 14, 2, 1], "classes": ["centerSmall"], "title": "Dpth R", "group": {"idParent": "op4keyScale"}},
+  {
+    "ui": "slider",
+    "rect": [20, 15, 4, 1],
+    "doc": {"path": "/operators/3/keyScale/rate", "range": [0, 99]},
+    "title": "Rate",
+    "group": {"idParent": "op4keyScale"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [18, 15, 2, 1], "classes": ["centerSmall"], "title": "Rate", "group": {"idParent": "op4keyScale"}},
+  {
+    "ui": "select",
+    "rect": [19, 16, 2, 1],
+    "doc": {"path": "/operators/3/keyScale/curveL", "range": [0, 99]},
+    "title": "Curve Left",
+    "group": {"idParent": "op4keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [18, 16, 1, 1], "classes": ["smText"], "title": "Curve Left", "group": {"idParent": "op4keyScale"}},
+  {
+    "ui": "select",
+    "rect": [22, 16, 2, 1],
+    "doc": {"path": "/operators/3/keyScale/curveR", "range": [0, 99]},
+    "title": "Curve Right",
+    "group": {"idParent": "op4keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [21, 16, 1, 1], "classes": ["smText"], "title": "Curve Right", "group": {"idParent": "op4keyScale"}},
+  {
+    "ui": "select",
+    "rect": [21, 17, 3, 1],
+    "doc": {"path": "/operators/3/keyScale/breakpoint", "range": [0, 99]},
+    "title": "Breakpoint",
+    "group": {"idParent": "op4keyScale"},
+    "rangeList": "breakpoint"
+  },
+  {"ui": "label", "rect": [18, 17, 3, 1], "classes": ["centerSmall"], "title": "Breakpoint", "group": {"idParent": "op4keyScale"}},
+  {"ui": "block", "classes": ["operators"], "rect": [0, 18, 24, 4], "title": "Operator 5", "group": {"id": "op5"}},
+  {"ui": "label", "rect": [0, 18, 5, 1], "classes": ["opTitle"], "title": "Operator 5", "group": {"idParent": "op5"}},
+  {"ui": "label", "rect": [0, 19, 2, 1], "title": "Freq.", "group": {"idParent": "op5"}},
+  {
+    "title": "Frequency",
+    "rect": [2, 19, 2, 1],
+    "ui": "number",
+    "doc": {"path": "/operators/4/freq", "range": [0, 31.99], "multipleOf": 0.01},
+    "cm": {"control": "NRPN", "controlNo": [0, 6], "ranges": [{"range": [0, 3199]}]},
+    "group": {"idParent": "op5"}
+  },
+  {"ui": "label", "rect": [4, 19, 1, 1], "title": "Hz"},
+  {"ui": "label", "rect": [0, 21, 2, 1], "title": "Osc."},
+  {
+    "ui": "select",
+    "rect": [2, 21, 3, 1],
+    "doc": {"path": "/operators/4/oscMode"},
+    "links": [{"resource": "X-GetRange", "id": "oscMode", "role": "range"}],
+    "group": {"idParent": "op5"},
+    "title": "Osc Mode",
+    "rangeList": "oscMode"
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 20, 3, 1],
+    "bipolar": true,
+    "doc": {"path": "/operators/4/detune", "range": [-7, 7]},
+    "cm": {"control": "CC", "controlNo": [17]},
+    "title": "Detune",
+    "group": {"idParent": "op5"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [0, 20, 2, 1], "title": "Detune"},
+  {
+    "ui": "slider",
+    "rect": [5, 18, 1, 3],
+    "doc": {"path": "/operators/4/volume", "range": [0, 99]},
+    "title": "Volume",
+    "group": {"idParent": "op5"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [5, 21, 1, 1], "classes": ["center"], "title": "Vol."},
+  {
+    "ui": "slider",
+    "rect": [6, 18, 1, 3],
+    "doc": {"path": "/operators/4/velocitySens", "range": [0, 7]},
+    "title": "Velocity Sens",
+    "group": {"idParent": "op5"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [6, 21, 1, 1], "classes": ["center"], "title": "Velo."},
+  {
+    "ui": "slider",
+    "rect": [7, 18, 1, 3],
+    "doc": {"path": "/operators/4/lfoAmpModSens", "range": [0, 7]},
+    "group": {"idParent": "op5"},
+    "title": "LFO Mod",
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [7, 21, 1, 1], "classes": ["center", "smText"], "title": "LFO mod sen"},
+  {"ui": "block", "rect": [8, 18, 10, 4], "title": "Pitch Envelope", "group": {"idParent": "op5", "id": "op5env", "role": "envelope"}},
+  {"ui": "label", "rect": [8, 18, 2, 2], "title": "Rates", "group": {"idParent": "op5env"}},
+  {"ui": "label", "rect": [8, 20, 2, 2], "title": "Levels", "group": {"idParent": "op5env"}},
+  {
+    "ui": "knob",
+    "rect": [10, 18, 2, 2],
+    "doc": {"path": "/operators/4/rates/0", "range": [0, 99]},
+    "title": "Rate 1",
+    "group": {"idParent": "op5env", "role": "x", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [10, 20, 2, 2],
+    "doc": {"path": "/operators/4/levels/0", "range": [0, 99]},
+    "title": "Level 1",
+    "group": {"idParent": "op5env", "role": "y", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 18, 2, 2],
+    "doc": {"path": "/operators/4/rates/1", "range": [0, 99]},
+    "title": "Rate 2",
+    "group": {"idParent": "op5env", "role": "x", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 20, 2, 2],
+    "doc": {"path": "/operators/4/levels/1", "range": [0, 99]},
+    "title": "Level 2",
+    "group": {"idParent": "op5env", "role": "y", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 18, 2, 2],
+    "doc": {"path": "/operators/4/rates/2", "range": [0, 99]},
+    "title": "Rate 3",
+    "group": {"idParent": "op5env", "role": "x", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 20, 2, 2],
+    "doc": {"path": "/operators/4/levels/2", "range": [0, 99]},
+    "title": "Level 3",
+    "group": {"idParent": "op5env", "role": "y", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 18, 2, 2],
+    "doc": {"path": "/operators/4/rates/3", "range": [0, 99]},
+    "title": "Rate 4",
+    "group": {"idParent": "op5env", "role": "x", "point": 3}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 20, 2, 2],
+    "doc": {"path": "/operators/4/levels/3", "range": [0, 99]},
+    "title": "Level 4",
+    "group": {"idParent": "op5env", "role": "y", "point": 3}
+  },
+  {"ui": "block", "rect": [18, 18, 6, 4], "title": "KeyScale", "group": {"idParent": "op5", "id": "op5keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [20, 18, 1, 1],
+    "doc": {"path": "/operators/4/keyScale/depthL", "range": [0, 99]},
+    "title": "Depth Left",
+    "group": {"idParent": "op5keyScale"}
+  },
+  {"ui": "label", "rect": [18, 18, 2, 1], "classes": ["centerSmall"], "title": "Dpth L", "group": {"idParent": "op5keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [23, 18, 1, 1],
+    "doc": {"path": "/operators/4/keyScale/depthR", "range": [0, 99]},
+    "title": "Depth Right",
+    "group": {"idParent": "op5keyScale"}
+  },
+  {"ui": "label", "rect": [21, 18, 2, 1], "classes": ["centerSmall"], "title": "Dpth R", "group": {"idParent": "op5keyScale"}},
+  {
+    "ui": "slider",
+    "rect": [20, 19, 4, 1],
+    "doc": {"path": "/operators/4/keyScale/rate", "range": [0, 99]},
+    "title": "Rate",
+    "group": {"idParent": "op5keyScale"},
+    "minimum": 0,
+    "maximum": 127
+  },
+  {"ui": "label", "rect": [18, 19, 2, 1], "classes": ["centerSmall"], "title": "Rate", "group": {"idParent": "op5keyScale"}},
+  {
+    "ui": "select",
+    "rect": [19, 20, 2, 1],
+    "doc": {"path": "/operators/4/keyScale/curveL", "range": [0, 99]},
+    "title": "Curve Left",
+    "group": {"idParent": "op5keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [18, 20, 1, 1], "classes": ["smText"], "title": "Curve Left", "group": {"idParent": "op5keyScale"}},
+  {
+    "ui": "select",
+    "rect": [22, 20, 2, 1],
+    "doc": {"path": "/operators/4/keyScale/curveR", "range": [0, 99]},
+    "title": "Curve Right",
+    "group": {"idParent": "op5keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [21, 20, 1, 1], "classes": ["smText"], "title": "Curve Right", "group": {"idParent": "op5keyScale"}},
+  {
+    "ui": "select",
+    "rect": [21, 21, 3, 1],
+    "doc": {"path": "/operators/4/keyScale/breakpoint", "range": [0, 99]},
+    "title": "Breakpoint",
+    "group": {"idParent": "op5keyScale"},
+    "rangeList": "breakpoint"
+  },
+  {"ui": "label", "rect": [18, 21, 3, 1], "classes": ["centerSmall"], "title": "Breakpoint", "group": {"idParent": "op5keyScale"}},
+  {"ui": "block", "classes": ["operators"], "rect": [0, 22, 24, 4], "title": "Operator 6", "group": {"id": "op6"}},
+  {"ui": "label", "rect": [0, 22, 5, 1], "classes": ["opTitle"], "title": "Operator 6", "group": {"idParent": "op6"}},
+  {"ui": "label", "rect": [0, 23, 2, 1], "title": "Freq.", "group": {"idParent": "op6"}},
+  {
+    "title": "Frequency",
+    "rect": [2, 23, 2, 1],
+    "ui": "number",
+    "doc": {"path": "/operators/5/freq", "range": [0, 31.99], "multipleOf": 0.01},
+    "cm": {"control": "NRPN", "controlNo": [0, 7], "ranges": [{"range": [0, 3199]}]},
+    "group": {"idParent": "op6"}
+  },
+  {"ui": "label", "rect": [4, 23, 1, 1], "title": "Hz"},
+  {"ui": "label", "rect": [0, 25, 2, 1], "title": "Osc."},
+  {
+    "ui": "select",
+    "rect": [2, 25, 3, 1],
+    "doc": {"path": "/operators/5/oscMode"},
+    "links": [{"resource": "X-GetRange", "id": "oscMode", "role": "range"}],
+    "group": {"idParent": "op6"},
+    "title": "Osc Mode",
+    "rangeList": "oscMode"
+  },
+  {
+    "ui": "slider",
+    "rect": [2, 24, 3, 1],
+    "bipolar": true,
+    "doc": {"path": "/operators/5/detune", "range": [-7, 7]},
+    "cm": {"control": "CC", "controlNo": [18]},
+    "title": "Detune",
+    "group": {"idParent": "op6"}
+  },
+  {"ui": "label", "rect": [0, 24, 2, 1], "title": "Detune"},
+  {"ui": "slider", "rect": [5, 22, 1, 3], "doc": {"path": "/operators/5/volume", "range": [0, 99]}, "title": "Volume", "group": {"idParent": "op6"}},
+  {"ui": "label", "rect": [5, 25, 1, 1], "classes": ["center"], "title": "Vol."},
+  {
+    "ui": "slider",
+    "rect": [6, 22, 1, 3],
+    "doc": {"path": "/operators/5/velocitySens", "range": [0, 7]},
+    "title": "Velocity Sens",
+    "group": {"idParent": "op6"}
+  },
+  {"ui": "label", "rect": [6, 25, 1, 1], "classes": ["center"], "title": "Velo."},
+  {
+    "ui": "slider",
+    "rect": [7, 22, 1, 3],
+    "doc": {"path": "/operators/5/lfoAmpModSens", "range": [0, 7]},
+    "group": {"idParent": "op6"},
+    "title": "LFO Mod"
+  },
+  {"ui": "label", "rect": [7, 25, 1, 1], "classes": ["center", "smText"], "title": "LFO mod sen"},
+  {"ui": "block", "rect": [8, 22, 10, 4], "title": "Pitch Envelope", "group": {"idParent": "op6", "id": "op6env", "role": "envelope"}},
+  {"ui": "label", "rect": [8, 22, 2, 2], "title": "Rates", "group": {"idParent": "op6env"}},
+  {"ui": "label", "rect": [8, 24, 2, 2], "title": "Levels", "group": {"idParent": "op6env"}},
+  {
+    "ui": "knob",
+    "rect": [10, 22, 2, 2],
+    "doc": {"path": "/operators/5/rates/0", "range": [0, 99]},
+    "title": "Rate 1",
+    "group": {"idParent": "op6env", "role": "x", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 26, 2, 2],
+    "doc": {"path": "/operators/5/levels/0", "range": [0, 99]},
+    "title": "Level 1",
+    "group": {"idParent": "op6env", "role": "y", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 22, 2, 2],
+    "doc": {"path": "/operators/5/rates/1", "range": [0, 99]},
+    "title": "Rate 2",
+    "group": {"idParent": "op6env", "role": "x", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 24, 2, 2],
+    "doc": {"path": "/operators/5/levels/1", "range": [0, 99]},
+    "title": "Level 2",
+    "group": {"idParent": "op6env", "role": "y", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 22, 2, 2],
+    "doc": {"path": "/operators/5/rates/2", "range": [0, 99]},
+    "title": "Rate 3",
+    "group": {"idParent": "op6env", "role": "x", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [14, 24, 2, 2],
+    "doc": {"path": "/operators/5/levels/2", "range": [0, 99]},
+    "title": "Level 3",
+    "group": {"idParent": "op6env", "role": "y", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 22, 2, 2],
+    "doc": {"path": "/operators/5/rates/3", "range": [0, 99]},
+    "title": "Rate 4",
+    "group": {"idParent": "op6env", "role": "x", "point": 3}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 24, 2, 2],
+    "doc": {"path": "/operators/5/levels/3", "range": [0, 99]},
+    "title": "Level 4",
+    "group": {"idParent": "op6env", "role": "y", "point": 3}
+  },
+  {"ui": "block", "rect": [18, 22, 6, 4], "title": "KeyScale", "group": {"idParent": "op6", "id": "op6keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [20, 22, 1, 1],
+    "doc": {"path": "/operators/5/keyScale/depthL", "range": [0, 99]},
+    "title": "Depth Left",
+    "group": {"idParent": "op6keyScale"}
+  },
+  {"ui": "label", "rect": [18, 22, 2, 1], "classes": ["centerSmall"], "title": "Dpth L", "group": {"idParent": "op6keyScale"}},
+  {
+    "ui": "knob",
+    "rect": [23, 22, 1, 1],
+    "doc": {"path": "/operators/5/keyScale/depthR", "range": [0, 99]},
+    "title": "Depth Right",
+    "group": {"idParent": "op6keyScale"}
+  },
+  {"ui": "label", "rect": [21, 22, 2, 1], "classes": ["centerSmall"], "title": "Dpth R", "group": {"idParent": "op6keyScale"}},
+  {
+    "ui": "slider",
+    "rect": [20, 23, 4, 1],
+    "doc": {"path": "/operators/5/keyScale/rate", "range": [0, 99]},
+    "title": "Rate",
+    "group": {"idParent": "op6keyScale"}
+  },
+  {"ui": "label", "rect": [18, 23, 2, 1], "classes": ["centerSmall"], "title": "Rate", "group": {"idParent": "op6keyScale"}},
+  {
+    "ui": "select",
+    "rect": [19, 24, 2, 1],
+    "doc": {"path": "/operators/5/keyScale/curveL", "range": [0, 99]},
+    "title": "Curve Left",
+    "group": {"idParent": "op6keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [18, 24, 1, 1], "classes": ["smText"], "title": "Curve Left", "group": {"idParent": "op6keyScale"}},
+  {
+    "ui": "select",
+    "rect": [22, 24, 2, 1],
+    "doc": {"path": "/operators/5/keyScale/curveR", "range": [0, 99]},
+    "title": "Curve Right",
+    "group": {"idParent": "op6keyScale"},
+    "rangeList": "curves"
+  },
+  {"ui": "label", "rect": [21, 24, 1, 1], "classes": ["smText"], "title": "Curve Right", "group": {"idParent": "op6keyScale"}},
+  {"ui": "label", "rect": [18, 25, 3, 1], "classes": ["centerSmall"], "title": "Breakpoint", "group": {"idParent": "op6keyScale"}},
+  {
+    "ui": "select",
+    "rect": [21, 25, 3, 1],
+    "doc": {"path": "/operators/5/keyScale/breakpoint", "range": [0, 99]},
+    "title": "Breakpoint",
+    "group": {"idParent": "op6keyScale"},
+    "rangeList": "breakpoint"
+  },
+  {"ui": "label", "rect": [11, 0, 3, 1], "title": "Patch Name", "classes": ["whiteText"]},
+  {"ui": "style", "rect": [0, 0, 2, 2], "title": "whiteText", "style": {"textColor": "#FFFFFFFF"}},
+  {"ui": "text", "rect": [14, 0, 3, 1], "title": "Patch Name", "doc": {"path": "/name"}},
+  {"ui": "select", "rect": [20, 0, 4, 1], "title": "Algorithm", "rangeList": "algos", "doc": {"path": "/algorithm"}},
+  {"ui": "label", "rect": [18, 0, 2, 1], "title": "Algorithm", "classes": ["whiteText"]},
+  {"ui": "label", "rect": [0, 26, 2, 1], "title": "Feedback", "classes": ["whiteText"]},
+  {"ui": "slider", "rect": [2, 26, 4, 1], "title": "Feedback", "doc": {"path": "/feedback", "range": [0, 7]}},
+  {"ui": "label", "rect": [0, 27, 2, 1], "title": "Transpose", "classes": ["whiteText"]},
+  {"ui": "select", "rect": [2, 27, 4, 1], "title": "Transpose", "doc": {"path": "/transpose"}, "rangeList": "transpose"},
+  {"ui": "label", "rect": [0, 28, 2, 1], "title": "Osc. Key Sync", "classes": ["whiteText"]},
+  {"ui": "switch", "rect": [2, 28, 4, 1], "title": "Osc. Key Sync", "doc": {"path": "/transpose"}},
+  {"ui": "block", "rect": [6, 26, 8, 4], "title": "LFO", "group": {"id": "LFO"}},
+  {"ui": "select", "rect": [9, 27, 5, 1], "title": "Wave Form", "group": {"idParent": "LFO"}, "rangeList": "lfos"},
+  {"ui": "label", "rect": [6, 26, 3, 1], "title": "LFO", "group": {"idParent": "LFO"}, "classes": ["whiteText"]},
+  {"ui": "label", "rect": [6, 27, 3, 1], "title": "Wave form", "classes": ["whiteText"], "group": {"idParent": "LFO"}},
+  {"ui": "label", "rect": [10, 26, 2, 1], "title": "Sync", "group": {"idParent": "LFO"}, "classes": ["whiteText"]},
+  {"ui": "switch", "rect": [12, 26, 2, 1], "title": "Sync"},
+  {"ui": "slider", "rect": [8, 28, 2, 1], "title": "Speed", "group": {"idParent": "LFO"}, "doc": {"path": "/lfoSpeed", "range": [99, 0]}},
+  {"ui": "slider", "rect": [12, 28, 2, 1], "title": "Delay", "doc": {"path": "/lfoDelay", "range": [99, 0]}, "group": {"idParent": "LFO"}},
+  {
+    "ui": "slider",
+    "rect": [12, 29, 2, 1],
+    "title": "Pitch Mod. Dpth",
+    "doc": {"path": "/lfoPitchModDepth", "range": [99, 0]},
+    "group": {"idParent": "LFO"}
+  },
+  {
+    "ui": "slider",
+    "rect": [8, 29, 2, 1],
+    "title": "Pitch Amp. Dpth",
+    "group": {"idParent": "LFO"},
+    "doc": {"path": "/lfoAmpModDepth", "range": [99, 0]}
+  },
+  {"ui": "label", "rect": [6, 28, 2, 1], "title": "Speed", "classes": ["whiteText"]},
+  {"ui": "label", "rect": [10, 28, 2, 1], "title": "Delay", "classes": ["whiteText"]},
+  {"ui": "label", "rect": [6, 29, 2, 1], "title": "Pitch Amp. Dpth", "classes": ["whiteText"]},
+  {"ui": "label", "rect": [10, 29, 2, 1], "title": "Pitch Mod. Dpth", "classes": ["whiteText"]},
+  {"ui": "block", "rect": [14, 26, 10, 4], "title": "Pitch Envelope", "group": {"id": "pitchEnv", "role": "envelope"}},
+  {"ui": "label", "rect": [14, 26, 2, 2], "title": "Rates", "group": {"idParent": "pitchEnv"}, "classes": ["whiteText"]},
+  {"ui": "label", "rect": [14, 28, 2, 2], "title": "Levels", "group": {"idParent": "pitchEnv"}, "classes": ["whiteText"]},
+  {
+    "ui": "knob",
+    "rect": [10, 22, 2, 2],
+    "doc": {"path": "/pitchEnvelope/rates/0", "range": [0, 99]},
+    "title": "Rate 1",
+    "group": {"idParent": "pitchEnv", "role": "x", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [16, 28, 2, 2],
+    "doc": {"path": "/pitchEnvelope/levels/0", "range": [0, 99]},
+    "title": "Level 1",
+    "group": {"idParent": "pitchEnv", "role": "y", "point": 0}
+  },
+  {
+    "ui": "knob",
+    "rect": [18, 26, 2, 2],
+    "doc": {"path": "/pitchEnvelope/rates/1", "range": [0, 99]},
+    "title": "Rate 2",
+    "group": {"idParent": "pitchEnv", "role": "x", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [18, 28, 2, 2],
+    "doc": {"path": "/pitchEnvelope/levels/1", "range": [0, 99]},
+    "title": "Level 2",
+    "group": {"idParent": "pitchEnv", "role": "y", "point": 1}
+  },
+  {
+    "ui": "knob",
+    "rect": [20, 26, 2, 2],
+    "doc": {"path": "/pitchEnvelope/rates/2", "range": [0, 99]},
+    "title": "Rate 3",
+    "group": {"idParent": "pitchEnv", "role": "x", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [20, 28, 2, 2],
+    "doc": {"path": "/pitchEnvelope/levels/2", "range": [0, 99]},
+    "title": "Level 3",
+    "group": {"idParent": "pitchEnv", "role": "y", "point": 2}
+  },
+  {
+    "ui": "knob",
+    "rect": [22, 26, 2, 2],
+    "doc": {"path": "/pitchEnvelope/rates/3", "range": [0, 99]},
+    "title": "Rate 4",
+    "group": {"idParent": "pitchEnv", "role": "x", "point": 3}
+  },
+  {
+    "ui": "knob",
+    "rect": [22, 28, 2, 2],
+    "doc": {"path": "/pitchEnvelope/levels/3", "range": [0, 99]},
+    "title": "Level 4",
+    "group": {"idParent": "pitchEnv", "role": "y", "point": 3}
+  },
+  {"ui": "button", "rect": [18, 1, 6, 1], "title": "FX", "links": [
+    {"resource": "UIList", "id": "fxGui", "role": "button", "data": {"resource":"X-ProgramEdit", "id":"singch1"}}
+  ]}
+]

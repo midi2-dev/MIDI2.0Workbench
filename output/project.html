@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Project</title>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="js/jquery.js"></script>
+
+    <script src="js/popper.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <script src="js/jstree/jstree.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-fileup.css" >
+    <script src="js/bootstrap.min.js"></script>
+    <link href="fa/css/all.css" rel="stylesheet">
+    <link href="js/jstree/themes/default/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/jsonformat.css" >
+
+    <link rel="stylesheet" href='js/jsonform/brutusin-json-forms.css'/>
+    <script src="js/jsonform/brutusin-json-forms.js"></script>
+    <script src="js/jsonform/brutusin-json-forms-bootstrap.js"></script>
+
+    <script src="js/NexusUI.min.js"></script>
+
+
+    <script>
+        const BrutusinForms = brutusin["json-forms"];
+        BrutusinForms.addDecorator(function (element, schema) {
+            if (element.tagName) {
+                var tagName = element.tagName.toLowerCase();
+                if (tagName === "input" && element.type !== "checkbox" || tagName === "textarea") {
+                    element.className += " form-control";
+                } else if (tagName === "select") {
+                    element.className += " chosen-select form-control";
+                } else if (tagName === "button") {
+                    if (element.className.match(/(^|\s)remove(\s|$)/)) {
+                        element.className += " fa fa-trash";
+                        while (element.firstChild) {
+                            element.removeChild(element.firstChild);
+                        }
+                    }
+                    element.className += " btn btn-primary  btn-xs";
+                } else if (tagName === "form") {
+                    element.className += " form-inline";
+                }
+            }
+        });
+        if (window.module) module = window.module;
+    </script>
+
+    <script src="app/project.js"></script>
+    <style>
+        #topnav .nav-link {
+            padding: 0;
+        }
+        #topnav .nav-item {
+            /*text-indent: -1em;*/
+            /*margin-left: 1em;*/
+        }
+
+        @media print {
+
+            .tab-pane{
+                page-break-before: always;
+            }
+            .tab-content>.tab-pane {
+                display: inherit;
+            }
+
+            .fade:not(.show) {
+                opacity: 100;
+            }
+
+            .hide-print {
+                display: none !important;
+            }
+
+            .form-control {
+                outline: none !important;
+                border: 0 !important;
+                background: transparent;
+                resize: none;
+            }
+            select.form-control{
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                text-indent: 1px;
+                text-overflow: '';
+            }
+            .maincol{
+                max-width: 100%;
+                width: 100%;
+                flex: auto;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container-fluid" style="position: relative;">
+
+    <div class="row">
+
+        <div class="col-md-2 mb-3 hide-print">
+<!--            <h3 class="mr-0 mr-md-2" data-pathText="/name"></h3>-->
+<!--            <hr/>-->
+
+            <ul class="nav nav-pills flex-column" id="topnav" role="tablist">
+                <li id="tbProjDet" class="nav-item remoteEndpoint">
+                    <a class="nav-link active" id="projectDetails-tab" data-toggle="tab" href="#projectdetailstab"
+                       role="tab" aria-selected="true"><b>MIDI Device Details</b></a>
+                </li>
+
+
+                <li class="nav-item isMidi1" data-visibleiftrue="/dinTransport"><hr/> </li>
+                <li class="nav-item isMidi1" data-visibleiftrue="/dinTransport">
+                    <a class="nav-link" id="uart-tab" data-toggle="tab" href="#uarttab" role="tab" aria-selected="false">5 Pin DIN/TRS</a>
+                </li>
+
+
+
+
+                <li class="nav-item remoteEndpoint"><hr/> </li>
+
+                <li class="nav-item umpStream">
+                    <a class="nav-link" id="ump-tab" data-toggle="tab" href="#umptab" role="tab" aria-selected="false">
+                        UMP
+                    </a>
+                </li>
+                <li class="nav-item umpStream">
+                    <a class="nav-link ml-3" id="ump-USB-tab" data-toggle="tab" href="#umpUSBtab" role="tab" aria-selected="false">
+                        Transport Information
+                    </a>
+                </li>
+                <li class="nav-item umpStream">
+                    <a class="nav-link ml-3" id="umpTesting" data-toggle="tab" href="#umpTestingTab" role="tab" aria-selected="false">
+                        UMP Testing</a>
+                </li>
+
+                <li class="nav-item remoteEndpoint">
+                    <a class="nav-link" id="midi10cvm-tab" data-toggle="tab" href="#midi10cvmtab" role="tab" aria-selected="false">MIDI CVM</a>
+                </li>
+                <li class="nav-item remoteEndpoint">
+                    <a class="nav-link ml-3" id="midiControlMess-tab" data-toggle="tab" href="#midiControlMesstab" role="tab" aria-selected="false">Control Messages</a>
+                </li>
+
+                <li class="nav-item remoteEndpoint">
+                    <a class="nav-link" id="system-tab" data-toggle="tab" href="#systemstab" role="tab" aria-selected="false">System Messages</a>
+                </li>
+
+                <li class="nav-item remoteEndpoint">
+                    <a class="nav-link" id="sysex-tab" data-toggle="tab" href="#sysextab" role="tab" aria-selected="false">SysEx7</a>
+                </li>
+
+
+
+                <li class="nav-item umpStream">
+                    <a class="nav-link" id="mixeddata-tab" data-toggle="tab" href="#mixeddatatab" role="tab"
+                       aria-selected="false">SysEx8 &amp; MDS</a>
+                </li>
+                <li class="nav-item umpStream" data-visibleiftrue="/remoteEndpoint/jrrxSupported,/remoteEndpoint/jrtxSupported">
+                    <a class="nav-link" id="jr-tab" data-toggle="tab" href="#jrtab" role="tab" aria-selected="false">Jitter Reduction</a>
+                </li>
+
+                <li class="nav-item remoteEndpoint">
+                    <a class="nav-link" id="extensions-tab" data-toggle="tab" href="#extensiontab" role="tab" aria-selected="false">Extensions</a>
+                </li>
+
+
+
+
+
+<!--                <li class="nav-item" data-visibleiftrue="/mpeSupported">-->
+<!--                    <a class="nav-link" id="mpe-tab" data-toggle="tab" href="#mpetab" role="tab" aria-selected="false">MPE</a>-->
+<!--                </li>-->
+
+                <li class="nav-item functionBlock"><hr/></li>
+                <li class="nav-item functionBlock">
+                    <a class="nav-link" id="functionBlock" data-toggle="tab" href="#functionBlocktab" role="tab" aria-selected="false">Function Block</a>
+                </li>
+                <li class="nav-item midiciDevice"><hr/></li>
+
+
+                <li class="nav-item midiciDevice">
+                    <a class="nav-link" id="midici-tab" data-toggle="tab" href="#midicitab" role="tab" aria-selected="false"><b>MIDI-CI</b></a>
+                </li>
+
+                <li class="nav-item" data-visibleiftrue="/supported/protocol">
+                    <a class="nav-link" id="protocol-tab" data-toggle="tab" href="#protocoltab" role="tab" aria-selected="false">Protocol Negotiation</a>
+                </li>
+
+
+                <li class="nav-item" data-visibleiftrue="/supported/profile">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profiletab" role="tab" aria-selected="false">Profiles</a>
+                </li>
+
+
+                <li class="nav-item" data-visibleiftrue="/supported/pe">
+                    <a class="nav-link" id="pe-tab" data-toggle="tab" href="#petabTesting" role="tab" aria-selected="false">Property Exchange</a>
+                </li>
+<!--                <li class="nav-item" data-visibleiftrue="/supported/pe">-->
+<!--                    <a class="nav-link ml-3" data-toggle="tab" href="#petabResourceList" role="tab" aria-selected="false">Resource List</a>-->
+<!--                </li>-->
+                <li class="nav-item" data-visibleiftrue="/supported/pe">
+                    <a class="nav-link ml-3" data-toggle="tab" href="#petabRaw" role="tab" aria-selected="false">Resource Data</a>
+                </li>
+
+                <li id="peNavSection"  class="nav-item" data-visibleiftrue="/supported/pe">
+                    <a class="nav-link ml-3" data-toggle="tab" href="#petab" role="tab" aria-selected="false">Checklist</a>
+                </li>
+
+                <li class="nav-item" data-visibleiftrue="/supported/procInq">
+                     <a class="nav-link" id="processInquiry-tab" data-toggle="tab" href="#processInquiryTab" role="tab" aria-selected="false">Process Inquiry</a>
+                </li>
+                <li class="nav-item" data-visibleiftrue="/processInquiryMIDIReport">
+                     <a class="nav-link ml-3" id="midiMessageReport" data-toggle="tab" href="#piTabMIDIMsgReport" role="tab" aria-selected="false">MIDI Message Report</a>
+                </li>
+
+
+            </ul>
+        </div>
+
+        <div class="col-sm-10 maincol">
+            <ul class="nav justify-content-end hide-print" style="border-bottom: 1px solid #dee2e6;">
+                <li class="nav-item" style="position: absolute; left: 5em;">
+                    <h2 class="display-7 text-center" data-pathText="/name"></h2>
+                </li>
+                <li class="nav-item remoteEndpoint">
+                    <a class="nav-link"  data-ipcmsg="showCertification" data-xdata="project" href="#">Logo Impl. Checklist</a>
+                </li>
+                <li class="nav-item">
+                    <a id="ddbLink" class="nav-link" data-ipcmsg="openDebug" href="#">
+                        Debug
+                        <span class="badge badge-warning"></span>
+                        <span class="badge badge-danger"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-ipcmsg="openTools" href="#">Tools</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="print" href="#">Print</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-ipcmsg="showHelp" data-xdata="index" href="#">Help</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" data-target="#exitModal" href="#">Exit</a>
+                </li>
+
+            </ul>
+
+            <div class="tab-content" id="pageTabContent">
+                <div class="tab-pane fade active show remoteEndpoint" id="projectdetailstab">
+                    <h4>MIDI Device Details</h4>
+                    <hr/>
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <table class="table table-striped table-bordered table-sm">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Device Information</th>
+                                    <th scope="col">Text</th>
+                                    <th scope="col" style="width: 250px">SysEx Device Id Fields</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">Manufacturer</th>
+                                    <td><input class="form-control" data-path="/device/manufacturer"/></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7" data-path="/device/manufacturerId/0"/>
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7" data-path="/device/manufacturerId/1"/>
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7" data-path="/device/manufacturerId/2"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Family</th>
+                                    <td><input class="form-control" data-path="/device/family"/></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7" data-path="/device/familyId/0"/>
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7" data-path="/device/familyId/1"/>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Model</th>
+                                    <td><input class="form-control" data-path="/device/model"/></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7" data-path="/device/modelId/0"/>
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7" data-path="/device/modelId/1"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Firmware/Version</th>
+                                    <td><input class="form-control"  data-path="/device/version"/></td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7"  data-path="/device/versionId/0"/>
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7"  data-path="/device/versionId/1"/>
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7"  data-path="/device/versionId/2"/>
+                                            <input type="text" min="0" max="127" step="1" class="form-control hexinput7"  data-path="/device/versionId/3"/>
+                                        </div>
+                                    </td>
+                                </tr>
+
+<!--                                <tr>-->
+<!--                                    <th scope="row">Serial Number</th>-->
+<!--                                    <td colspan="5"><span data-pathText="/device/serialNumber"/></td>-->
+<!--                                </tr>-->
+
+                                <tr>
+                                    <th scope="row" colspan="3">&nbsp;</th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Device Type</th>
+                                    <td colspan="2">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" data-path="/type/controller">
+                                            <label class="form-check-label">Controller - Transmits Note Messages</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" data-path="/type/tg">
+                                            <label class="form-check-label">Tone Generator - Receives Note Messages and produces an output</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" data-path="/type/other">
+                                            <label class="form-check-label">Other</label>
+                                        </div>
+
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Release Date</th>
+                                    <td colspan="2"><input type="date" class="form-control"  data-path="/releaseDate"/></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Contact Name</th>
+                                    <td colspan="2"><input class="form-control" data-path="/contactName"/></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Email</th>
+                                    <td colspan="2"><input type="email" class="form-control"  data-path="/email"/></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Phone</th>
+                                    <td colspan="2"><input type="tel" class="form-control" data-path="/phone"/></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Address</th>
+                                    <td colspan="2">
+                                        <textarea class="form-control"  data-path="/address"></textarea>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div class="card">
+                        <div class="card-header">
+                            Transport
+                        </div>
+                        <div class="card-body p-0">
+                            <table class="table table-striped table-bordered table-sm">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Y/N</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+
+                                <tr class ="isMidi1">
+                                    <td>
+                                        5 Pin DIN/TRS UART Transport
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" data-path="/dinTransport"/></td>
+                                </tr>
+                                <tr class ="isMidi1">
+                                    <td scope="row">
+                                        BLE MIDI 1.0
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" data-path="/bleTransport"/></td>
+                                </tr>
+                                <tr class ="isMidi1">
+                                    <td scope="row">
+                                        RTP-MIDI 1.0
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" data-path="/rtpmidiTransport"/></td>
+                                </tr>
+
+                                <tr class ="isMidi1">
+                                    <td >
+                                        <a href="https://www.usb.org/sites/default/files/midi10.pdf">USB MIDI 1.0 Class Compliant</a>
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" data-path="/usbmidi1Transport"/></td>
+                                </tr>
+                                <tr class ="umpStream">
+                                    <td>
+                                        <a href="https://www.usb.org/sites/default/files/USB%20MIDI%20v2_0.pdf">
+                                            USB MIDI 2.0 Class Compliant
+                                        </a>
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" data-path="/usbmidi2Transport"/></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade isMidi1" id="uarttab">
+                    <h4>5 Pin DIN / TRS - UART MIDI 1.0 byte stream</h4>
+                    <hr/>
+                    <div id="uarttabCheck"></div>
+
+                </div>
+
+                <div class="tab-pane fade umpStream" id="umptab">
+                    <h4>Universal Message Packet Support</h4>
+                    <hr/>
+                    <table class="table table-striped table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">MIDI Endpoint Data</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Version</td>
+                            <td><span data-pathText="/remoteEndpoint/versionMajor"></span>.<span data-pathText="/remoteEndpoint/versionMinor"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Static Function Blocks</td>
+                            <td><span data-pathText="/remoteEndpoint/staticBlocks"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Number Of Function Blocks</td>
+                            <td><span data-pathText="/remoteEndpoint/numOfBlocks"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td><span data-pathText="/remoteEndpoint/name"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Product Instance Id</td>
+                            <td><span data-pathText="/remoteEndpoint/prodInstId"></span></td>
+                        </tr>
+                        <tr>
+                            <td>MIDI 2.0 CVM supported</td>
+                            <td>
+                                <span data-pathText="/remoteEndpoint/midi2Supported" data-bool="1"></span>
+                                <span data-visibleiftrue="/remoteEndpoint/midi2On"> (active)</span>
+                                <button class="form-control btn btn-secondary btn-sm p-0"
+                                        data-visibleifalltrue="/remoteEndpoint/midi2Supported"
+                                        data-ipcmsg="midi2On"
+                                        style="max-width: 170px;float: right;" >
+                                    Request MIDI 2.0 Protocol
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MIDI 1.0 CVM supported</td>
+                            <td>
+                                <span data-pathText="/remoteEndpoint/midi1Supported" data-bool="1"></span>
+                                <span data-visibleiftrue="/remoteEndpoint/midi1On"> (active)</span>
+                                <button class="form-control btn btn-secondary btn-sm p-0"
+                                        data-visibleiftrue="/remoteEndpoint/midi1Supported"
+                                        data-ipcmsg="midi1On"
+                                        style="max-width: 170px;float: right;" >
+                                    Request MIDI 1.0 Protocol
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jitter Reduction Receive Support</td>
+                            <td><span data-pathText="/remoteEndpoint/jrrxSupported" data-bool="1"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Jitter Reduction Transmit Support</td>
+                            <td><span data-pathText="/remoteEndpoint/jrtxSupported" data-bool="1"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr/>
+
+                    <h4 data-visibleiftrue="/remoteEndpoint/rawFunctionBlocks/0">Function Blocks on the MIDI Endpoint</h4>
+                    <table  data-visibleiftrue="/remoteEndpoint/rawFunctionBlocks/0" class="table table-striped table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Idx</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Active</th>
+                            <th scope="col">First Gr.</th>
+                            <th scope="col"># of Grs.</th>
+                            <th scope="col">Dir</th>
+
+                            <th scope="col">CI MFV</th>
+                            <th scope="col">M1?</th>
+                            <th scope="col">S8 Max</th>
+                        </tr>
+                        </thead>
+                        <tbody id="FBLIST"></tbody>
+                    </table>
+
+                    <div id="umptabCheck"></div>
+                </div>
+                <div class="tab-pane fade umpStream" id="umpUSBtab">
+                    <h4>UMP Transport Information</h4>
+                    <hr/>
+                    <h5 data-visibleiftrue="/remoteEndpoint/usbDetails/groupBlocks">USB Group Terminal Blocks on the MIDI Endpoint</h5>
+                    <table  data-visibleiftrue="/remoteEndpoint/usbDetails/groupBlocks" class="table table-striped table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Idx</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">First Gr.</th>
+                            <th scope="col"># of Grs.</th>
+                            <th scope="col">Dir</th>
+                            <th scope="col">Protocol</th>
+                        </tr>
+                        </thead>
+                        <tbody id="GBLIST"></tbody>
+                    </table>
+
+                    <h5 data-visibleiftrue="/remoteEndpoint/usbDetails">USB Descriptor Details</h5>
+                    <table  data-visibleiftrue="/remoteEndpoint/usbDetails" class="table table-striped table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Descriptor</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Expected Value</th>
+                            <th scope="col">Valid</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><th colspan="4">Interface</th></tr>
+                        <tr>
+                            <td>bLength</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bLength" class="hexinput7"/></td>
+                            <td>0x09</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bLength==9">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bLength!=9">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bDescriptorType</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bDescriptorType" class="hexinput7"/></td>
+                            <td>INTERFACE(0x04)</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bDescriptorType==4">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bDescriptorType!=4">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bInterfaceNumber</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceNumber" class="hexinput7"/></td>
+                            <td></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>bAlternateSetting</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bAlternateSetting" class="hexinput7"/></td>
+                            <td>0x01 Preferred</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>bNumEndpoints</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bNumEndpoints" class="hexinput7"/></td>
+                            <td></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>bInterfaceClass</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass" class="hexinput7"/></td>
+                            <td>AUDIO(0x01)</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass==1">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass!=1">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bInterfaceSubClass</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass" class="hexinput7"/></td>
+                            <td>MIDISTREAMING(0x03)</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass==3">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass!=3">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bInterfaceProtocol</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol" class="hexinput7"/></td>
+                            <td>0x00 - Unused</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol==0">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol!=0">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>iInterface</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/iInterface" class="hexinput7"/></td>
+                            <td></td>
+                            <td>-</td>
+                        </tr>
+                        <tr><th colspan="4">Class-Specific MS Interface Header Descriptor</th></tr>
+                        <tr>
+                            <td>bLength</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength" class="hexinput7"/></td>
+                            <td>0x07</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength==7">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength!=7">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bDescriptorType</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType" class="hexinput7"/></td>
+                            <td>CS_INTERFACE(0x24)</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType==36">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType!=36">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bDescriptorSubtype</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype" class="hexinput7"/></td>
+                            <td>MS_HEADER(0x01)</td>
+                            <td>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype==1">Y</span>
+                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype!=1">N</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bcdMSC</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bcdMSC" class="hexinput16"/></td>
+                            <td>0x0200</td>
+                            <td><span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bcdMSC==512">Y</span> </td>
+                        </tr>
+                        <tr>
+                            <td>wTotalLength</td>
+                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/wTotalLength" class="hexinput16"/></td>
+                            <td>0x0007</td>
+                            <td><span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/wTotalLength==7">Y</span> </td>
+                        </tr>
+                        </tbody>
+                        <tbody id="usbendpoints">
+                        </tbody>
+
+                        <tbody id="grptrmblks">
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="tab-pane fade umpStream" id="umpTestingTab">
+                    <h4>UMP Testing</h4>
+                    <hr/>
+                    <div class="hide-print">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >Group</span>
+                            </div>
+                            <input id="umpKeyGr" type="number" value="1" step="1" min="1" max="16" class="form-control" />
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >Channel</span>
+                            </div>
+                            <input id="umpKeyCh" type="number" value="1" step="1" min="1" max="16" class="form-control" />
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >CVM</span>
+                            </div>
+                            <input id="umpKeyCVM" type="number" value="1" step="1" min="1" max="2" class="form-control" />
+                        </div>
+                        <div id="pianoKeys" style="height: 150px"></div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >CC</span>
+                            </div>
+                            <input id="umpCCNum" type="number" value="0" step="1" min="0" max="127" class="form-control" />
+                            <input id="umpCCVal" type="range" value="0" step="1" min="0" max="127" class="form-control" />
+
+                        </div>
+                        <hr/>
+                        <div>
+                            <h5>UMP Message Builder and Send</h5>
+                            <div class="form-group">
+                                <label for="UBmessagetype" class="col-form-label">Message Type</label>
+                                <select id="UBmessagetype" class="form-control">
+                                    <option value="-1">--please choose--</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="UBstatus" class="col-form-label">Status</label>
+                                <select id="UBstatus" class="form-control">
+                                </select>
+                            </div>
+                            <div id="buildUMP"></div>
+                        </div>
+                        <hr/>
+                        <h5>Raw UMP Message Send</h5>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >UMP</span>
+                            </div>
+                            <input id="ump1" type="text" placeholder="32bit word (hex or decimal)" class="form-control" />
+                            <input id="ump2" type="text" placeholder="32bit word (hex or decimal)" class="form-control" />
+                            <input id="ump3" type="text" placeholder="32bit word (hex or decimal)" class="form-control" />
+                            <input id="ump4" type="text" placeholder="32bit word (hex or decimal)" class="form-control" />
+                            <button id="sendraw" class="form-control">Send</button>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="tab-pane fade remoteEndpoint" id="midi10cvmtab">
+                    <h4>MIDI Channel Voice Message Support</h4>
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead><tr><th colspan="2">Type</th><th>Recognize</th><th>Transmit</th></tr></thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="2">MIDI channels</td>
+                            <td><textarea class="form-control form-control-sm" data-path="/implementation/midiChannels/transmit"></textarea></td>
+                            <td><textarea class="form-control form-control-sm" data-path="/implementation/midiChannels/recognize"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Note Numbers</td>
+                            <td><textarea class="form-control form-control-sm" data-path="/implementation/noteNumbers/transmit"></textarea></td>
+                            <td><textarea class="form-control form-control-sm" data-path="/implementation/noteNumbers/recognize"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Program change</td>
+                            <td><textarea class="form-control form-control-sm" data-path="/implementation/programChange/transmit"></textarea></td>
+                            <td><textarea class="form-control form-control-sm" data-path="/implementation/programChange/recognize"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Bank Select Response</td>
+                            <td></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/bankSelect/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="6">Modes Supported</td>
+                            <td>Mode 1: Omni-On, Poly</td>
+                            <td></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mode1/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>Mode 2: Omni-On, Mono</td>
+                            <td colspan="1"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mode2/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>Mode 3: Omni-Off, Poly</td>
+                            <td colspan="1"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mode3/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>Mode 4: Omni-Off, Mono</td><td colspan="1"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mode4/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>Multi Mode</td><td colspan="1"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/modeMulti/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>MPE</td><td colspan="1"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/mpeSupported"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Note On Velocity</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/noteOnVelocity/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/noteOnVelocity/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Note Off Velocity</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/noteOfVelocity/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/noteOfVelocity/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Channel AfterTouch</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/channelAfterTouch/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/channelAfterTouch/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Poly (Key) Aftertouch</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/polyTouch/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/polyTouch/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Pitch Bend</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/pitchBend/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/pitchBend/recognize"></td>
+                        </tr>
+
+                        <!--<tr><th colspan="2">MIDI Timing and Synchronization</th><th></th><th></th><th></th></tr><tr><td colspan="2">MIDI Machine Control</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mmc/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mmc/recognize"></td><td rowspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/mmc/remarks"></textarea></td></tr><tr><td rowspan="2">MIDI Show Control</td><td>Available</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/midiShowControl/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/midiShowControl/recognize"></td><td rowspan="2"><textarea class="form-control form-control-sm" data-path="/implementation/msc/remarks"></textarea></td></tr><tr><td> MSC Level supported</td><td colspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/mscLevel/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/mscLevel/recognize"></textarea></td></tr><tr><th colspan="2">Extensions Compatibility</th><th></th><th></th><th></th></tr><tr><td rowspan="2">General MIDI</td><td>General MIDI compatible? (level)</td><td><textarea class="form-control form-control-sm" data-path="/implementation/gmCompatible/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/gmCompatible/recognize"></textarea></td><td rowspan="2"><textarea class="form-control form-control-sm" data-path="/implementation/gm/remarks"></textarea></td></tr><tr><td> Is GM default power-up mode? (level)</td><td colspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/gmDefPowerUp/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/gmDefPowerUp/recognize"></textarea></td></tr><tr><td rowspan="2">DLS</td><td>DLS compatible? (level)</td><td><textarea class="form-control form-control-sm" data-path="/implementation/dlsCompatible/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/dlsCompatible/recognize"></textarea></td><td rowspan="2"><textarea class="form-control form-control-sm" data-path="/implementation/dls/remarks"></textarea></td></tr><tr><td> DLS File Type(s)</td><td colspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/dlsFileType/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/dlsFileType/recognize"></textarea></td></tr><tr><td colspan="2">Standard MIDI Files (Type(s))</td><td><textarea class="form-control form-control-sm" data-path="/implementation/stdMidiFiles/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/stdMidiFiles/recognize"></textarea></td><td rowspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/stdMidiFiles/remarks"></textarea></td></tr><tr><td colspan="2">XMF Files (Type(s))</td><td><textarea class="form-control form-control-sm" data-path="/implementation/xmfFiles/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/xmfFiles/recognize"></textarea></td><td rowspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/xmfFiles/remarks"></textarea></td></tr><tr><td colspan="2">SP-MIDI compatible?</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/spMIDI/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/spMIDI/recognize"></td><td rowspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/spMIDI/remarks"></textarea></td></tr>-->
+                        </tbody>
+                    </table>
+                    <hr/>
+                    <div id="midiCvmtabCheck"></div>
+                </div>
+                <div class="tab-pane fade remoteEndpoint" id="midiControlMesstab">
+                    <h4>Defined MIDI Control Messages</h4>
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead><tr><th>Control #</th><th>Type</th><th>Recognize</th><th>Transmit</th><th></th></tr></thead>
+                        <tbody>
+                        <tr>
+                            <th colspan="5">Registered Controllers (RPN's)</th>
+                        </tr>
+                        <tr>
+                            <td>RPN 00</td><td>Pitch Bend Sensitivity</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn00/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn00/recognize"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>RPN 01</td><td>Channel Fine Tune</td><td colspan="1"><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn01/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn01/recognize"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>RPN 02</td><td>Channel Coarse Tune</td><td colspan="1"><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn02/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn02/recognize"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>RPN 03</td><td>Tuning Program Select</td><td colspan="1"><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn03/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn03/recognize"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>RPN 04</td><td>Tuning Bank Select</td><td colspan="1"><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn04/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn04/recognize"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>RPN 05</td><td>Modulation Depth Range</td><td colspan="1"><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn05/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn05/recognize"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>RPN 06</td><td>MPE MCM</td><td colspan="1"><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn06/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/rpn06/recognize"></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                        <thead><tr><th>Control #</th><th>Type</th><th>Recognize</th><th>Transmit</th><th>14 Bit</th></tr></thead>
+                        <tr>
+                            <th colspan="5">Control Change Messages</th>
+                        </tr>
+                        <tbody>
+                        <tr>
+                            <td>0</td><td>Bank Select</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc0/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc0/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc0/lsb"></td>
+                        </tr>
+                        <tr>
+                            <td>1</td><td>Modulation</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc1/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc1/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc1/lsb"></td>
+                        </tr>
+                        <tr>
+                            <td>2</td><td>Breath Controller</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc2/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc2/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc2/lsb"></td>
+                        </tr>
+                        <tr>
+                            <td>4</td><td>Foot Controller</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc4/transmit">
+                        </td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc4/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc4/lsb"></td>
+                        </tr><tr>
+                            <td>5</td><td>Portamento Time</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc5/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc5/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc5/lsb"></td>
+                        </tr><tr>
+                            <td>7</td><td>Volume</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc7/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc7/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc7/lsb"></td>
+                        </tr><tr>
+                            <td>8</td><td>Balance</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc8/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc8/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc8/lsb"></td>
+                        </tr><tr>
+                            <td>10</td><td>Pan</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc10/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc10/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc10/lsb"></td>
+                        </tr><tr>
+                            <td>11</td><td>Expression</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc11/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc11/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc11/lsb"></td>
+                        </tr><tr>
+                            <td>12</td><td>Effect Controller 1</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc12/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc12/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc12/lsb"></td>
+                        </tr><tr>
+                            <td>13</td><td>Effect Controller 2</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc13/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc13/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc13/lsb"></td>
+                        </tr><tr>
+                            <td>16</td><td>General Purpose Controller 1</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc16/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc16/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc16/lsb"></td>
+                        </tr><tr>
+                            <td>17</td><td>General Purpose Controller 2</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc17/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc17/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc17/lsb"></td>
+                        </tr><tr>
+                            <td>18</td><td>General Purpose Controller 3</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc18/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc18/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc18/lsb"></td>
+                        </tr><tr>
+                            <td>19</td><td>General Purpose Controller 4</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc19/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc19/recognize"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc19/lsb"></td>
+                        </tr><tr>
+                            <td>64</td><td>Sustain Pedal</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc64/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc64/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>65</td><td>Portamento On/Off</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc65/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc65/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>66</td><td>Sostenuto</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc66/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc66/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>67</td><td>Soft Pedal</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc67/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc67/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>68</td><td>Legato FootSwitch</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc68/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc68/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>69</td><td>Hold 2</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc69/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc69/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>70</td><td>Sound Controller 1 (default: Sound Variation)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc70/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc70/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>71</td><td>Sound Controller 2 (default: Timbre / Harmonic Quality)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc71/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc71/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>72</td><td>Sound Controller 3 (default: Release Time)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc72/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc72/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>73</td><td>Sound Controller 4 (default: Attack)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc73/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc73/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>74</td><td>Sound Controller 5 (default: Brightness)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc74/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc74/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>75</td><td>Sound Controller 6 (GM2 default: Decay Time)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc75/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc75/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>76</td><td>Sound Controller 7 (GM2 default: Vibrato Rate)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc76/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc76/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>77</td><td>Sound Controller 8 (GM2 default: Vibrato Depth)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc77/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc77/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>78</td><td>Sound Controller 9 (GM2 default: Vibrato Delay)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc78/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc78/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>79</td><td>Sound Controller 10 (GM2 default: Undefined) </td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc79/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc79/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>80</td><td>General Purpose Controller 5</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc80/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc80/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>81</td><td>General Purpose Controller 6</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc81/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc81/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>82</td><td>General Purpose Controller 7</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc82/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc82/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>83</td><td>General Purpose Controller 8</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc83/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc83/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>84</td><td>Portamento Control</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc84/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc84/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>88</td><td>High Resolution Velocity (MIDI 1 Only)</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc84/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc84/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>91</td><td>Effects 1 Depth (default: Reverb Send)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc91/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc91/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>92</td><td>Effects 2 Depth (default: Tremolo Depth)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc92/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc92/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>93</td><td>Effects 3 Depth (default: Chorus Send)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc93/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc93/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>94</td><td>Effects 4 Depth (default: Celeste [Detune] Depth)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc94/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc94/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>95</td><td>Effects 5 Depth (default: Phaser Depth)</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc95/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc95/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>120</td><td>All Sound Off</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc120/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc120/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>121</td><td>Reset All Controllers</td><td>
+                            <input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc121/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc121/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>122</td><td>Local On/Off</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc122/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc122/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>123</td><td>All Notes Off</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc123/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc123/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>124</td><td>Omni Mode Off</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc124/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc124/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>125</td><td>Omni Mode On</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc125/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc125/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>126</td><td>Mono Mode</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc126/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc126/recognize"></td>
+                            <td></td>
+                        </tr><tr>
+                            <td>127</td><td>Poly Mode</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc127/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementationCC/cc127/recognize"></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="tab-pane fade remoteEndpoint" id="systemstab">
+                    <h4>System Message Support</h4>
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead><tr><th></th><th>Type</th><th>Recognize</th><th>Transmit</th></tr></thead>
+                        <tbody>
+                        <tr>
+                            <td>0xF1</td>
+                            <td>MIDI Time Code</td>
+                            <td>
+                                <input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mtc/transmit">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-control form-control-sm" data-path="/implementation/mtc/recognize">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>0xF2</td>
+                            <td>Song Position Pointer</td>
+                            <td>
+                                <input type="checkbox" class="form-control form-control-sm" data-path="/implementation/songPosPoint/transmit">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-control form-control-sm" data-path="/implementation/songPosPoint/recognize">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>0xF3</td>
+                            <td>Song Select</td>
+                            <td>
+                                <input type="checkbox" class="form-control form-control-sm" data-path="/implementation/songSelect/transmit">
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-control form-control-sm" data-path="/implementation/songSelect/recognize">
+                            </td>
+                        <tr>
+                            <td>0xF6</td>
+                            <td>Tune Request</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/tuneRequest/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/tuneRequest/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>0xF8</td>
+                            <td>Timing Clock</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/midiClock/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/midiClock/recognize"></td>
+                        </tr>
+
+                        <tr>
+                            <td>0xF9</td>
+                            <td>Start</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/start/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/start/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>0xFA</td>
+                            <td>Continue</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/continue/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/continue/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>0xFB</td>
+                            <td>Stop</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/stop/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/stop/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>0xFE</td>
+                            <td>Active Sense</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/activeSense/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/activeSense/recognize"></td>
+                        </tr>
+                        <tr>
+                            <td>0xFF</td>
+                            <td>System Reset</td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/systemReset/transmit"></td>
+                            <td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/systemReset/recognize"></td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                    <hr/>
+                    <div id="systemstabCheck"></div>
+                </div>
+                <div class="tab-pane fade remoteEndpoint" id="sysextab">
+                    <h4>Universal System Exclusive Support</h4>
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead><tr><th>Type</th><th>Support Level</th></tr></thead>
+                        <tbody>
+                        <tr>
+                            <td>Sample Dump Standard</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/sds">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Device Inquiry</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/deviceInquiry">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>File Dump</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/fileDump">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>MIDI Tuning</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/midiTuning">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Master Volume</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/masterVolume">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Master Balance</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/masterBalance">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Notation Information</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/notationInfo">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Turn GM1 System On</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/gm1On">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Turn GM2 System On</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/gm2On">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Turn GM System Off</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/gmOff">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DLS-1</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/dls1">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>File Reference</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/fileRef">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Controller Destination</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/controllerDest">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Key-based Instrument Ctrl</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/keyBasedInstCtrl">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Fine/Coarse Tune</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/fineCoarseTune">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MIDI Machine Control</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/mmc">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MIDI Show Control</td>
+                            <td>
+                                <select class="form-control form-control-sm" data-path="/implementation/msc">
+                                    <option value="">None</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="full">Full</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr/>
+                    <div id="sysexCheckList"></div>
+                </div>
+                <div class="tab-pane fade umpStream" id="mixeddatatab">
+                    <h3>SysEx8 &amp; Mixed Data Set</h3>
+                    <hr/>
+                    <div id="mixeddataCheckList"></div>
+                </div>
+
+                <div class="tab-pane fade umpStream" id="jrtab">
+                    <h3>Jitter Reduction</h3>
+                    <hr/>
+                    <div id="jrCheckList"></div>
+
+                </div>
+                <div class="tab-pane fade remoteEndpoint" id="extensiontab">
+                    <h4>Extensions Compatibility</h4>
+                    <hr/>
+                    <table class="table table-striped table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col" colspan="2"></th>
+                            <th scope="col">Transmit/Export</th>
+                            <th scope="col">Recognize/Import</th>
+                            <th scope="col">Remarks</th>
+                        </tr>
+                        </thead>
+                        <tbody id="implbody">
+                            <tr><td rowspan="2">General MIDI</td><td>General MIDI compatible? (level)</td><td><textarea class="form-control form-control-sm" data-path="/implementation/gmCompatible/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/gmCompatible/recognize"></textarea></td><td rowspan="2"><textarea class="form-control form-control-sm" data-path="/implementation/gm/remarks"></textarea></td></tr><tr><td> Is GM default power-up mode? (level)</td><td colspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/gmDefPowerUp/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/gmDefPowerUp/recognize"></textarea></td></tr><tr><td rowspan="2">DLS</td><td>DLS compatible? (level)</td><td><textarea class="form-control form-control-sm" data-path="/implementation/dlsCompatible/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/dlsCompatible/recognize"></textarea></td><td rowspan="2"><textarea class="form-control form-control-sm" data-path="/implementation/dls/remarks"></textarea></td></tr><tr><td> DLS File Type(s)</td><td colspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/dlsFileType/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/dlsFileType/recognize"></textarea></td></tr><tr><td colspan="2">Standard MIDI Files (Type(s))</td><td><textarea class="form-control form-control-sm" data-path="/implementation/stdMidiFiles/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/stdMidiFiles/recognize"></textarea></td><td rowspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/stdMidiFiles/remarks"></textarea></td></tr><tr><td colspan="2">XMF Files (Type(s))</td><td><textarea class="form-control form-control-sm" data-path="/implementation/xmfFiles/transmit"></textarea></td><td><textarea class="form-control form-control-sm" data-path="/implementation/xmfFiles/recognize"></textarea></td><td rowspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/xmfFiles/remarks"></textarea></td></tr><tr><td colspan="2">SP-MIDI compatible?</td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/spMIDI/transmit"></td><td><input type="checkbox" class="form-control form-control-sm" data-path="/implementation/spMIDI/recognize"></td><td rowspan="1"><textarea class="form-control form-control-sm" data-path="/implementation/spMIDI/remarks"></textarea></td></tr></tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade functionBlock" id="functionBlocktab">
+                    <h3>Function Block</h3>
+                    <hr/>
+                    <table class="table table-striped table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Function Block Settings</th>
+                            <th scope="col" width="200"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Function Block Index</td>
+                            <td align="right"><span class="hexinput7" data-pathText="/functionBlock/fbIdx"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Function Block Name</td>
+                            <td align="right"><span data-pathText="/functionBlock/name"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Active</td>
+                            <td align="right"><span data-pathText="/functionBlock/active"></span></td>
+                        </tr>
+                        <tr>
+                            <td>First Group</td>
+                            <td align="right">
+                                <span  data-zerobased="true" data-pathText="/functionBlock/firstGroup"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Number of Group</td>
+                            <td align="right"><span data-pathText="/functionBlock/numberGroups"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Direction</td>
+                            <td align="right"><span class="hexinput7" data-pathText="/functionBlock/direction"></span></td>
+                        </tr>
+
+                        <tr>
+                            <td>MIDI-CI Message Format Version</td>
+                            <td align="right"><span class="hexinput7" data-pathText="/functionBlock/ciVersion"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Is MIDI 1</td>
+                            <td align="right"><span class="hexinput7" data-pathText="/functionBlock/isMIDI1"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Max SysEx 8 Streams</td>
+                            <td align="right"><span data-pathText="/functionBlock/sysex8Streams"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade midiciDevice" id="midicitab">
+                    <h4>MIDI Capability Inquiry Support</h4>
+                    <hr/>
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <table class="table table-striped table-bordered table-sm">
+                                <thead>
+                                <tr>
+                                    <th scope="col">MIDI-CI Settings</th>
+                                    <th scope="col" width="200"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Message Format Version</td>
+                                        <td align="right"><span class="hexinput7" data-pathText="/messageFormatVersion"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>MUID</td>
+                                        <td align="right"><span data-pathText="/MUID"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Manufacturer</td>
+                                        <td align="right">
+                                            <span data-pathText="/device/manufacturer"></span>
+                                            <br/>
+                                            <span class="hexinput7" data-pathText="/device/manufacturerId/0"></span>&nbsp;
+                                            <span class="hexinput7" data-pathText="/device/manufacturerId/1"></span>&nbsp;
+                                            <span class="hexinput7" data-pathText="/device/manufacturerId/2"></span>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Family Id</td>
+                                        <td align="right">
+                                            <span class="hexinput7" data-pathText="/device/familyId/0"></span>&nbsp;
+                                            <span class="hexinput7" data-pathText="/device/familyId/1"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Model Id</td>
+                                        <td align="right">
+                                            <span class="hexinput7" data-pathText="/device/modelId/0"></span>&nbsp;
+                                            <span class="hexinput7" data-pathText="/device/modelId/1"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Software Revision Level</td>
+                                        <td align="right">
+                                            <span class="hexinput7" data-pathText="/device/versionId/0"></span>&nbsp;
+                                            <span class="hexinput7" data-pathText="/device/versionId/1"></span>&nbsp;
+                                            <span class="hexinput7" data-pathText="/device/versionId/2"></span>&nbsp;
+                                            <span class="hexinput7" data-pathText="/device/versionId/3"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Max Sysex</td>
+                                        <td align="right"><span data-pathText="/maxSysex"></span> bytes</td>
+                                    </tr>
+                                    <tr data-visibleifequal="/messageFormatVersion>=2">
+                                        <td>Output Path Id</td>
+                                        <td align="right"><span class="hexinput7" data-pathText="/outputPathId"></span></td>
+                                    </tr>
+                                    <tr data-visibleifequal="/messageFormatVersion>=2">
+                                        <td>Function Block Index</td>
+                                        <td align="right"><span class="hexinput7" data-pathText="/fbIdx"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">&nbsp;</td>
+                                    </tr>
+
+                                </tbody>
+                                <thead data-visibleifequal="/messageFormatVersion>=2">
+                                    <tr>
+                                        <th scope="col">MIDI Endpoint Data</th>
+                                        <th scope="col" width="200"></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-visibleifequal="/messageFormatVersion>=2">
+                                    <tr>
+                                        <td>
+                                            <a data-ipcmsg="getEndpointInfo" data-xdata="3" href="#">
+                                                Product Instance Id (0x03)
+                                            </a>
+                                        </td>
+                                        <td align="right"><span data-pathText="/endpointInformation/status_3"></span></td>
+                                    </tr>
+                                </tbody>
+                                <thead>
+                                <tr>
+                                    <th scope="col">MIDI-CI Categories Supported</th>
+                                    <th scope="col" align="center">Y/N</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td scope="row">
+                                        <b>Protocol Negotiation</b><br/>
+                                        Device uses MIDI-CI to negotiate to a protocol that includes the use of any MIDI
+                                        2.0 Voice Channel Messages (Message Type 0x4), or Utility Messages (Message Type
+                                        0x0), or Data Messages (Message Type 0x5).
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" disabled data-path="/supported/protocol"/></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">
+                                        <b>Profile Configuration</b><br/>
+                                        Device Has at least 1 MIDI-CI Profile which is reported in a Reply to Profile Inquiry message
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" disabled data-path="/supported/profile"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td scope="row">
+                                        <b>Property Exchange</b><br/>
+                                        Device Receives a MIDI-CI PE Inquiry for “ResourceList” and replies with at
+                                        least 1 Resource object in the list or Can act as Initiator and send MIDI-CI PE
+                                        Inquiries for “ResourceList” and at least 1 other PE Resource.
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" class="form-control" disabled data-path="/supported/pe"/>
+                                    </td>
+                                </tr>
+
+
+
+                                <tr data-visibleifequal="/messageFormatVersion>=2">
+                                    <td scope="row">
+                                        <b>Process Inquiry</b><br/>
+                                        MIDI-CI Device Supports discovering the current state of supported MIDI Messages.
+                                    </td>
+                                    <td><input type="checkbox" class="form-control" disabled data-path="/supported/procInq"/></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div id="midiCiChecklist"></div>
+                </div>
+                <div class="tab-pane fade midiciDevice" id="protocoltab">
+                    <button type="button" data-ipcmsg="protocolNegotiation"
+                            class="btn btn-outline-secondary btn-sm">Refresh Protocol List</button>
+                    <table class="table table-striped table-sm  table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">Protocols</th>
+                            <th scope="col">Value</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td scope="row">MIDI 1.0 Protocol in UMP with 32 and 64 bit Messages
+
+                            </td>
+                            <td>
+                                <span data-visibleifequal="/currentProtocolId=umpmidi10">(Active)</span>
+                                <span data-visibleifequal="/currentProtocolId!=umpmidi10">
+                                    <button type="button" data-ipcmsg="setNewProtocol" data-xdata="umpmidi10"
+                                        data-visibleiftrue="/umpmidi10"
+                                        class="btn btn-outline-secondary btn-sm">Set New Protocol</button>
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td scope="row">MIDI 1.0 Protocol in UMP with 32, 64, 96 and 128 bit Messages
+                                <span data-visibleifequal="/currentProtocolId=umpmidi10mixed">(Active)</span>
+                            </td>
+                            <td>
+                                <span data-visibleifequal="/currentProtocolId=umpmidi10mixed">(Active)</span>
+                                <span data-visibleifequal="/currentProtocolId!=umpmidi10mixed">
+                                    <button type="button" data-ipcmsg="setNewProtocol" data-xdata="umpmidi10mixed"
+                                        data-visibleiftrue="/umpmidi10mixed"
+                                        class="btn btn-outline-secondary btn-sm">Set New Protocol</button>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="row">MIDI 1.0 Protocol in UMP with 32 and 64 bit Messages and JR Timestamps
+                            </td>
+
+                            <td>
+                                <span data-visibleifequal="/currentProtocolId=umpmidi10mixed">(Active)</span>
+                                <span data-visibleifequal="/currentProtocolId!=umpmidi10jr">
+                                    <button type="button" data-ipcmsg="setNewProtocol" data-xdata="umpmidi10jr"
+                                            data-visibleiftrue="/umpmidi10jr"
+                                            class="btn btn-outline-secondary btn-sm">Set New Protocol</button>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="row">MIDI 1.0 Protocol in UMP with 32, 64, 96 and 128 bit Messages and JR Timestamps
+                            </td>
+
+                            <td>
+                                <span data-visibleifequal="/currentProtocolId=umpmidi10mixedjr">(Active)</span>
+                                <span data-visibleifequal="/currentProtocolId!=umpmidi10mixedjr">
+                                    <button type="button" data-ipcmsg="setNewProtocol" data-xdata="umpmidi10mixedjr"
+                                            data-visibleiftrue="/umpmidi10mixedjr"
+                                            class="btn btn-outline-secondary btn-sm">Set New Protocol</button>
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td scope="row">MIDI 2.0 Protocol in UMP
+                            </td>
+
+                            <td>
+                                <span data-visibleifequal="/currentProtocolId=umpmidi20">(Active)</span>
+                                <span data-visibleifequal="/currentProtocolId!=umpmidi20">
+                                    <button type="button" data-ipcmsg="setNewProtocol" data-xdata="umpmidi20"
+                                            data-visibleiftrue="/umpmidi20"
+                                            class="btn btn-outline-secondary btn-sm">Set New Protocol</button>
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td scope="row">MIDI 2.0 Protocol in UMP with JR Timestamps
+                            </td>
+
+                            <td>
+                                <span data-visibleifequal="/currentProtocolId=umpmidi20jr">(Active)</span>
+                                <span data-visibleifequal="/currentProtocolId!=umpmidi20jr">
+                                    <button type="button" data-ipcmsg="setNewProtocol" data-xdata="umpmidi20jr"
+                                            data-visibleiftrue="/umpmidi20jr"
+                                            class="btn btn-outline-secondary btn-sm">Set New Protocol</button>
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div id="protocolInteroperability"></div>
+                </div>
+
+                <div class="tab-pane fade accordion midiciDevice" id="profiletab" role="tabpanel" style="position: relative" >
+                    <h4>Profile Configuration</h4>
+
+                    <button type="button" id="profileCapability" style="position: absolute; top: 5px; right: 5px;"
+                            class="btn btn-outline-secondary btn-sm hide-print ">Refresh list of Profiles</button>
+
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th>Group</th>
+                            <th>Channel/Group/FB</th>
+                            <th>Profiles</th>
+                        </tr>
+                        </thead>
+                        <tbody id="profileOptions">
+
+                        </tbody>
+                    </table>
+                    <hr/>
+                    <div id="profileInteroperability"></div>
+
+                </div>
+
+                <div class="tab-pane fade hide-print midiciDevice" id="petabTesting" role="tabpanel" style="position: relative" >
+                    <h4>Property Exchange</h4>
+                    <hr/>
+                    <button type="button" id="peRefresh"
+                            class="btn btn-outline-secondary btn-sm"
+                            data-toggle="popover" data-html="true"
+                            title="PE Refresh will:"
+                            style="position: absolute; top: 5px; right: 5px;"
+                            data-content="<ul><li>Unsubscribe from all Resources</li><li>PE Capability Inquiry</li><li>Get ResourcesList</li><li>Rebuild Interface</li></ul>"
+                    >Refresh Property Exchange</button>
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="border border-primary  rounded p-2">
+                                    <h4 id="peDeviceInfoHeading" data-toggle="popover" data-html="true"
+                                        title="Property Data" style="cursor:pointer;" data-trigger="click"
+                                    >
+                                        DeviceInfo Resource
+                                    </h4>
+                                    <div id="peDeviceInfoDetails"></div>
+                                    <table class="w-100">
+                                        <tbody id="peDeviceLinks"></tbody>
+                                    </table>
+                                </div>
+
+                                <div id="peSimpleResources"></div>
+                            </div>
+                            <div class="col-8">
+                                <div id="peModeListLinks" style="position:relative;"
+                                     class="border rounded p-2">
+                                    <h4 id="peModeListHeading" data-toggle="popover" data-html="true"
+                                        title="Property Data" style="cursor:pointer;">ModeList Resource Property Data</h4>
+                                    <table id="peModeListTable"  data-resource="CurrentMode"></table>
+                                </div>
+                                <br/>
+                                <div class="border-primary border rounded  p-2">
+                                    <h4 id="peChannelListHeading" data-toggle="popover" data-html="true"
+                                        title="Property Data" style="cursor:pointer;">ChannelList Resource Property Data</h4>
+                                    <div id="peChannelList" data-resource="ChannelList" style="position:relative;"></div>
+                                </div>
+
+                                <div class="border-primary border rounded  p-2">
+                                    <h4 id="pepeAllCtrlListHeading" data-toggle="popover" data-html="true"
+                                        title="Property Data" style="cursor:pointer;">AllCtrlList Resource Property Data</h4>
+                                    <div id="peAllCtrlList" data-resource="AllCtrlList" style="position:relative;"></div>
+                                </div>
+
+                                <br/>
+                                <div id="peStateList" data-resource="State" class="border rounded p-2">
+                                    <h4 id="peStateListHeading" data-toggle="popover" data-html="true"
+                                        title="Property Data" style="cursor:pointer;">StateList Resource Property Data</h4>
+                                    <div id="peStateListTable"></div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade midiciDevice" id="petab">
+                    <h4>Property Exchange</h4>
+
+                    <hr/>
+                    <div id="petabResourceList" ></div>
+                    <div class="tab-pane fade show active" id="peInteroperability" role="tabpanel" ></div>
+                </div>
+
+                <div class="tab-pane fade accordion hide-print" id="petabRaw" role="tabpanel" ></div>
+
+                <div class="tab-pane fade" id="processInquiryTab">
+                    <h3>Process Inquiry Checklist</h3>
+                    <hr/>
+                    <div id="piInteroperability"></div>
+                </div>
+                <div class="tab-pane fade hide-print" id="piTabMIDIMsgReport">
+                    <h3>Process Inquiry: MIDI Message Report</h3>
+                    <div class="input-group">
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            MTC Qtr Frame&nbsp;&nbsp;
+                                            <input type="checkbox" class="systemTypesBitmap" value="1">
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Song Position&nbsp;&nbsp;
+                                            <input type="checkbox"  class="systemTypesBitmap" value="2">
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Song Select&nbsp;&nbsp;
+                                            <input type="checkbox"  class="systemTypesBitmap" value="4">
+                                        </div>
+                                </div>
+                        </div>
+                    <div class="input-group">
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Program Change&nbsp;&nbsp;
+                                            <input type="checkbox"  class="chanContTypeBitmap" value="16" checked>
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Pitch Bend&nbsp;&nbsp;
+                                            <input type="checkbox"  class="chanContTypeBitmap" value="1" checked>
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Channel Pressure&nbsp;&nbsp;
+                                            <input type="checkbox"  class="chanContTypeBitmap" value="32" checked>
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            CC&nbsp;&nbsp;
+                                            <input type="checkbox"  class="chanContTypeBitmap" value="2" checked>
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            RPN&nbsp;&nbsp;
+                                            <input type="checkbox"  class="chanContTypeBitmap" value="4" checked>
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            NRPN&nbsp;&nbsp;
+                                            <input type="checkbox"  class="chanContTypeBitmap" value="8" checked>
+                                        </div>
+                                </div>
+                        </div>
+                    <div class="input-group">
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Notes&nbsp;&nbsp;
+                                            <input type="checkbox"   class="noteDataTypeBitmap" value="1">
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Per-Note PB&nbsp;&nbsp;
+                                            <input type="checkbox"  class="noteDataTypeBitmap" value="4">
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Poly Press.&nbsp;&nbsp;
+                                            <input type="checkbox" class="noteDataTypeBitmap" value="2">
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Ass. Per-Note Cont.&nbsp;&nbsp;
+                                            <input type="checkbox" class="noteDataTypeBitmap" value="16">
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Reg. Per-Note Cont.&nbsp;&nbsp;
+                                            <input type="checkbox" class="noteDataTypeBitmap" value="8">
+                                        </div>
+                                </div>
+                            <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                            Per-Note Mmt Msg&nbsp;&nbsp;
+                                            <input type="checkbox" class="noteDataTypeBitmap" value="32">
+                                        </div>
+                                </div>
+                        </div>
+                    <div class="input-group">
+                            <div class="input-group-prepend">
+                                    <span class="input-group-text" >Message Data Control</span>
+                                </div>
+                            <select class="form-control" id="MDdataControl" >
+                                    <option value="0">No Data</option>
+                                    <option value="1">Non-default Values</option>
+                                    <option value="127" selected>All Values</option>
+                                </select>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" >Group</span>
+                            </div>
+                            <input type="number" step="1" min="1" max="16" class="form-control" id="MDGroup1b" />
+                            <div class="input-group-prepend">
+                                    <span class="input-group-text" >Channel</span>
+                                </div>
+                            <select class="form-control" id="MDChannel" >
+                                    <option value="0" selected>1</option>
+                                    <option value="1">2</option>
+                                    <option value="2">3</option>
+                                    <option value="3">4</option>
+                                    <option value="4">5</option>
+                                    <option value="5">6</option>
+                                    <option value="6">7</option>
+                                    <option value="7">8</option>
+                                    <option value="8">9</option>
+                                    <option value="9">10</option>
+                                    <option value="10">11</option>
+                                    <option value="11">12</option>
+                                    <option value="12">13</option>
+                                    <option value="13">14</option>
+                                    <option value="14">15</option>
+                                    <option value="15">16</option>
+                                    <option value="127">Port</option>
+                                </select>
+                            <div class="input-group-prepend">
+                                    <button type="button" id="processInquiryTabMIDIGet"
+                                            class="btn btn-outline-secondary">Get MIDI Report
+                                    </button>
+                                </div>
+                        </div>
+                    <table class="table">
+                            <thead>
+                            <tr><th>Channel/Group/FB</th>
+                                    <th>Message</th>
+                                    <th>Value</th></tr>
+                            </thead>
+                            <tbody id="midiReportResults">
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="exitModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Exit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"  data-ipcmsg="exitProject">Exit</button>
+                    <button type="button" class="btn btn-warning midiciDevice"  data-ipcmsg="exitProjectINVRemote">Exit &amp; Invalidate this MIDI-CI Device's MUID</button>
+                    <button type="button" class="btn btn-warning midiciDevice"  data-ipcmsg="exitProjectINVLocal">Exit &amp; Invalidate Workbench MUID</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>

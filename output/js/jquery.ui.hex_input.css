@@ -1,0 +1,39 @@
+span.custom-hexInput input.custom-hexInput-input {
+  padding-right: 22px;
+  text-overflow: ellipsis;
+}
+
+span.custom-hexInput input.custom-hexInput-hexInput {
+  text-align: center;
+  width: 1.5em;
+}
+
+span.custom-hexInput label.custom-hexInput-hexInputLabel {
+  display: block;
+  text-align: center;
+  font-size: 70%;
+  opacity: 0.5;
+}
+
+span.custom-hexInput div.custom-hexInput-hexInputGroup {
+  display: inline-block;
+}
+
+span.custom-hexInput span.custom-hexInput-hexExpand {
+  left: -20px;
+}
+ 
+span.custom-hexInput span.custom-hexInput-hexExpand, 
+span.custom-hexInput span.custom-hexInput-hexCollapse {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+span.custom-hexInput span.custom-hexInput-hexCollapse {
+}
+
+span.custom-hexInput span.ui-icon {
+  cursor: pointer;
+}
+

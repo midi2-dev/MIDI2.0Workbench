@@ -1,0 +1,209 @@
+{
+  "algorithm": 9,
+  "feedback": 6,
+  "oscKeySync": true,
+  "operators": [
+    {
+      "rates": [
+        99,
+        25,
+        25,
+        61
+      ],
+      "levels": [
+        99,
+        98,
+        70,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "+LIN",
+        "rate": 0
+      },
+      "detune": 7,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 2
+    },
+    {
+      "rates": [
+        99,
+        39,
+        32,
+        46
+      ],
+      "levels": [
+        99,
+        98,
+        70,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "+LIN",
+        "rate": 0
+      },
+      "detune": 7,
+      "lfoAmpModSens": 0,
+      "velocitySens": 1,
+      "volume": 89,
+      "oscMode": "ratio",
+      "freq": 0
+    },
+    {
+      "rates": [
+        99,
+        39,
+        32,
+        71
+      ],
+      "levels": [
+        99,
+        98,
+        70,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "+LIN",
+        "rate": 0
+      },
+      "detune": -3,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        99,
+        39,
+        32,
+        71
+      ],
+      "levels": [
+        99,
+        98,
+        70,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 0
+      },
+      "detune": -2,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 0
+    },
+    {
+      "rates": [
+        99,
+        39,
+        32,
+        71
+      ],
+      "levels": [
+        99,
+        98,
+        70,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "+LIN",
+        "curveR": "+LIN",
+        "rate": 0
+      },
+      "detune": 1,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 0
+    },
+    {
+      "rates": [
+        99,
+        39,
+        32,
+        71
+      ],
+      "levels": [
+        99,
+        98,
+        70,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 39,
+        "depthL": 0,
+        "depthR": 59,
+        "curveL": "+LIN",
+        "curveR": "-LIN",
+        "rate": 0
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 80,
+      "oscMode": "ratio",
+      "freq": 0
+    }
+  ],
+  "name": "SYN-BASS 2",
+  "lfoSpeed": 37,
+  "lfoDelay": 0,
+  "lfoPitchModDepth": 0,
+  "lfoAmpModDepth": 0,
+  "lfoPitchModSens": 3,
+  "lfoWaveform": "sine",
+  "lfoSync": false,
+  "pitchEnvelope": {
+    "rates": [
+      84,
+      95,
+      95,
+      60
+    ],
+    "levels": [
+      50,
+      50,
+      50,
+      50
+    ]
+  },
+  "transpose": 12,
+  "chorus": {
+    "on": false,
+    "depth": 0.8,
+    "rate": 7.73
+  },
+  "delay": {
+    "on": false,
+    "delayTime": 0.42,
+    "feedback": 0.55,
+    "mix": 0.81
+  }
+}

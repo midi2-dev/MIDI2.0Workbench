@@ -1,0 +1,105 @@
+/*!
+ * JQuery UI Bootstrap v0.0.1-alpha ()
+ * Copyright 2015-2015 Vijay Dharap
+ * Licensed under MIT (https://github.com/dharapvj/jq-ui-makeover/blob/master/LICENSE)
+ */
+
+/*!
+ * jQuery UI CSS Framework @VERSION
+ * http://jqueryui.com
+ *
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/category/theming/
+ */
+.ui-helper-hidden {
+  display: none;
+}
+
+.ui-helper-hidden-accessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
+.ui-helper-reset {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  line-height: 1.3;
+  text-decoration: none;
+  list-style: none;
+  border: 0;
+  outline: 0;
+}
+
+.ui-helper-clearfix:before,
+.ui-helper-clearfix:after {
+  display: table;
+  border-collapse: collapse;
+  content: "";
+}
+
+.ui-helper-clearfix:after {
+  clear: both;
+}
+
+.ui-helper-zfix {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: Alpha(Opacity=0);
+  opacity: 0;
+  /* support: IE8 */
+}
+
+.ui-front {
+  z-index: 100;
+}
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-disabled {
+  pointer-events: none;
+  cursor: default !important;
+}
+
+/* Icons
+----------------------------------*/
+/* states and images */
+.ui-icon {
+  display: block;
+  overflow: hidden;
+  text-indent: -99999px;
+  background-repeat: no-repeat;
+}
+
+/* Misc visuals
+----------------------------------*/
+/* Overlays */
+.ui-widget-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+/*# sourceMappingURL=jq-ui-bootstrap.css.map */
+
+
+a.ui-spinner-button.ui-spinner-up::before {
+  content: "▲";
+}
+
+a.ui-spinner-button.ui-spinner-down::before {
+  content: "▼";
+}

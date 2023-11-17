@@ -1,0 +1,22 @@
+{
+  "main": "index.js",
+  "version": "0.1.0",
+  "name": "usb_midi_2",
+  "license": "MIT",
+  "scripts": {
+    "configure": "node-gyp configure",
+    "configuredebug": "node-gyp configure --debug",
+    "build": "node-gyp build",
+    "buildVerbose": "node-gyp build --verbose",
+    "builddebug": "node-gyp build --debug"
+  },
+  "devDependencies": {
+    "node-gyp": "^7.1.0"
+  },
+  "dependencies": {
+    "async": "^3.2.3",
+    "bindings": "^1.5.0",
+    "nan": "^2.14.1",
+    "usb": "^2.9.0"
+  }
+}

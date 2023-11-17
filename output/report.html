@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Implementation Testing Report V0.02</title>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="js/jquery.js"></script>
+
+    <script src="js/popper.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <script src="js/bootstrap.min.js"></script>
+    <link href="fa/css/all.css" rel="stylesheet">
+
+
+    <script>
+	if (window.module) module = window.module;
+    </script>
+
+    <script src="app/project.js"></script>
+    <style>
+        .maincol > div{
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid mt-5 pt-4" style="position: relative;">
+
+    <div class="row">
+        <div class="col-sm-12 maincol">
+            <div id="projectdetailstab">
+                <h1>MIDI Implementation Testing Report V0.02</h1>
+                <div class="card">
+                    <div class="card-header">MIDI Device Information</div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped table-bordered table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">Device Information</th>
+                                <th scope="col">Text</th>
+                                    <th scope="col" style="width: 250px">SysEx Device Id Fields</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">Manufacturer</th>
+                                <td><span data-pathText="/device/manufacturer"></span></td>
+                                <td>
+                                    <span class="hexinput7" data-pathText="/device/manufacturerId/0"></span>
+                                    <span class="hexinput7" data-pathText="/device/manufacturerId/1"></span>
+                                    <span class="hexinput7" data-pathText="/device/manufacturerId/2"></span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Family</th>
+                                <td><span data-pathText="/device/family"></span></td>
+                                <td>
+                                    <span class="hexinput7" data-pathText="/device/familyId/0"></span>
+                                    <span class="hexinput7" data-pathText="/device/familyId/1"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">Model</th>
+                                <td><span data-pathText="/device/model"></span></td>
+                                <td>
+                                    <span class="hexinput7" data-pathText="/device/modelId/0"></span>
+                                    <span class="hexinput7" data-pathText="/device/modelId/1"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Firmware/Version</th>
+                                <td><span data-pathText="/device/version"></span></td>
+                                <td>
+                                    <span class="hexinput7" data-pathText="/device/versionId/0"></span>
+                                    <span class="hexinput7" data-pathText="/device/versionId/1"></span>
+                                    <span class="hexinput7" data-pathText="/device/versionId/2"></span>
+                                    <span class="hexinput7" data-pathText="/device/versionId/3"></span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                    <th scope="row">Serial Number</th>
+                                    <td colspan="5"><span data-pathText="/device/serialNumber"/></td>
+                                </tr>
+
+                                <tr>
+                                <th scope="row" colspan="3">&nbsp;</th>
+                            </tr>
+                            <tr>
+                                <th scope="row">Release Date</th>
+                                <td colspan="2">
+                                    <span data-pathText="/releaseDate"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Contact Name</th>
+                                <td colspan="2">
+                                    <span data-pathText="/contactName"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td colspan="2">
+                                    <span data-pathText="/email"></span>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">Phone</th>
+                                <td colspan="2">
+                                    <span data-pathText="/phone"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Address</th>
+                                <td colspan="2">
+                                    <span style="white-space: pre;" data-pathText="/address"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                    <hr/>
+
+                <div class="card"
+                     data-visibleiftrue="/umpmidi20,/umpmidi20jr,/umpmidi10mixedjr,/umpmidi10jr,/umpmidi10mixedjr,/umpmidi10mixed,/supported/profile,/supported/pe">
+                    <div class="card-header">MIDI 2.0 features supported:</div>
+                    <div class="card-body p-0">
+                        <ul>
+                            <li data-visibleiftrue="/umpmidi20,/umpmidi20jr">MIDI 2.o Protocol Channel Voice Messages</li>
+                            <li data-visibleiftrue="/supported/profile">Profile Configuration</li>
+                            <li data-visibleiftrue="/supported/pe">Property Exchange</li>
+                            <li data-visibleiftrue="/umpmidi20jr,/umpmidi10mixedjr,/umpmidi10jr">Jitter Reduction Timestamps</li>
+                            <li data-visibleiftrue="/umpmidi20,/umpmidi10mixedjr,/umpmidi10mixed">SysEx8 and Mixed Data Set</li>
+                        </ul>
+                    </div>
+                </div>
+                <br/>
+
+                <div class="card"  data-visibleiftrue="/midiCIEnabled">
+                    <div class="card-header">MIDI-CI Support</div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped table-bordered table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">MIDI-CI Categories Supported</th>
+                                <th scope="col">Y/N</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td scope="row">
+                                    <b>Profile Configuration</b><br/>
+                                    Device Has at least 1 MIDI-CI Profile which is reported in a Reply to Profile Inquiry message
+                                </td>
+                                    <td><input type="checkbox" class="form-control" disabled data-path="/supported/profile"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI-CI requirements</li>
+                                        <li>Complete the Profile Configuration requirements</li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td scope="row">
+                                    <b>Property Exchange</b><br/>
+                                    Device Receives a MIDI-CI PE Inquiry for “ResourceList” and replies with at
+                                    least 1 Resource object in the list or Can act as Initiator and send MIDI-CI PE
+                                    Inquiries for “ResourceList” and at least 1 other PE Resource.
+                                </td>
+                                <td>
+                                        <input type="checkbox" class="form-control" disabled data-path="/supported/pe"/>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI-CI requirements</li>
+                                        <li>Complete the Property Exchange Configuration requirements</li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td scope="row">
+                                    <b>Protocol Negotiation</b><br/>
+                                    Device uses MIDI-CI to negotiate to a protocol that includes the use of any MIDI
+                                    2.0 Voice Channel Messages (Message Type 0x4), or Utility Messages (Message Type
+                                    0x0), or Data Messages (Message Type 0x5).
+                                </td>
+                                    <td><input type="checkbox" class="form-control" disabled data-path="/supported/protocol"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI-CI requirements</li>
+                                        <li>Complete the Protocol Negotiation Configuration requirements</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td scope="row">
+                                    <b>Process Inquiry</b><br/>
+                                    MIDI-CI Device Supports discovering the current state of supported MIDI Messages.
+                                </td>
+                                    <td><input type="checkbox" class="form-control" disabled data-path="/supported/procInq"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI-CI requirements</li>
+                                        <li>Complete the Process Inquiry requirements</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="card">
+                    <div class="card-header">Protocol/Transport Support</div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped table-bordered table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">Protocol Variations</th>
+                                <th scope="col">Y/N</th>
+                                <th scope="col" width="30%">Actions</th>
+                            </tr>
+                            </thead>
+                                <tbody data-visibleiftrue="/midi1Packet">
+                                    <tr>
+                                        <td scope="row">MIDI 1.0 Protocol</td>
+                                                <td><input type="checkbox" class="form-control" checked /></td>
+                                                <td>
+                                            <ul>
+                                                <li>Complete the MIDI 1.0 CVM requirements</li>
+                                                <li>Complete the System Messages requirements</li>
+                                                <li>Complete the SysEx Byte Stream requirements</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            MPE
+                                        </td>
+                                        <td><input type="checkbox" class="form-control" data-path="/mpeSupported"/></td>
+                                        <td>
+                                            <ul>
+                                                <li>Complete the MPE Requirements</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            UART Transport (DIN 5 Pin or TRS connector)
+                                        </td>
+                                        <td><input type="checkbox" class="form-control" data-path="/dinTransport"/></td>
+                                        <td>
+                                            <ul>
+                                                <li>Complete the UART Transport Requirements</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            BLE MIDI
+                                        </td>
+                                        <td><input type="checkbox" class="form-control" data-path="/bleTransport"/></td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">
+                                            RTP-MIDI
+                                        </td>
+                                        <td><input type="checkbox" class="form-control" data-path="/rtpmidiTransport"/></td>
+                                        <td>
+                                            <ul>
+                                                <li>Complete the RTP-MIDI Requirements</li>
+                                            </ul>
+                                        </td>
+                                        <!--                                    <td></td>-->
+                                    </tr>
+
+                                    <tr>
+                                        <td scope="row">
+                                            USB MIDI 1.0 Class Compliant
+                                        </td>
+                                        <td><input type="checkbox" class="form-control" data-path="/usbmidi1Transport"/></td>
+                                        <td>
+                                            <ul>
+                                                <li>Please follow the <a href="https://www.usb.org/sites/default/files/midi10.pdf">USB-IF MIDI Device Class 1.0 Specification</a></li>
+                                            </ul>
+                                        </td>
+                                        <!--                                    <td></td>-->
+                                    </tr>
+                                </tbody>
+                                <tbody  data-visibleiftrue="/umpPacket">
+
+
+
+                            <tr>
+                                <td scope="row">MIDI 1.0 Protocol in UMP with 32 and 64 bit Messages</td>
+                                <td>
+                                    <input type="checkbox" class="form-control" data-path="/umpmidi10"/>
+
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI 1.0 CVM requirements</li>
+                                        <li>Complete the UMP requirements</li>
+                                    </ul>
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td scope="row">MIDI 1.0 Protocol in UMP with 32, 64, 96 and 128 bit Messages</td>
+                                <td><input type="checkbox" class="form-control" data-path="/umpmidi10mixed"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI 1.0 CVM requirements</li>
+                                        <li>Complete the UMP requirements</li>
+                                        <li>Complete the SysEx8 and Mixed Data Set requirements</li>
+                                    </ul>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td scope="row">MIDI 1.0 Protocol in UMP with 32 and 64 bit Messages and JR Timestamps</td>
+                                <td><input type="checkbox" class="form-control" data-path="/umpmidi10jr"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI 1.0 CVM requirements</li>
+                                        <li>Complete the UMP requirements</li>
+                                        <li>Complete the JR Timestamps requirements</li>
+                                    </ul>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td scope="row">MIDI 1.0 Protocol in UMP with 32, 64, 96 and 128 bit Messages and JR Timestamps</td>
+                                <td><input type="checkbox" class="form-control" data-path="/umpmidi10mixedjr"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI 1.0 CVM requirements</li>
+                                        <li>Complete the UMP requirements</li>
+                                        <li>Complete the SysEx8 and Mixed Data Set requirements</li>
+                                        <li>Complete the JR Timestamps requirements</li>
+                                    </ul>
+                                </td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td scope="row">MIDI 2.0 Protocol in UMP</td>
+                                <td><input type="checkbox" class="form-control" data-path="/umpmidi20"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI 2.0 CVM requirements</li>
+                                        <li>Complete the UMP requirements</li>
+                                        <li>Complete the SysEx8 and Mixed Data Set requirements</li>
+                                    </ul>
+                                </td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td scope="row">MIDI 2.0 Protocol in UMP with JR Timestamps</td>
+                                <td><input type="checkbox" class="form-control" data-path="/umpmidi20jr"/></td>
+                                <td>
+                                    <ul>
+                                        <li>Complete the MIDI 2.0 CVM requirements</li>
+                                        <li>Complete the UMP requirements</li>
+                                        <li>Complete the SysEx8 and Mixed Data Set requirements</li>
+                                        <li>Complete the JR Timestamps requirements</li>
+                                    </ul>
+                                </td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td scope="row">
+                                    MIDI 1.0 CVM <--> MIDI 2.0 CVM
+                                </td>
+                                <td><input type="checkbox" class="form-control" data-path="/ump1to2translate"/></td>
+                                        <td colspan="2">
+                                    <ul>
+                                        <li>Complete the MIDI 1.0 CVM <--> MIDI 2.0 CVM Translation</li>
+                                    </ul>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td scope="row">
+                                            USB MIDI 2.0 Class Compliant
+                                </td>
+                                        <td><input type="checkbox" class="form-control" data-path="/usbmidi2Transport"/></td>
+                                        <td colspan="2">
+                                    <ul>
+                                        <li>Please follow the
+                                            <a href="https://www.usb.org/sites/default/files/USB%20MIDI%20v2_0.pdf">
+                                                USB-IF MIDI Device Class 2.0 Specification
+                                            </a>  and see Section 3.1.1 for information about also supporting the
+                                            <a href="https://www.usb.org/sites/default/files/midi10.pdf">
+                                                USB-IF MIDI Device Class 1.0 Specification
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                            </tr>
+                                    <tr data-visibleiftrue="/umpmidi10,/midi10,/umpmidi10mixedjr,/umpmidi10mixed">
+                                <td scope="row">
+                                            MPE (using MIDI 1.0 Protocol in UMP)
+                                </td>
+                                        <td><input type="checkbox" class="form-control" data-path="/mpeSupported"/></td>
+                                        <td colspan="2">
+                                    <ul>
+                                                <li>Complete the MPE Requirements</li>
+                                    </ul>
+                                </td>
+
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="midi10cvmtab"  data-visibleiftrue="/midi1Packet,/umpmidi10,/midi10,/umpmidi10mixedjr,/umpmidi10mixed"></div>
+            <div id="systemstab" data-visibleiftrue="/midi1Packet,/umpmidi10,/midi10,/umpmidi20,/umpmidi20jr,/umpmidi10mixedjr,/umpmidi10mixed"></div>
+            <div id="sysextab" data-visibleiftrue="/midi1Packet,/umpmidi10,/midi10,/umpmidi20,/umpmidi20jr,/umpmidi10mixedjr,/umpmidi10mixed"></div>
+            <div id="mpetab"  data-visibleiftrue="/mpeSupported"></div>
+
+            <div id="midicitab" data-visibleiftrue="/midiCIEnabled"></div>
+            <div id="protocoltab"  data-visibleiftrue="/supported/protocol"></div>
+            <div id="profileInteroperability" data-visibleiftrue="/supported/profile"></div>
+            <div id="peInteroperability" data-visibleiftrue="/supported/pe"></div>
+            <div id="piInteroperability" data-visibleiftrue="/supported/pi"></div>
+
+            <div class="tab-pane fade" id="processInquiryTab"></div>
+
+            <div  id="umptab" data-visibleiftrue="/umpPacket"></div>
+            <div id="midi20cvmtab"  data-visibleiftrue="/umpmidi20,/umpmidi20jr"></div>
+            <div id="transaltiontab"  data-visibleiftrue="/ump1to2translate"></div>
+            <div id="mixeddatatab" data-visibleiftrue="/umpmidi20,/umpmidi10mixedjr,/umpmidi10mixed"></div>
+            <div id="jrtab"  data-visibleiftrue="/umpmidi20jr,/umpmidi10mixedjr,/umpmidi10jr"></div>
+
+            <div id="uarttab" data-visibleiftrue="/dinTransport"></div>
+            <div id="rtptab" data-visibleiftrue="/rtpMidiTransport"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>

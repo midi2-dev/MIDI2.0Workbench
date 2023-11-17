@@ -1,0 +1,209 @@
+{
+  "algorithm": 5,
+  "feedback": 1,
+  "oscKeySync": true,
+  "operators": [
+    {
+      "rates": [
+        95,
+        28,
+        27,
+        47
+      ],
+      "levels": [
+        99,
+        90,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 49,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 3
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 2,
+      "volume": 89,
+      "oscMode": "ratio",
+      "freq": 4
+    },
+    {
+      "rates": [
+        95,
+        72,
+        71,
+        99
+      ],
+      "levels": [
+        99,
+        97,
+        91,
+        98
+      ],
+      "keyScale": {
+        "breakpoint": 49,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 1
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        95,
+        28,
+        27,
+        47
+      ],
+      "levels": [
+        99,
+        90,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 49,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 3
+      },
+      "detune": -1,
+      "lfoAmpModSens": 0,
+      "velocitySens": 2,
+      "volume": 85,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        95,
+        72,
+        71,
+        99
+      ],
+      "levels": [
+        99,
+        97,
+        91,
+        98
+      ],
+      "keyScale": {
+        "breakpoint": 64,
+        "depthL": 0,
+        "depthR": 46,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 1
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 4
+    },
+    {
+      "rates": [
+        95,
+        28,
+        27,
+        47
+      ],
+      "levels": [
+        99,
+        90,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 49,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 3
+      },
+      "detune": -1,
+      "lfoAmpModSens": 0,
+      "velocitySens": 3,
+      "volume": 83,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        95,
+        72,
+        71,
+        99
+      ],
+      "levels": [
+        99,
+        97,
+        91,
+        98
+      ],
+      "keyScale": {
+        "breakpoint": 64,
+        "depthL": 0,
+        "depthR": 55,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 1
+      },
+      "detune": 0,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 87,
+      "oscMode": "ratio",
+      "freq": 5
+    }
+  ],
+  "name": "HARPSICH 2",
+  "lfoSpeed": 35,
+  "lfoDelay": 0,
+  "lfoPitchModDepth": 0,
+  "lfoAmpModDepth": 0,
+  "lfoPitchModSens": 0,
+  "lfoWaveform": "square",
+  "lfoSync": false,
+  "pitchEnvelope": {
+    "rates": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "levels": [
+      50,
+      50,
+      50,
+      50
+    ]
+  },
+  "transpose": 24,
+  "chorus": {
+    "on": true,
+    "depth": 0.83,
+    "rate": 2.78
+  },
+  "delay": {
+    "on": false,
+    "delayTime": 0.88,
+    "feedback": 0.91,
+    "mix": 0.09
+  }
+}

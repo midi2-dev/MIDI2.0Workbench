@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+	<script src="js/jquery-3.3.1.slim.min.js"></script>
+	<script src="js/popper.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css" >
+	<script src="js/bootstrap.min.js"></script>
+	<link href="fa/css/all.css" rel="stylesheet">
+	<script>if (window.module) module = window.module;</script>
+
+	<script src="app/index.js"></script>
+	<style>
+		.gbName {
+			float: right;
+		}
+	</style>
+</head>
+<body>
+<div class="container-fluid" style="position: relative;">
+
+	<div class="row ">
+
+
+		<div class="col-sm-12 maincol">
+			<span style="position: absolute; top:0;left:0;background-color: #007bff; height:2.5em;width: 79px;z-index: 1;"></span>
+
+			<span style="position: absolute;top: -4px;left: 65px;z-index:  2;color: white;">®</span>
+
+			<img src="images/logo.gif" style="height:2.5em;float:left;z-index: 6;position: absolute;">
+			<ul class="nav justify-content-end" style="border-bottom: 1px solid #dee2e6;">
+				<li class="nav-item" style="position: absolute; left: 6em;">
+
+					<h2 class="display-7 text-center">
+						MIDI 2.0 Workbench
+					</h2>
+				</li>
+				<li class="nav-item">
+					<a id="ddbLink" class="nav-link" data-ipcmsg="openDebug" href="#">
+						Debug
+						<span class="badge badge-warning"></span>
+						<span class="badge badge-danger"></span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-ipcmsg="openTools" href="#">Tools</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-ipcmsg="openSMF2" href="#">SMF2</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="modal" data-target="#configModal" href="#">Settings</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-ipcmsg="showHelp" data-xdata="index" href="#">Help</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-ipcmsg="showAbout" data-xdata="index" href="#">About</a>
+				</li>
+
+			</ul>
+			<br/>
+<!--			<h3 class="bg-primary text-white text-center">Verify interoperability of your MIDI 2.0 Device!</h3>-->
+
+
+		</div>
+
+	</div>
+	<div class="row">
+<!--		<div class="input-group">-->
+<!--			<button id="discoverAllUMPMIDICI" type="button"-->
+<!--					class="form-control btn btn-primary btn-lg"-->
+<!--					data-tooltip="tooltip"-->
+<!--					title="Go thorough all UMP Endpoints connected and try to find any MIDI-CI enabled devices."-->
+<!--			>-->
+<!--				Rediscover UMP MIDI Endpoints and MIDI-CI Devices-->
+<!--			</button>-->
+
+<!--		</div>-->
+<!--		<br/>-->
+<!--		<hr/>-->
+
+	</div>
+	<div  id="umpDevices" class="row p-3"></div>
+
+
+	<div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document"  style="max-width: 80%">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<ul class="nav nav-tabs" id="settings" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active"   data-toggle="tab" href="#settingMIDICI" role="tab">MIDI-CI</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link"   data-toggle="tab" href="#settingExp" role="tab">Experimental</a>
+						</li>
+					</ul>
+					<div class="tab-content" id="settingTabContent">
+
+						<div class="tab-pane active" id="settingMIDICI" role="tabpanel" >
+							<div class="form-group">
+								<label for="ciVerLocal" class="col-form-label">MIDI-CI Version:</label>
+								<select id="ciVerLocal"  data-path="/config/ciVerLocal" class="form-control">
+									<option value="1">0x01 (MIDI-CI 1.1)</option>
+									<option value="2">0x02 (MIDI-CI 1.2)</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="maxSysEx" class="col-form-label">Max SysEx:</label>
+								<input type="number" step="1" id="maxSysEx" value="2048" data-path="/config/maxSysex" class="form-control" />
+							</div>
+
+							<div class="form-group">
+								<label for="maxStreams" class="col-form-label">PE Simultaneous Requests:</label>
+								<input type="number" step="1" id="maxStreams" value="4" max="127" data-path="/config/maxStreams" class="form-control" />
+							</div>
+
+							<div class="form-group">
+								<div class="form-check">
+									<input type="checkbox" id="peCompression" data-path="/config/peCompression" class="form-check-input" />
+									<label for="peCompression" class="form-check-label">PE zLib Compression</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="form-check">
+									<input type="checkbox" id="skipProtocol" data-path="/config/skipProtocol" class="form-check-input" />
+									<label for="skipProtocol" class="form-check-label">Ignore Protocol Negotiation</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane fade " id="settingExp" role="tabpanel" >
+
+
+							<div class="form-group">
+								<div class="form-check">
+									<input type="checkbox" id="debugActiveSenseClock" data-path="/config/debugActiveSenseClock" class="form-check-input" />
+									<label for="debugActiveSenseClock" class="form-check-label">Debug/Log Active Sense and Clock Messages</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="form-check">
+									<input type="checkbox" id="debugUMPSysEx" data-path="/config/debugUMPSysEx" class="form-check-input" />
+									<label for="debugUMPSysEx" class="form-check-label">Debug/Log UMP SysEx Messages</label>
+								</div>
+							</div>
+							<div data-visibleiftrue="/config/expExtensions" class="form-group">
+								<div class="form-check">
+									<label for="sysexTimer" class="col-form-label">SysEx Time between SysEx Messages:</label>
+									<input type="number" step="1" id="sysexTimer" value="4" max="2000" min="10" data-path="/config/sysexTimer" class="form-control" />
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="m1Modal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document"  style="max-width: 80%">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">MIDI 1.0 Device Setup</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-sm">
+						<thead><tr>
+							<th>Port</th><th>Name</th><th>MIDI Port to Receive (in)</th>
+							<th>MIDI Port to Request (out)</th><th></th>
+						</tr></thead>
+						<tbody id="midi1DevicesList"></tbody>
+					</table>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="getStarted" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document"  style="max-width: 80%">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Getting Started</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					To start using the MIDI 2.0 Workbench it is recommended to watch the Basic Introduction video and look at the <a data-ipcmsg="showHelp" data-xdata="index" href="#">Help</a> pages.<br/>
+					<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/43duptJN4uw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					<div  class="form-group">
+						<div class="form-check">
+							<input type="checkbox" data-path="/config/hidehelpPopup" class="form-check-input" />
+							<label  class="form-check-label">Do not show in future</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+</div>
+</body>
+</html>

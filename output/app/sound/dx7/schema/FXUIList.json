@@ -1,0 +1,43 @@
+[
+  {"ui": "block", "rect": [0, 0, 21, 9]},
+  {"ui": "block", "rect": [0, 0, 10, 9], "title": "Chorus", "styleIds": ["chor"]},
+  {"ui": "block", "rect": [11, 0, 10, 9], "title": "Delay", "styleIds": ["del"]},
+  {"ui": "label", "rect": [11, 0, 10, 2], "title": "Delay", "styleIds": ["del"]},
+  {"ui": "label", "rect": [0, 0, 10, 2], "title": "Chorus", "styleIds": ["chor"]},
+  {"ui": "switch", "rect": [4, 7, 2, 2], "title": "Chorus On", "paramPath": "/chorus/on"},
+  {"ui": "switch", "rect": [15, 7, 2, 2], "title": "Delay On", "paramPath": "/delay/on"},
+  {
+    "ui": "knob",
+    "rect": [1, 3, 2, 2],
+    "title": "Chorus Depth",
+    "paramPath": "/chorus/depth", "minMax": [0, 1], "multipleOf": 0.1
+  },
+  {
+    "ui": "knob",
+    "rect": [7, 3, 2, 2],
+    "title": "Chorus Rate",
+    "paramPath": "/chorus/rate", "minMax": [0, 10], "precision": 0.01
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 3, 2, 2],
+    "title": "Delay Time",
+    "paramPath": "/delay/delayTime", "minMax": [0, 1], "precision": 0.1
+  },
+  {
+    "ui": "knob",
+    "rect": [15, 3, 2, 2],
+    "title": "Delay Feedback",
+    "paramPath": "/delay/feedback", "minMax": [0, 1], "precision": 0.1
+  },
+  {
+    "ui": "knob",
+    "rect": [18, 3, 2, 2],
+    "paramPath": "/delay/mix", "minMax": [0, 1], "precision": 0.01
+  },
+  {"ui": "label", "rect": [1, 5, 2, 1], "title": "Depth"},
+  {"ui": "label", "rect": [7, 5, 2, 1], "title": "Rate"},
+  {"ui": "label", "rect": [12, 5, 2, 1], "title": "Delay Time"},
+  {"ui": "label", "rect": [15, 5, 2, 1], "title": "Feedback"},
+  {"ui": "label", "rect": [18, 5, 2, 1], "title": "Mix"}
+]

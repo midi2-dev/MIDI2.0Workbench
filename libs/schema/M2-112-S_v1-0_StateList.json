@@ -1,0 +1,86 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-112-S_v1-0_StateList.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "State List",
+  "description": "MIDI CI Property Exchange State List.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "title",
+      "stateId"
+    ],
+    "properties": {
+      "title": {
+        "title": "State Title",
+        "description": "Human-readable name of the State.",
+        "type": "string"
+      },
+      "stateId": {
+        "title": "State ID",
+        "description": "This is the State id of the particular device state. It is used with the State Resource to Get or Set the State in \"resId\" Property.",
+        "type": "string"
+      },
+      "stateRev": {
+        "title": "Revision",
+        "description": "This is a device-specific reference of the State in the MIDI Device. Devices can use this field to compare states, and decide whether it is necessary to reload.",
+        "type": "string"
+      },
+      "timestamp": {
+        "title": "UNIX Timestamp",
+        "description": "This is the Unix time of the last update to this state.  This is the number of seconds that have elapsed since the Unix epoch, that is the time 00:00:00 UTC on 1 January 1970, minus leap seconds.",
+        "type": "integer"
+      },
+      "description": {
+        "title": "Description",
+        "description": "This is a text description that helps the user understand what this particular State does.",
+        "type": "string",
+        "format": "commonmark"
+      },
+      "size": {
+        "title": "Byte Size",
+        "description": "This is the expected size of the State in bytes.",
+        "type": "integer"
+      },
+      "links": {
+        "type": "array",
+        "description": "Resources that return an object or an array of objects may provide links to other related Resources.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "resource": {
+              "type": "string",
+              "description": "This is the Resource to be linked.",
+              "minLength": 3,
+              "maxLength": 36
+            },
+            "resId": {
+              "type": "string",
+              "description": "Resource Id, the identifier used to select the desired Payload Data entry.",
+              "maxLength": 36
+            },
+            "title": {
+              "type": "string",
+              "description": "This is the human readable title for this link. Fall back to using the \"title\" Property in ResourceList if not supplied."
+            },
+            "role": {
+              "type": "string",
+              "description": "This is the role for this linked resource.",
+              "minLength": 1,
+              "maxLength": 32
+            }
+          },
+          "required": [
+            "resource"
+          ]
+        }
+      }
+    },
+    "additionalProperties": false,
+    "patternProperties": {
+      "^x-": {
+        "description": "Any property starting with x- is valid."
+      }
+    }
+  }
+}

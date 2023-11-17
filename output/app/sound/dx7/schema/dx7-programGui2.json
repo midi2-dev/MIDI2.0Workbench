@@ -1,0 +1,398 @@
+{
+  "classes": {
+    "root": {
+      "bgColor": "#444444FF",
+      "textColor": "#FFFFFFFF",
+      "textAlign": "left",
+      "textSize": 6
+    },
+    "operators": {
+      "bgColor": "#666666FF",
+      "textSize": 3
+    },
+    "opTitle": {"textSize": 4},
+    "center": {
+      "textAlign": "center",
+      "controlColor": "#a11b1bFF"
+    },
+    "centerSmall": {
+      "textAlign": "center",
+      "textSize": 2
+    }
+  },
+  "lists":{
+    "curves":[
+      {"value":"-LIN","title":"-LIN"}
+    ,{"value":"-EXP","title":"-EXP"}
+    ,{"value":"+EXP","title":"+EXP"}
+    ,{"value":"+LIN","title":"+LIN"}
+    ],
+    "oscMode":[
+      {
+        "value": "ratio",
+        "title": "Ratio",
+        "range": [0, 63]
+      },
+      {
+        "value": "fixed",
+        "title": "Fixed",
+        "range": [64, 127]
+      }
+    ],
+    "breakpoint":[{"value":0,"title":"A-1"},{"value":1,"title":"A#-1"},{"value":2,"title":"B-1"},{"value":3,"title":"C0"},{"value":4,"title":"C#0"},{"value":5,"title":"D0"},{"value":6,"title":"D#0"},{"value":7,"title":"E0"},{"value":8,"title":"F0"},{"value":9,"title":"F#0"},{"value":10,"title":"G0"},{"value":11,"title":"G#0"},{"value":12,"title":"A0"},{"value":13,"title":"A#0"},{"value":14,"title":"B0"},{"value":15,"title":"C1"},{"value":16,"title":"C#1"},{"value":17,"title":"D1"},{"value":18,"title":"D#1"},{"value":19,"title":"E1"},{"value":20,"title":"F1"},{"value":21,"title":"F#1"},{"value":22,"title":"G1"},{"value":23,"title":"G#1"},{"value":24,"title":"A1"},{"value":25,"title":"A#1"},{"value":26,"title":"B1"},{"value":27,"title":"C2"},{"value":28,"title":"C#2"},{"value":29,"title":"D2"},{"value":30,"title":"D#2"},{"value":31,"title":"E2"},{"value":32,"title":"F2"},{"value":33,"title":"F#2"},{"value":34,"title":"G2"},{"value":35,"title":"G#2"},{"value":36,"title":"A2"},{"value":37,"title":"A#2"},{"value":38,"title":"B2"},{"value":39,"title":"C3"},{"value":40,"title":"C#3"},{"value":41,"title":"D3"},{"value":42,"title":"D#3"},{"value":43,"title":"E3"},{"value":44,"title":"F3"},{"value":45,"title":"F#3"},{"value":46,"title":"G3"},{"value":47,"title":"G#3"},{"value":48,"title":"A3"},{"value":49,"title":"A#3"},{"value":50,"title":"B3"},{"value":51,"title":"C4"},{"value":52,"title":"C#4"},{"value":53,"title":"D4"},{"value":54,"title":"D#4"},{"value":55,"title":"E4"},{"value":56,"title":"F4"},{"value":57,"title":"F#4"},{"value":58,"title":"G4"},{"value":59,"title":"G#4"},{"value":60,"title":"A4"},{"value":61,"title":"A#4"},{"value":62,"title":"B4"},{"value":63,"title":"C5"},{"value":64,"title":"C#5"},{"value":65,"title":"D5"},{"value":66,"title":"D#5"},{"value":67,"title":"E5"},{"value":68,"title":"F5"},{"value":69,"title":"F#5"},{"value":70,"title":"G5"},{"value":71,"title":"G#5"},{"value":72,"title":"A5"},{"value":73,"title":"A#5"},{"value":74,"title":"B5"},{"value":75,"title":"C6"},{"value":76,"title":"C#6"},{"value":77,"title":"D6"},{"value":78,"title":"D#6"},{"value":79,"title":"E6"},{"value":80,"title":"F6"},{"value":81,"title":"F#6"},{"value":82,"title":"G6"},{"value":83,"title":"G#6"},{"value":84,"title":"A6"},{"value":85,"title":"A#6"},{"value":86,"title":"B6"},{"value":87,"title":"C7"},{"value":88,"title":"C#7"},{"value":89,"title":"D7"},{"value":90,"title":"D#7"},{"value":91,"title":"E7"},{"value":92,"title":"F7"},{"value":93,"title":"F#7"},{"value":94,"title":"G7"},{"value":95,"title":"G#7"},{"value":96,"title":"A7"},{"value":97,"title":"A#7"},{"value":98,"title":"B7"},{"value":99,"title":"C8"}]
+  },
+  "root": {
+    "ui": "block",
+    "classes": ["root"],
+    "rect": [0, 0, 24, 8],
+    "title": "",
+    "children": [
+      {
+        "ui": "label",
+        "rect": [0, 0, 24, 2],
+        "title": "6 Op FM"
+      },
+      {
+        "ui": "block",
+        "classes": ["operators"],
+        "rect": [0, 2, 24, 6],
+        "title": "Operator 1",
+        "children": [
+          {
+            "ui": "block",
+            "rect": [0, 0, 8, 6],
+            "title": "General",
+            "children": [
+              {
+                "ui": "label",
+                "rect": [0, 0, 6, 1],
+                "classes": ["opTitle"],
+                "title": "Operator 1"
+              },
+              {
+                "ui": "label",
+                "rect": [0, 2, 2, 1],
+                "title": "Freq."
+              },
+              {
+                "ui": "number",
+                "showTitle": true,
+                "rect": [2, 2, 2, 1],
+                "path": "/operators/0/freq",
+                "maximum": 31.99,
+                "multipleOf": 0.01,
+                "cm": {
+                  "control": "NRPN",
+                  "controlNo": [0, 1],
+                  "ranges": [
+                    {"range": [0, 3199]}
+                  ]
+                },
+                "title": "Frequency"
+              },
+              {
+                "ui": "label",
+                "rect": [4, 2, 1, 1],
+                "title": "Hz"
+              },
+              {
+                "ui": "label",
+                "rect": [0, 4, 2, 1],
+                "title": "Osc."
+              },
+              {
+                "ui": "text",
+                "rect": [2, 4, 3, 1],
+                "path": "/operators/0/oscMode",
+                "list":"oscMode",
+                "control": "CC",
+                "controlNo": [12],
+                "cm": {
+                  "ranges": [
+                    {
+                      "value": "ratio",
+                      "title": "Ratio",
+                      "range": [0, 63]
+                    },
+                    {
+                      "value": "fixed",
+                      "title": "Fixed",
+                      "range": [64, 127]
+                    }
+                  ],
+                  "control": "CC",
+                  "controlNo": [12]
+                },
+                "classes": [],
+                "title": "Osc Mode"
+              },
+              {
+                "ui": "slider",
+                "showTitle": true,
+                "rect": [2, 5, 3, 1],
+                "bipolar": true,
+                "path": "/operators/0/detune",
+                "minimum": -7,
+                "maximum": 7,
+                "cm": {
+                  "control": "CC",
+                  "controlNo": [13]
+                },
+                "title": "Detune"
+              },
+              {
+                "ui": "label",
+                "rect": [0, 5, 2, 1],
+                "title": "Detune"
+              },
+              {
+                "ui": "slider",
+                "rect": [5, 0, 1, 5],
+                "path": "/operators/0/volume",
+                "maximum": 99,
+                "title": "Volume"
+              },
+              {
+                "ui": "label",
+                "rect": [5, 5, 1, 1],
+                "classes": ["center"],
+                "title": "Vol."
+              },
+              {
+                "ui": "slider",
+                "rect": [6, 0, 1, 5],
+                "path": "/operators/0/velocitySens",
+                "maximum": 7,
+                "title": "Velocity Sens"
+              },
+              {
+                "ui": "label",
+                "rect": [6, 5, 1, 1],
+                "classes": ["center"],
+                "title": "Velo."
+              },
+              {
+                "ui": "slider",
+                "rect": [7, 0, 1, 4],
+                "path": "/operators/0/lfoAmpModSens",
+                "maximum": 7,
+                "classes": [],
+                "title": "LFO Mod"
+              },
+              {
+                "ui": "label",
+                "rect": [7, 4, 1, 2],
+                "classes": ["center"],
+                "title": "LFO Mon Sens"
+              }
+            ]
+          },
+          {
+            "ui": "envelope",
+            "rect": [8, 0, 10, 6],
+            "title": "Pitch Envelope",
+            "children": [
+              {
+                "ui": "label",
+                "rect": [0, 0, 2, 2],
+                "title": "Envelope Rates"
+              },
+              {
+                "ui": "label",
+                "rect": [0, 3, 2, 2],
+                "title": "Envelope Levels"
+              },
+              {
+                "ui": "knob",
+                "rect": [2, 0, 2, 2],
+                "path": "/operators/0/rate/0",
+                "minimum": 0,
+                "maximum": 99,
+                "pointXY": "x",
+                "point": 0,
+                "title": "Rate 1"
+              },
+              {
+                "ui": "knob",
+                "rect": [4, 0, 2, 2],
+                "maximum": 99,
+                "point": 1,
+                "pointXY": "x",
+                "path": "/operators/0/rate/1",
+                "title": "Rate 2"
+              },
+              {
+                "ui": "knob",
+                "rect": [6, 0, 2, 2],
+                "path": "/operators/0/rate/2",
+                "pointXY": "x",
+                "point": 2,
+                "maximum": 99,
+                "title": "Rate 3"
+              },
+              {
+                "ui": "knob",
+                "rect": [8, 0, 2, 2],
+                "path": "/operators/0/rate/3",
+                "pointXY": "x",
+                "point": 3,
+                "maximum": 99,
+                "title": "Rate 4"
+              },
+              {
+                "ui": "knob",
+                "rect": [2, 3, 2, 2],
+                "path": "/operators/0/level/0",
+                "maximum": 99,
+                "pointXY": "y",
+                "point": 0,
+                "title": "Level 1"
+              },
+              {
+                "ui": "knob",
+                "rect": [4, 3, 2, 2],
+                "path": "/operators/0/level/1",
+                "pointXY": "y",
+                "point": 1,
+                "maximum": 99,
+                "title": "Level 2"
+              },
+              {
+                "ui": "knob",
+                "rect": [6, 3, 2, 2],
+                "path": "/operators/0/level/2",
+                "pointXY": "y",
+                "point": 2,
+                "maximum": 99,
+                "title": "Level 3"
+              },
+              {
+                "ui": "knob",
+                "rect": [8, 3, 2, 2],
+                "path": "/operators/0/level/3",
+                "pointXY": "y",
+                "point": 3,
+                "maximum": 99,
+                "title": "Level 4"
+              },
+              {
+                "ui": "label",
+                "rect": [2, 5, 2, 1],
+                "classes": ["center"],
+                "title": "1"
+              },
+              {
+                "ui": "label",
+                "rect": [4, 5, 2, 1],
+                "classes": ["center"],
+                "title": "2"
+              },
+              {
+                "ui": "label",
+                "rect": [6, 5, 2, 1],
+                "classes": ["center"],
+                "title": "3"
+              },
+              {
+                "ui": "label",
+                "rect": [8, 5, 2, 1],
+                "classes": ["center"],
+                "title": "4"
+              }
+            ]
+          },
+          {
+            "ui": "block",
+            "rect": [18, 0, 6, 6],
+            "title": "KeyScale",
+            "children": [
+              {
+                "ui": "label",
+                "rect": [0, 0, 6, 1],
+                "classes": [
+                  "opTitle",
+                  "center"
+                ],
+                "title": "KeyScale"
+              },
+              {
+                "ui": "knob",
+                "rect": [0, 1, 2, 2],
+                "path": "/operators/0/keyScale/depthL",
+                "maximum": 99,
+                "title": "Depth Left"
+              },
+              {
+                "ui": "knob",
+                "rect": [2, 1, 2, 2],
+                "path": "/operators/0/keyScale/rate",
+                "maximum": 99,
+                "title": "Rate"
+              },
+              {
+                "ui": "knob",
+                "rect": [4, 1, 2, 2],
+                "path": "/operators/0/keyScale/depthR",
+                "maximum": 99,
+                "title": "Depth Right"
+              },
+              {
+                "ui": "label",
+                "rect": [0, 3, 2, 1],
+                "classes": [
+                  "centerSmall"
+                ],
+                "title": "Depth Left"
+              },
+              {
+                "ui": "label",
+                "rect": [2, 3, 2, 1],
+                "classes": [
+                  "centerSmall"
+                ],
+                "title": "Rate"
+              },
+              {
+                "ui": "label",
+                "rect": [3, 3, 4, 1],
+                "classes": [
+                  "centerSmall"
+                ],
+                "title": "Depth Right"
+              },
+              {
+                "ui": "label",
+                "rect": [2, 4, 2, 1],
+                "classes": ["center"],
+                "title": "Curve"
+              },
+              {
+                "ui": "text",
+                "rect": [0, 4, 2, 1],
+                "path": "/operators/0/keyScale/curveL",
+                "title": "Curve Left","list":"curves"
+              },
+              {
+                "ui": "text",
+                "rect": [4, 4, 2, 1],
+                "path": "/operators/0/keyScale/curveR",
+                "title": "Curve Right","list":"curves"
+              },
+              {
+                "ui": "label",
+                "rect": [0, 5, 3, 1],
+                "title": "Break Point"
+              },
+              {
+                "ui": "text",
+                "rect": [3, 5, 3, 1],
+                "path": "/operators/0/keyScale/breakpoint",
+                "title": "Break Point","list":"breakpoint"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

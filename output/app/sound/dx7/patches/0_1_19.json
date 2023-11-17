@@ -1,0 +1,209 @@
+{
+  "algorithm": 5,
+  "feedback": 5,
+  "oscKeySync": false,
+  "operators": [
+    {
+      "rates": [
+        95,
+        20,
+        19,
+        25
+      ],
+      "levels": [
+        99,
+        0,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": 2,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 95,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        98,
+        29,
+        71,
+        28
+      ],
+      "levels": [
+        99,
+        0,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": 3,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 82,
+      "oscMode": "ratio",
+      "freq": 2.75
+    },
+    {
+      "rates": [
+        95,
+        33,
+        71,
+        25
+      ],
+      "levels": [
+        99,
+        0,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": -5,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 95,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        98,
+        12,
+        71,
+        28
+      ],
+      "levels": [
+        99,
+        0,
+        0,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": -2,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 75,
+      "oscMode": "ratio",
+      "freq": 2.75
+    },
+    {
+      "rates": [
+        38,
+        98,
+        0,
+        35
+      ],
+      "levels": [
+        99,
+        99,
+        72,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": -4,
+      "lfoAmpModSens": 0,
+      "velocitySens": 2,
+      "volume": 99,
+      "oscMode": "ratio",
+      "freq": 1
+    },
+    {
+      "rates": [
+        16,
+        99,
+        12,
+        28
+      ],
+      "levels": [
+        99,
+        99,
+        80,
+        0
+      ],
+      "keyScale": {
+        "breakpoint": 0,
+        "depthL": 0,
+        "depthR": 0,
+        "curveL": "-LIN",
+        "curveR": "-LIN",
+        "rate": 2
+      },
+      "detune": 4,
+      "lfoAmpModSens": 0,
+      "velocitySens": 0,
+      "volume": 90,
+      "oscMode": "ratio",
+      "freq": 1
+    }
+  ],
+  "name": "T.BL-EXPA ",
+  "lfoSpeed": 35,
+  "lfoDelay": 55,
+  "lfoPitchModDepth": 0,
+  "lfoAmpModDepth": 0,
+  "lfoPitchModSens": 2,
+  "lfoWaveform": "sine",
+  "lfoSync": false,
+  "pitchEnvelope": {
+    "rates": [
+      67,
+      95,
+      95,
+      60
+    ],
+    "levels": [
+      50,
+      50,
+      50,
+      50
+    ]
+  },
+  "transpose": 24,
+  "chorus": {
+    "on": true,
+    "depth": 0.69,
+    "rate": 8.61
+  },
+  "delay": {
+    "on": true,
+    "delayTime": 0.39,
+    "feedback": 0.29,
+    "mix": 0.47
+  }
+}

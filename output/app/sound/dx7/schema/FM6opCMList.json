@@ -1,0 +1,46 @@
+[
+  {
+    "title": "Op 1 Frequency",
+    "paramPath": "/operators/0/freq",
+    "controlType": "nrpn",
+    "controlIdx": [0, 1]
+  },
+  {
+    "title": "Op 1 Detune",
+    "default": 2147483648,
+    "paramPath": "/operators/0/detune",
+    "controlType": "cc",
+    "controlIdx":  [13]
+  },
+  {
+    "title": "Chorus Depth",
+    "paramPath": "/chorus/depth",
+    "controlType": "cc",
+    "controlIdx":  [93]
+  },
+  {
+    "title": "Chorus Rate",
+    "paramPath": "/chorus/depth",
+    "controlType": "cc",
+    "controlIdx":  [89]
+  },
+
+  {
+    "title": "Delay Time",
+    "paramPath": "/delay/delayTime",
+    "controlType": "cc",
+    "controlIdx":  [92]
+  },
+  {
+    "title": "Delay Feedback",
+    "paramPath": "/delay/feedback",
+    "controlType": "cc",
+    "controlIdx":  [90]
+  },
+  {
+    "title": "Delay Mix",
+    "paramPath": "/delay/mix",
+    "controlType": "cc",
+    "controlIdx":  [94]
+  }
+]

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio </title>
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/popper.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/bootstrap-fileup.css" >
+    <script src="js/bootstrap.min.js"></script>
+    <link href="fa/css/all.css" rel="stylesheet">
+
+
+    <script src="app/sound/audioworklet.js"></script>
+    <script src="app/sound/wam-controller.js"></script>
+    <script src="app/sound/dx7/dx7-awn.js"></script>
+    <script src="js/NexusUI.min.js"></script>
+
+    <script>if (window.module) module = window.module; </script>
+
+    <script src="app/audio.js"></script>
+
+</head>
+<body>
+    <h1>Virtual Audio UMP Device</h1>
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active"   data-toggle="tab" href="#keys" role="tab">Keys</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"   data-toggle="tab" href="#tg" role="tab">Tone Generator</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link"   data-toggle="tab" href="#mpe" role="tab">MPE</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="settingTabContent">
+        <div class="tab-pane active" id="keys" role="tabpanel" >
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" >Group</span>
+                </div>
+                <input type="number" step="1" min="1" max="16" data-zerobased="true"
+                       data-path="/config/umpVirtualAudio/keys/firstGroup" class="form-control" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" >Channel</span>
+                </div>
+                <input type="number" step="1" min="1" max="16"  data-zerobased="true" data-path="/config/umpVirtualAudio/keys/channel" class="form-control" />
+            </div>
+            <div id="pianoKeys" style="height: 150px"></div>
+        </div>
+        <div class="tab-pane" id="tg" role="tabpanel" >
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" >Start Group</span>
+                </div>
+                <input type="number" step="1" min="1" max="16"  data-zerobased="true"
+                       data-path="/config/umpVirtualAudio/tg/firstGroup" class="form-control" />
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Channel/Group/FB</th>
+                    <th>Profiles</th>
+                </tr>
+                </thead>
+                <tbody id="channels">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="mpe" role="tabpanel" >
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" >Start Group</span>
+                </div>
+                <input type="number" step="1" min="1" max="16"  data-zerobased="true"
+                       data-path="/config/umpVirtualAudio/mpe/firstGroup" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+</body>
+</html>

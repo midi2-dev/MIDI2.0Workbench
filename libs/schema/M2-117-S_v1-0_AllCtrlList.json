@@ -1,0 +1,179 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-117-S_v1-0_AllCtrlList.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Active Controller Message List",
+  "description": "MIDI CI Property Exchange Active Controller Message List.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "title",
+      "ctrlType"
+    ],
+    "properties": {
+      "title": {
+        "title": "Active Controller Title",
+        "description": "Human-readable name of the Active Controller Message, pertaining to the effect of recognized messages or the physical interface generating messages. This may be displayed to the user by a connected device.",
+        "type": "string"
+      },
+      "description": {
+        "title": "Description",
+        "description": "Human-readable description of the effect of recognized messages or the physical interface generating messages.  This may be displayed to the user by a connected device.",
+        "type": "string",
+        "format": "commonmark"
+      },
+      "ctrlType": {
+        "title": "Type",
+        "description": "Type of Controller Message.",
+        "type": "string",
+        "enum": [
+          "cc",
+          "chPress",
+          "pPress",
+          "nrpn",
+          "rpn",
+          "pBend",
+          "pnrc",
+          "pnac",
+          "pnp"
+        ]
+      },
+      "ctrlIndex": {
+        "title": "Controller Message index",
+        "description": "This is an array of the Controller Message index numbers. For (N)RPN this will be the Bank (MSB) and Index (LSB). For CC this would mostly be just a single item for the CC, however this can be a pair of MSB and LSB to have 14bit CC messages.",
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 2,
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127
+        }
+      },
+      "channel": {
+        "title": "MIDI Channel",
+        "description": "This is the Channel being described by this entry in the list of Active Controllers.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 16
+      },
+      "priority": {
+        "title": "Priority",
+        "description": "A value of 1 is the most important, descending down to 5 as the least important. When entries are sent in the CtrlList Resource array, they should be ordered by the \"priority\" Property. Initiators should use the ordering of the CtrlList Resource to complement the priority given.  The Initiator may decide the best way to display or handle entries based on priority",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "default": {
+        "title": "Default Value",
+        "description": "The default value if entry is reset. Values declared in unsigned 32 bit values",
+        "type": "integer"
+      },
+      "transmit": {
+        "title": "Transmit",
+        "description": "Declares whether this entry supports absolute values, relative values using Relative Registered/Assignable Controllers, both, or none. If not given, the Device only transmits using absolute values.",
+        "type": "string",
+        "enum": [
+          "absolute",
+          "relative",
+          "both",
+          "none"
+        ],
+        "default": "absolute"
+      },
+      "recognize": {
+        "title": "Recognize",
+        "description": "Declares whether this entry supports absolute values, relative values using Relative Registered/Assignable Controllers, both, or none. If not given, the Device only recognizes using absolute values",
+        "type": "string",
+        "enum": [
+          "absolute",
+          "relative",
+          "both",
+          "none"
+        ],
+        "default": "absolute"
+      },
+      "numSigBits": {
+        "title": "Number of significant bits",
+        "description": "Number of significant bits used for the 32 bit values. 32, if not provided.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 32
+      },
+      "typeHint": {
+        "title": "Type Hint",
+        "description": "Provides a hint as to what physical (or displayed) control mechanism should be used on the Initiator to generate the Active Controller Messages.",
+        "type": "string",
+        "enum": [
+          "continuous",
+          "momentary",
+          "toggle",
+          "relative",
+          "valueSelect"
+        ]
+      },
+      "ctrlMapId": {
+        "title": "Control Map Id",
+        "type": "string",
+        "description": "This Property provides the \"resId\" that shall be used with a CtrlMapList Resource. Subsequently, the CtrlMapList Resource provides a set of enumerated values for the Active Controller Message",
+        "maxLength": 36
+      },
+      "stepCount": {
+        "title": "Step Count",
+        "description": "If Active Controller Message only supports a discrete number of steps, set this value to declare the number of steps. Refer to Stepped Values and Enumerations in Resolution and Bit Scaling Recommended Practice ",
+        "type": "integer"
+      },
+      "minMax": {
+        "title": "Min/Max",
+        "description": "When a Responder recognizes an Active Controller Message within a limited range of the possible values, it may declare the minimum and maximum values recognized. Values declared in unsigned 32 bit values.",
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "links": {
+        "type": "array",
+        "description": "Resources that return an object or an array of objects may provide links to other related Resources.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "resource": {
+              "type": "string",
+              "description": "This is the Resource to be linked.",
+              "minLength": 3,
+              "maxLength": 36
+            },
+            "resId": {
+              "type": "string",
+              "description": "Resource Id, the identifier used to select the desired Payload Data entry.",
+              "maxLength": 36
+            },
+            "title": {
+              "type": "string",
+              "description": "This is the human readable title for this link. Fall back to using the \"title\" Property in ResourceList if not supplied."
+            },
+            "role": {
+              "type": "string",
+              "description": "This is the role for this linked resource.",
+              "minLength": 1,
+              "maxLength": 32
+            }
+          },
+          "required": [
+            "resource"
+          ]
+        }
+      }
+    },
+    "additionalProperties": false,
+    "patternProperties": {
+      "^x-": {
+        "description": "Any property starting with x- is valid."
+      }
+    }
+  }
+}

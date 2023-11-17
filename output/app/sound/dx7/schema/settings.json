@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Settings",
+  "type": "object",
+  "properties": {
+    "localOn":{
+      "description":"Local On Off setting",
+      "type":"boolean"
+
+    },
+    "clock":{
+      "description":"MIDI Clock",
+      "type":"string",
+      "enum":["auto","internal","external"]
+    },
+    "veloCurve":{
+      "description": "Velocity Curve",
+      "type": "integer",
+      "minimum":0,
+      "maximum":127
+    }
+
+  },
+  "additionalProperties": false,
+  "patternProperties": {
+    "^x-": {
+      "$ref": "#/definitions/_extension"
+    }
+  }
+
+}

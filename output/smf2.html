@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMF2</title>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-3.3.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/jsonformat.css" >
+    <script src="js/bootstrap.min.js"></script>
+    <link href="fa/css/all.css" rel="stylesheet">
+    <script>if (window.module) module = window.module;</script>
+
+    <script src="app/smf2.js"></script>
+    <style>
+        .umpvalnum{
+            display: inline-block;
+            width: 90px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid" style="position: relative;">
+    <div class="row bg-primary text-white">
+        <div class="col-sm-12">
+            Standard MIDI File 2
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="form-group inputDnD">
+            <input type="file" id="input-file-smf2" class="form-control-file text-primary font-weight-bold"
+                   data-title="Drag and drop a file"/>
+        </div>
+        <div class="col-sm-12">
+            <table id="clip" class="table table-sm table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Byte</th>
+                    <th scope="col">Data</th>
+                    <th><button type="button"
+                                class="bg-white btn btn-alert btn-sm emptyTable"
+                                style="float: right"
+                                data-logtype="ump"
+                    >Clear</button></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

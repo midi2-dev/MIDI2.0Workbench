@@ -1,0 +1,45 @@
+[
+  {"ui": "block", "styleIds": ["root"], "rect": [0, 0, 24, 30], "titleRect": [1, 0, 10, 2], "title": "6 Operator FM Synth"},
+  {"ui": "text", "rect": [14, 0, 3, 1], "title": "Patch Name", "paramPath": "/name", "styleIds": ["whiteText"],"titleRect": [11, 0, 3, 1]},
+
+  {"ui": "valueSelect", "rect": [20, 0, 4, 1], "title": "Algorithm", "controlMapId": "algoMap", "paramPath": "/algorithm"
+  , "titleRect": [18, 0, 2, 1], "styleIds": ["whiteText"]},
+
+
+  {"ui": "buttonLink", "rect": [18, 1, 6, 1], "title": "FX",
+    "onClickLink": {
+      "uiListId": "fxGui",
+      "uiStyleListId": "styles",
+      "cmListId": "common",
+      "role": "uiView",
+      "resource": "X-ProgramEdit",
+      "resId": "current"
+    }
+  },
+
+  {"ui": "block", "styleIds": ["operators"], "rect": [0, 2, 24, 4], "title": "Operator 1",
+    "paramPath": "/operators/0", "subUIListId": "operator", "titleRect": [0, 2, 5, 1]
+  },
+
+  {"ui": "block", "styleIds": ["operators"], "rect": [0, 6, 24, 4], "title": "Operator 2",
+    "paramPath": "/operators/1", "subUIListId": "operator", "titleRect": [0, 6, 5, 1]
+  },
+
+  {"ui": "block", "styleIds": ["operators"], "rect": [0, 10, 24, 4], "title": "Operator 3",
+    "paramPath": "/operators/2", "subUIListId": "operator", "titleRect": [0, 10, 5, 1]
+  },
+  {"ui": "block", "styleIds": ["operators"], "rect": [0, 14, 24, 4], "title": "Operator 4",
+    "paramPath": "/operators/3", "subUIListId": "operator", "titleRect": [0, 14, 5, 1]
+  },
+  {"ui": "block", "styleIds": ["operators"], "rect": [0, 18, 24, 4], "title": "Operator 5",
+    "paramPath": "/operators/4", "subUIListId": "operator", "titleRect": [0, 18, 5, 1]
+  },
+
+  {"ui": "block", "styleIds": ["operators"], "rect": [0, 22, 24, 4], "title": "Operator 6",
+    "paramPath": "/operators/5", "subUIListId": "operator", "titleRect": [0, 22, 5, 1]
+  },
+
+  {"ui": "block", "rect": [0, 26, 24, 6], "title": "General",
+    "paramPath": "", "subUIListId": "general", "styleIds": ["whiteText"]
+  }
+]

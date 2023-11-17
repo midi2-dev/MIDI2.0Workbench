@@ -1,0 +1,135 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-105-S_v1-0_DeviceInfo.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Device Information",
+  "description": "MIDI-CI Property Exchange DeviceInfo.",
+  "type": "object",
+  "properties": {
+    "manufacturerId": {
+      "title": "Manufacturer Id",
+      "description": "This is the System Exclusive ID Number. It is an array of the 3 data byte values (as integers) in the same structure as defined in MIDI-CI Inquiry & Negotiation Messages.",
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "maximum": 127,
+        "minimum": 0
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "familyId": {
+      "title": "Family Id",
+      "description": "This is an array of the 2 data byte values (as integers) in the same structure as defined in MIDI-CI Inquiry & Negotiation Messages.",
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "maximum": 127,
+        "minimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "modelId": {
+      "title": "Model Id",
+      "description": "This is an array of the 2 data byte values (as integers) in the same structure as defined in MIDI-CI Inquiry & Negotiation Messages.",
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "maximum": 127,
+        "minimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "versionId": {
+      "title": "Version Id",
+      "description": "This is an array of the 4 data byte values (as integers) in the same structure as defined in MIDI-CI Inquiry & Negotiation Messages.",
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "maximum": 127,
+        "minimum": 0
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "manufacturer": {
+      "title": "Manufacturer",
+      "description": "The name of the Manufacturer.",
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "title": "Family",
+      "description": "The product family name.",
+      "type": "string",
+      "minLength": 1
+    },
+    "model": {
+      "title": "Model",
+      "description": "The model name.",
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "title": "Version",
+      "description": "The firmware version.",
+      "type": "string",
+      "minLength": 1
+    },
+    "serialNumber": {
+      "title": "Serial Number",
+      "description": "The Device may return a unique serial number.",
+      "type": "string"
+    },
+    "links": {
+      "type": "array",
+      "description": "Resources that return an object or an array of objects may provide links to other related Resources.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string",
+            "description": "This is the Resource to be linked.",
+            "minLength": 3,
+            "maxLength": 36
+          },
+          "resId": {
+            "type": "string",
+            "description": "Resource Id, the identifier used to select the desired Payload Data entry.",
+            "maxLength": 36
+          },
+          "title": {
+            "type": "string",
+            "description": "This is the human-readable title for this link. Fall back to the \"title\" Property in ResourceList if not supplied."
+          },
+          "role": {
+            "type": "string",
+            "description": "This is the role for this linked resource.",
+            "minLength": 1,
+            "maxLength": 32
+          }
+        },
+        "required": [
+          "resource"
+        ]
+      }
+    }
+  },
+  "required": [
+    "manufacturerId",
+    "familyId",
+    "modelId",
+    "versionId",
+    "manufacturer",
+    "family",
+    "model",
+    "version"
+  ],
+  "additionalProperties": false,
+  "patternProperties": {
+    "^x-": {
+      "description": "Any property starting with x- is valid."
+    }
+  }
+}

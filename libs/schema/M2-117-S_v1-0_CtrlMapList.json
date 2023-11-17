@@ -1,0 +1,34 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-10?-S_v1-0_CtrlMapList.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Controller Map List",
+  "description": "CtrlMapList returns the current set of enumerated values of an Active Controller Message within the range of values recognized by the Responder.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "title",
+      "value"
+    ],
+    "properties": {
+      "title": {
+        "title": "Title",
+        "description": "Human-readable name of the enumerated value.",
+        "type": "string"
+      },
+      "value": {
+        "title": "Value",
+        "description": "An unsigned 32 bit value",
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4294967295
+      }
+    },
+    "additionalProperties": false,
+    "patternProperties": {
+      "^x-": {
+        "description": "Any property starting with x- is valid."
+      }
+    }
+  }
+}

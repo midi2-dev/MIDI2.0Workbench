@@ -1,0 +1,92 @@
+{
+  "id": "http://schema.midi.org/property-exchange/M2-105-S_v1-0_ProgramList.json#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Program List",
+  "description": "MIDI CI Property Exchange Program List.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "title",
+      "bankPC"
+    ],
+    "properties": {
+      "title": {
+        "title": "Program Title",
+        "description": "Human-readable name of the Program.",
+        "type": "string"
+      },
+      "bankPC": {
+        "title": "Bank MSB, LSB and Program Change",
+        "description": "This is a 3 item array containing the Bank MSB, Bank LSB and Program Change [ MSB, LSB, PC ] for the current Program. Do not provide if there is no defined Program for the Mode e.g GM Mode. All Bank/PC messages are 0 based.",
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127
+        }
+      },
+      "category": {
+        "title": "Categories",
+        "description": "A list of categories from the defined list.",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "minItems": 1
+        }
+      },
+      "tags": {
+        "description": "A list of Meta-tags.",
+        "title": "Meta-tags",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "minItems": 1
+        }
+      },
+      "links": {
+        "type": "array",
+        "description": "Resources that return an object or an array of objects may provide links to other related Resources.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "resource": {
+              "type": "string",
+              "description": "This is the Resource to be linked.",
+              "minLength": 3,
+              "maxLength": 36
+            },
+            "resId": {
+              "type": "string",
+              "description": "Resource Id, the identifier used to select the desired Payload Data entry.",
+              "maxLength": 36
+            },
+            "title": {
+              "type": "string",
+              "description": "This is the human readable title for this link. Fall back to using the \"title\" Property in ResourceList if not supplied."
+            },
+            "role": {
+              "type": "string",
+              "description": "This is the role for this linked resource.",
+              "minLength": 1,
+              "maxLength": 32
+            }
+          },
+          "required": [
+            "resource"
+          ]
+        }
+      }
+    },
+    "additionalProperties": false,
+    "patternProperties": {
+      "^x-": {
+        "description": "Any property starting with x- is valid."
+      }
+    }
+  }
+}

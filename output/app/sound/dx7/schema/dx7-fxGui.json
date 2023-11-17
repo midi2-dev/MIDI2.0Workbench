@@ -1,0 +1,56 @@
+[
+  {"ui": "block", "rect": [0, 0, 21, 9]},
+  {"ui": "style", "rect": [0, 0, 12, 9], "style": {"bgColor": "#ff444444", "textSize": "5"}, "title": "chor"},
+  {"ui": "style", "rect": [0, 0, 12, 9], "style": {"bgColor": "#44ff4444", "textSize": "5"}, "title": "del"},
+  {"ui": "block", "rect": [0, 0, 10, 9], "title": "Chorus", "classes": ["chor"], "group": {"id": "chorus"}},
+  {"ui": "block", "rect": [11, 0, 10, 9], "title": "Delay", "classes": ["del"], "group": {"id": "delay"}},
+  {"ui": "label", "rect": [11, 0, 10, 2], "title": "Delay", "classes": ["del"]},
+  {"ui": "label", "rect": [0, 0, 10, 2], "title": "Chorus", "classes": ["chor"]},
+  {"ui": "switch", "rect": [4, 7, 2, 2], "title": "On", "group": {"idParent": "chorus"}, "doc": {"path": "/chorus/on"}},
+  {"ui": "switch", "rect": [15, 7, 2, 2], "title": "On", "group": {"idParent": "delay"}, "doc": {"path": "/delay/on"}},
+  {
+    "ui": "knob",
+    "rect": [1, 3, 2, 2],
+    "title": "Depth",
+    "group": {"idParent": "chorus"},
+    "doc": {"path": "/chorus/depth", "range": [0, 1], "multipleOf": 0.1},
+    "cm": {"control": "CC", "controlNo": [93]}
+  },
+  {
+    "ui": "knob",
+    "rect": [7, 3, 2, 2],
+    "title": "Rate",
+    "group": {"idParent": "chorus"},
+    "doc": {"path": "/chorus/rate", "range": [0, 10], "multipleOf": 0.01},
+    "cm": {"control": "CC", "controlNo": [89]}
+  },
+  {
+    "ui": "knob",
+    "rect": [12, 3, 2, 2],
+    "title": "Delay Time",
+    "group": {"idParent": "delay"},
+    "doc": {"path": "/delay/delayTime", "range": [0, 1], "multipleOf": 0.1},
+    "cm": {"control": "CC", "controlNo": [92]}
+  },
+  {
+    "ui": "knob",
+    "rect": [15, 3, 2, 2],
+    "title": "Feedback",
+    "group": {"idParent": "delay"},
+    "doc": {"path": "/delay/feedback", "range": [0, 1], "multipleOf": 0.1},
+    "cm": {"control": "CC", "controlNo": [90]}
+  },
+  {
+    "ui": "knob",
+    "rect": [18, 3, 2, 2],
+    "title": "Mix",
+    "group": {"idParent": "delay"},
+    "doc": {"path": "/delay/mix", "range": [0, 1], "multipleOf": 0.01},
+    "cm": {"control": "CC", "controlNo": [94]}
+  },
+  {"ui": "label", "rect": [1, 5, 2, 1], "title": "Depth"},
+  {"ui": "label", "rect": [7, 5, 2, 1], "title": "Rate"},
+  {"ui": "label", "rect": [12, 5, 2, 1], "title": "Delay Time"},
+  {"ui": "label", "rect": [15, 5, 2, 1], "title": "Feedback"},
+  {"ui": "label", "rect": [18, 5, 2, 1], "title": "Mix"}
+]
