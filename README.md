@@ -7,6 +7,8 @@ This application is used to test and debug MIDI 2.0 applications and hardware.
 
 ### How To Build this Project
 -----------------------
+Use version 16.x of NodeJS. Later version have issues with the C++ plugins.
+
 After you cloned this repository
 please run:
 ```
