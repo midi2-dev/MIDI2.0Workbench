@@ -26,3 +26,5 @@ yarn run start
 -----------------
 This Project aims to follow the current public MIDI specifications. 
 Please use the GitHub Issues to log any bugs, suggestions etc. 
+
+This project is supported and copyrighted by Yamaha Corporation 2020 under MIT. 
