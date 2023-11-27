@@ -20,6 +20,7 @@ It provides a comprehensive debug of:
 * Standard MIDI File 2 - Processor and validator
 
 The MIDI 2.0 Workbench also test various UMP transports where possible.
+
 To test USB MIDI 2.0 please make sure you use either:
 * OSX 14+
 * Linux with a 6.5+ Kernel and ALSA libs 1.2.10+
