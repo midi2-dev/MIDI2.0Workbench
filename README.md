@@ -23,6 +23,7 @@ The MIDI 2.0 Workbench also test various UMP transports where possible.
 To test USB MIDI 2.0 please make sure you use either:
 * OSX 14+
 * Linux with a 6.5+ Kernel and ALSA libs 1.2.10+
+
 Some prior version may work with mixed results.
 
 There are many features as part of the Workbench this includes:
@@ -47,7 +48,8 @@ To run the application:
 yarn run start
 ```
 
-
+_Q: Why are there no binary releases?_<br/>
+A: This will happen eventually. Once code-signing is set up and working this will occur.
 
 #### Issues and Updates
 -----------------
