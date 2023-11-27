@@ -8,9 +8,9 @@ It provides a comprehensive debug of:
 * UMP messages
   * Stream Messages
   * Channel Voice Messages
-  * System
-  * Utility
-  * SysEx
+  * System Messages
+  * Utility Messages
+  * System Exclusive
 * MIDI-CI v1.1 and 1.2
   * Discovery
   * Property Exchange
@@ -32,6 +32,7 @@ There are many features as part of the Workbench this includes:
 * Function Block and USB Group Terminal Block display and reporting
 * UMP Generator
 * Bridging UMP Devices
+* In-depth MIDI-CI System Exclusive debugging
 
 ### How To Build this Project
 -----------------------
