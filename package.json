@@ -45,7 +45,8 @@
     "usb_midi_2": "./midi2usb/"
   },
   "resolutions": {
-    "**/automation-events": "4.0.14"
+    "**/automation-events": "4.0.14",
+    "**/node-gyp": "8.4.1"
   },
   "build": {
     "appId": "com.electron.midi2workbench",
