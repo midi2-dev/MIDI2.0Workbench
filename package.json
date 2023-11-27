@@ -1,7 +1,7 @@
 {
-  "name": "midi_workbench",
+  "name": "midi2_workbench_public",
   "version": "1.5.4p",
-  "description": "This is the MIDI 2.0 Workbench for testing MIDI 2.0 Devices",
+  "description": "The MIDI 2.0 Workbench is a free tool from MIDI Association Members to help developers develop, debug (and deploy) MIDI 2.0 Applications and Devices. It runs on Windows, Mac and Linux. The Workbench connects to your device or software, to test various MIDI 2.0 implementation features against the currently released specifications.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -49,7 +49,7 @@
     "**/node-gyp": "8.4.1"
   },
   "build": {
-    "appId": "com.electron.midi2workbench",
+    "appId": "com.electron.midi2workbenchpublic",
     "productName": "midi2workbench",
     "mac": {
       "category": "public.app-category.music",
@@ -64,7 +64,7 @@
     },
     "linux": {
       "target": "AppImage",
-      "synopsis": "MIDI 2.0 Testing Workbench",
+      "synopsis": "MIDI 2.0 Workbench",
       "category": "Audio",
       "publish": "github",
       "desktop": {
@@ -79,7 +79,7 @@
       "publish": "github"
     },
     "appx": {
-      "applicationId": "midi-workbench",
+      "applicationId": "midi2-workbench-public",
       "displayName": "MIDI 2.0 Workbench",
       "publisher": "MIDI Manufacturers Association",
       "publisherDisplayName": "MIDI Manufacturers Association",
