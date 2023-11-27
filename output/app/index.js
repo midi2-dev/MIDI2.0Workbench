@@ -423,6 +423,7 @@ function addUMPDevFBs(umpDev,FBList){
         $('<span/>',{class:'fa fa-sync fa-xs',style:'float:right; opacity:0.6'})
             .appendTo(jqName)
             .on('click',(e)=>{
+                $(e.currentTarget).closest('.funcBlock').find("[data-muid]").remove();
                 $(e.currentTarget).addClass('fa-spin');
 
                 ipcRenderer.send('asynchronous-message', 'refreshMIDICI',
