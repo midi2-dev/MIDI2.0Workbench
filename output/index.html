@@ -57,7 +57,7 @@
 					<a class="nav-link" data-ipcmsg="showHelp" data-xdata="index" href="#">Help</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" data-ipcmsg="showAbout" data-xdata="index" href="#">About</a>
+					<a class="nav-link" id="showAbout" data-xdata="index" href="#">About</a>
 				</li>
 
 			</ul>
@@ -210,23 +210,38 @@
 					<table>
 						<tr style="vertical-align:top">
 							<td width="50%">
-								To start using the MIDI 2.0 Workbench it is recommended to watch the Basic Introduction video and look at the <a data-ipcmsg="showHelp" data-xdata="index" href="#">Help</a> pages.<br/>
+								<p>The <a href="https://github.com/midi2-dev/MIDI2.0Workbench">MIDI 2.0 Workbench</a> is
+									a free tool to help developers develop, debug (and deploy)
+									MIDI 2.0 Applications and Devices against currently released MIDI 2.0 specifications.</p>
+
+
+								<p>To start using the MIDI 2.0 Workbench it is recommended to watch the Basic Introduction video and look at the <a data-ipcmsg="showHelp" data-xdata="index" href="#">Help</a> pages.<br/>
 								<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/43duptJN4uw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								</p>
+								<p>Authored by: Andrew Mee &lt;primary.edw@gmail.com&gt;<BR/>
+									<a href="https://github.com/midi2-dev/MIDI2.0Workbench/issues" >
+										Report errors or suggestions here.
+									</a><br/>
+
+									This work is supported by Yamaha Corporation<br/>
+
+								This code is under <a href="https://opensource.org/license/mit/">MIT License</a> -  Copyright 2023 Yamaha Corporation</p>
 							</td>
 							<td width="50%">
 								<div class="_form_46"></div><script src="https://midi.activehosted.com/f/embed.php?id=46" type="text/javascript" charset="utf-8"></script>
 							</td>
 						</tr>
 					</table>
+
+				</div>
+
+				<div class="modal-footer">
 					<div  class="form-group">
 						<div class="form-check">
 							<input type="checkbox" data-path="/config/hidehelpPopup" class="form-check-input" />
 							<label  class="form-check-label">Do not show in future</label>
 						</div>
 					</div>
-				</div>
-
-				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				</div>
 			</div>

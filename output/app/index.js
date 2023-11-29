@@ -124,6 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ipcRenderer.send('asynchronous-message', 'getAllUMPDevicesFunctionBlocks');
     });
 
+    $('#showAbout').on('click',()=>{
+        $('#getStarted').modal({show:true});
+    })
+
 
 
 
