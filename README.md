@@ -27,13 +27,9 @@ To test USB MIDI 2.0 please make sure you use either:
 
 Some prior version may work with mixed results.
 
-There are many features as part of the Workbench this includes:
-* Logo Licence Checklist generator
-* Extensive Property Exchange Interface testing including Subscriptions
-* Function Block and USB Group Terminal Block display and reporting
-* UMP Generator
-* Bridging UMP Devices
-* In-depth MIDI-CI System Exclusive debugging
+
+This project uses a lot of raw data, as such it may not use available OS API's. It is recommended to use OS API's where 
+available, and this project should not been seen as reference code.
 
 ### How To Build this Project
 -----------------------
