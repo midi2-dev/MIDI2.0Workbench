@@ -1,7 +1,10 @@
 const os = require('os');
 const release = os.release().split('.').map(v=>parseInt(v,10));
 const USBDevices = require("./usbMIDI2Devices");
-let CoreMIDI, CoreMIDI2, CMDevices, CMoutport, ALSA, ALSASupport, AlsaDevices, legacyAlsaOnly;
+let CoreMIDI, CoreMIDI2, CMDevices, CMoutport,
+    ALSA, ALSASupport, AlsaDevices, legacyAlsaOnly,
+    WinMIDI, WinMIDISession
+    ;
 
 //const child_process = require('child_process');
 
@@ -51,6 +54,15 @@ module.exports = {
     }),
     sendMIDI: ((id, ump)=>{
 
+        if(WinMIDI){
+            if(MIDI2Devices[id]){
+                sendOutUMPBrokenUp(ump,0,(umpSplit,group)=>{
+                    MIDI2Devices[id]._connection.sendMessageWords(WinMIDI.MidiClock.now, ...umpSplit);
+                });
+            }
+            return;
+        }
+
         if(CoreMIDI2){
             if(MIDI2Devices[id]){
                 sendOutUMPBrokenUp(ump,0,(umpSplit,group)=>{
@@ -89,6 +101,107 @@ module.exports = {
 
 
 //###########  Intial load and setup
+
+if(os.platform()==='win32'){
+    //Check if MIDI Service is running
+    const { execSync } = require('child_process');
+    try {
+        if (execSync("midi service status", {encoding: "utf8"}).match(/Service MidiSrv is running/).length) {
+            //Window MIDI Service is running
+            WinMIDI = require('winmidi2');
+            WinMIDISession = WinMIDI.MidiSession.createSession("Electron Test Session");
+
+
+            const messageReceiveHandler = (sender, args) => {
+                // there are several ways to read the incoming message.
+                // One is to use strongly-typed message types. Another is to read an array, and still another is to
+                // get back an interface you will cast to an appropriate type. Lots of options there, and different
+                // ones work better in different client languages, and they have different amounts of overhead.
+
+                const packet = args.getMessagePacket();
+                const endpointDeviceId = WinMIDI.MidiEndpointConnection.castFrom(sender).endpointDeviceId;
+                const id = WinMIDI.MidiEndpointDeviceInformation.createFromId(endpointDeviceId).deviceInstanceId.replaceAll('\\', '_')
+
+                if (packet.packetType === WinMIDI.MidiPacketType.universalMidiPacket32) {
+                    const ump = WinMIDI.MidiMessage32.castFrom(packet);
+                    recvMIDI(id, [ump.word0]);
+                } else if (packet.packetType === WinMIDI.MidiPacketType.universalMidiPacket64) {
+                    const ump = WinMIDI.MidiMessage64.castFrom(packet);
+                    recvMIDI(id, [ump.word0, ump.word1]);
+                } else if (packet.packetType === WinMIDI.MidiPacketType.universalMidiPacket96) {
+                    const ump = WinMIDI.MidiMessage96.castFrom(packet);
+                    recvMIDI(id, [ump.word0, ump.word1, ump.word2]);
+                } else if (packet.packetType === WinMIDI.MidiPacketType.universalMidiPacket128) {
+                    const ump = WinMIDI.MidiMessage128.castFrom(packet);
+                    recvMIDI(id, [ump.word0, ump.word1, ump.word2, ump.word3]);
+                }
+
+            }
+
+            let checkNewDevices = setInterval(() => {
+                // Enumerate endpoints
+                let epList = WinMIDI.MidiEndpointDeviceInformation.findAll(
+                    WinMIDI.MidiEndpointDeviceInformationSortOrder.name,
+                    WinMIDI.MidiEndpointDeviceInformationFilter.includeDiagnosticLoopback |
+                    WinMIDI.MidiEndpointDeviceInformationFilter.includeClientUmpNative |
+                    WinMIDI.MidiEndpointDeviceInformationFilter.includeClientByteStreamNative
+                    //WinMIDI.MidiEndpointDeviceInformationFilter.includeDiagnosticPing
+
+                );
+
+                Object.keys(MIDI2Devices).map(k => {
+                    MIDI2Devices[k]['_checkExists'] = false;
+                });
+
+
+                for (var i = 0; i < epList.size; i++) {
+                    const endpoint = epList.getAt(i);
+                    const id = endpoint.deviceInstanceId.replaceAll('\\', '_');
+                    if(endpoint.name==='Diagnostics Loopback A'){
+                        continue;
+                    }
+                    if (MIDI2Devices[id]) {
+                        MIDI2Devices[id]['_checkExists'] = true;
+                    } else {
+                        MIDI2Devices[id] = {
+                            _connection: WinMIDISession.createEndpointConnection(endpoint.id),
+                            devId: id,
+                            blocks: [],
+                            _checkExists: true,
+                            clientName: endpoint.name,
+                            _transportMnemonic: endpoint.transportMnemonic,
+                            _description: endpoint.description,
+                            _deviceInstanceId: endpoint.deviceInstanceId
+
+                        };
+                        MIDI2Devices[id]._connection.on("MessageReceived", messageReceiveHandler);
+                        MIDI2Devices[id]._connection.open();
+
+                        console.log('New EP:' + endpoint.name);
+
+                        alertNewDev(id, MIDI2Devices[id]);
+
+                    }
+
+                    // console.log(endpoint.id);
+                    // console.log(endpoint.deviceInstanceId);
+                    // console.log(endpoint.name);
+                    // console.log(endpoint.description);
+                    // console.log(endpoint.transportMnemonic);
+                    // console.log("------------------------------------------------");
+                    // console.log("");
+                }
+
+
+            });
+
+        }
+    }catch (e) {
+        //Ignore errors
+    }
+
+    //WinMIDI
+}else
 if(os.platform()==='linux'){
     ALSA = require('bindings')('ALSA');
     ALSASupport = ALSA.UMPSupported();

@@ -11,12 +11,14 @@
     "builddebug": "node-gyp build --debug"
   },
   "devDependencies": {
-    "node-gyp": "^7.1.0"
+    "node-gyp": "8.4.1"
   },
+  "gypfile": true,
   "dependencies": {
     "async": "^3.2.3",
     "bindings": "^1.5.0",
-    "nan": "^2.14.1",
-    "usb": "^2.9.0"
+    "nan": "latest",
+    "usb": "^2.9.0",
+    "winmidi2": "./winmidi2"
   }
 }

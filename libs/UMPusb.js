@@ -34,8 +34,8 @@ function addDev(umpDev,m2){
         remoteEndpoint: {
             staticBlocks: 1,
             name: m2.clientName,
-            blocks: m2.blocks,
-            usbDetails: m2.usbDetails||null,
+            blocks: m2.blocks ||[],
+            usbDetails: m2.usbDetails|| {},
             manufacturer: m2.usbDetails?.iManufacturer||null,
             model: m2.usbDetails?.iProduct||null,
             midi2Supp: {
