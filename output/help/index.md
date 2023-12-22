@@ -18,6 +18,7 @@ found on [https://midi.org/specs](https://midi.org/specs)
 * [[Report an Error in the Workbench?|report]]
 * [[Set Up and Test a MIDI 1.0 Device using MIDI-CI|testM1MidiCi]]
 * [[Test a UMP Device?|testUMPDevice]]
+  * [[Test Windows API|win2midi]]
   * [[Setup a USB UMP Device?|usb]]
 * [[Test a MIDI-CI Device in Function Block on a UMP Device?|testFuncBlock]]
 * [[Fill out a Logo Implementation CheckList?|logoChecklist]]

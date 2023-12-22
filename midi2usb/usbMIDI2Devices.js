@@ -311,7 +311,7 @@ function descriptorLookup(dev, interfaceId) {
                                                 nNumGroupTrm: groupBlockData[6],
                                                 iBlockItem: groupBlockData[7],
                                                 bMIDIProtocol: groupBlockData[8],
-                                                wMaxInputBandwidth: groupBlockData[9] + (groupBlockData[9]<<8),
+                                                wMaxInputBandwidth: groupBlockData[9] + (groupBlockData[10]<<8),
                                                 wMaxOutputBandwidth: groupBlockData[11] + (groupBlockData[12]<<8),
                                             });
                                             if(groupBlockData[7]){
