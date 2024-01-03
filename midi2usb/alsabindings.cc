@@ -207,16 +207,16 @@ NAN_METHOD(get_UMP_Endpoints) {
         //int clientNum = snd_seq_port_info_get_client(pinfo);
         int portNum = snd_seq_port_info_get_port(pinfo);
 
-        int card = snd_seq_client_info_get_card(client);
-        if(card>=0){
-            BString hwname = BString::format("hw:%d", card);
-            snd_ctl_t* card_control_handle;
-            snd_ctl_open(&card_control_handle, hwname.toUTF8(), 0);
-            snd_ctl_card_info(card_control_handle, card_info);
-            BString location(getLocation(card, card_info));
-            BString manufacturer(getManufacturer(location));
-            Nan::Set(port,Nan::New("manufacturer").ToLocalChecked(),Nan::New(manufacturer.toUTF8()));
-        }
+//         int card = snd_seq_client_info_get_card(client);
+//         if(card>=0){
+//             BString hwname = BString::format("hw:%d", card);
+//             snd_ctl_t* card_control_handle;
+//             snd_ctl_open(&card_control_handle, hwname.toUTF8(), 0);
+//             snd_ctl_card_info(card_control_handle, card_info);
+//             BString location(getLocation(card, card_info));
+//             BString manufacturer(getManufacturer(location));
+//             Nan::Set(port,Nan::New("manufacturer").ToLocalChecked(),Nan::New(manufacturer.toUTF8()));
+//         }
 
         Nan::Set(port,Nan::New("client").ToLocalChecked(),Nan::New(client));
         Nan::Set(port,Nan::New("port").ToLocalChecked(),Nan::New(portNum));

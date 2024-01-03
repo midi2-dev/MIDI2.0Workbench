@@ -285,12 +285,23 @@ class midici {
 	sendInvalidate(remoteMuid,group=0){
 		if (!this.remoteDevicesInternal[remoteMuid])return;
 
+		let umpDev = this.remoteDevicesInternal[remoteMuid].umpDev;
+
 		const newResponse = this.createMIDICIMsg(this._muid, 0x7E,0x7F, 0xFFFFFFF,{
 			targetMuid: remoteMuid, group:group
 		});
-		this.completeMIDICIMsg(newResponse, this.remoteDevicesInternal[remoteMuid].umpDev);
+		this.completeMIDICIMsg(newResponse, umpDev);
+
+		global.umpDevices[umpDev].remoteEndpoint.blocks.map(fb=>{
+			if(group >= fb.firstGroup && group < fb.firstGroup+fb.numberGroups){
+				delete fb.muids[remoteMuid];
+			}
+
+		});
 		delete this.remoteDevices[remoteMuid];
 		delete this.remoteDevicesInternal[remoteMuid];
+		global.umpDevices[umpDev].reportEndpoint();
+
 	}
 
 	getEndpointInformation(remoteMuid, epStatus, cbComplete = function(){} ) {
@@ -1164,8 +1175,8 @@ class midici {
 			cbComplete();
 			return;
 		}
-		this.setData(remoteMuid, '/profiles.js', {});
-		//global.settings.projDevice.profiles.js={};
+		this.setData(remoteMuid, '/profiles', {});
+		//global.settings.projDevice.profiles={};
 		this.setData(remoteMuid, '/interoperability/pf1.1','',true);
 		this.setData(remoteMuid, '/interoperability/pf1.3','',true);
 		let newResponse = this.createMIDICIMsg(this._muid, 0x20,

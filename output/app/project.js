@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 interoperability.interoperability.map(topic=>{
                     common.buildinteroperability('#'+topic.tab,topic);
                     if(window.isReport && topic.tab==='profileInteroperability'){
-                        const profileConfig = ptr.get(window.settings, '/profiles.js') || {};
+                        const profileConfig = ptr.get(window.settings, '/profiles') || {};
                         for(let pfid in profileConfig){
                             let pf = profileConfig[pfid];
                             const jqPFTabContent = $('<div/>',{id:pfid}).insertAfter('#'+topic.tab);
@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('.profileControllers').on('click',function(e){
         const ch = parseInt($(this).attr('pfch'),10) -1 ;
-        const profileList = ptr.get(window.settings, '/profiles.js') || [];
+        const profileList = ptr.get(window.settings, '/profiles') || [];
        // debugger;
         const CtrlList = [];
         for (let pfid in  profileList){

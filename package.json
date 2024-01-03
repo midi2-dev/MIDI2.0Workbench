@@ -1,6 +1,6 @@
 {
   "name": "midi2_workbench_public",
-  "version": "1.5.4p",
+  "version": "1.5.5p",
   "description": "The MIDI 2.0 Workbench is a free tool from MIDI Association Members to help developers develop, debug (and deploy) MIDI 2.0 Applications and Devices. It runs on Windows, Mac and Linux. The Workbench connects to your device or software, to test various MIDI 2.0 implementation features against the currently released specifications.",
   "main": "main.js",
   "scripts": {
@@ -42,7 +42,7 @@
     "sanitize-filename": "^1.6.3",
     "serialport": "^10.5.0",
     "tone": "^14.7.77",
-    "usb_midi_2": "./midi2usb/"
+    "usb_midi_2": "./midi2usb"
   },
   "resolutions": {
     "**/automation-events": "4.0.14",

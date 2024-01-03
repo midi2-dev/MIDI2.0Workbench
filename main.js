@@ -428,7 +428,6 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			whichGlobalMIDICI(xData.umpDev).sendInvalidate(xData.muid);
 			BrowserWindow.fromWebContents(event.sender).close();
 			setTimeout(()=>{
-				//search_mDNS();
 				Object.keys(global.umpDevices).map(umpDev=>{
 					global.umpDevices[umpDev].getEndpointInfo();
 					//global.umpDevices[umpDev].getFunctionBlocks();
@@ -441,7 +440,6 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			global._midiciM1.invalidateSelf();
 			BrowserWindow.fromWebContents(event.sender).close();
 			setTimeout(()=>{
-				//search_mDNS();
 				Object.keys(global.umpDevices).map(umpDev=>{
 					global.umpDevices[umpDev].getEndpointInfo();
 					//global.umpDevices[umpDev].getFunctionBlocks();

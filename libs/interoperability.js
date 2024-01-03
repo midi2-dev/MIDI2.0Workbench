@@ -91,10 +91,7 @@ exports.interoperability=[
                                 if(muidList.length<10){
                                     opts.sendToInteroperabilityModal({msg:"Sending invalidate MUID"});
 
-                                    const newResponse = whichGlobalMIDICI(opts.umpDev).createMIDICIMsg(whichGlobalMIDICI(opts.umpDev)._muid, 0x7E,0x7F, 0xFFFFFFF,{
-                                        targetMuid: muidRemote, group:opts.group
-                                    });
-                                    whichGlobalMIDICI(umpDev).completeMIDICIMsg(newResponse, whichGlobalMIDICI(opts.umpDev).remoteDevicesInternal[muidRemote].umpDev);
+                                    whichGlobalMIDICI(opts.umpDev).sendInvalidate( muidRemote, opts.group);
                                     return;
                                 }
                                 whichGlobalMIDICI(opts.umpDev).loadMUID(muidRemote, opts.homedir,()=>{
@@ -189,10 +186,11 @@ exports.interoperability=[
                                     });
                                 });
                                 //whichGlobalMIDICI(opts.umpDev).sendInvalidate(opts.currentMuid);
-                                const newResponse = whichGlobalMIDICI(opts.umpDev).createMIDICIMsg(whichGlobalMIDICI(opts.umpDev)._muid, 0x7E,0x7F, 0xFFFFFFF,{
-                                    targetMuid: opts.currentMuid, group:opts.group
-                                });
-                                whichGlobalMIDICI(opts.umpDev).completeMIDICIMsg(newResponse, whichGlobalMIDICI(opts.umpDev).remoteDevicesInternal[opts.currentMuid].umpDev);
+                                whichGlobalMIDICI(opts.umpDev).sendInvalidate(opts.currentMuid, opts.group);
+                                // const newResponse = whichGlobalMIDICI(opts.umpDev).createMIDICIMsg(whichGlobalMIDICI(opts.umpDev)._muid, 0x7E,0x7F, 0xFFFFFFF,{
+                                //     targetMuid: opts.currentMuid, group:opts.group
+                                // });
+                                // whichGlobalMIDICI(opts.umpDev).completeMIDICIMsg(newResponse, whichGlobalMIDICI(opts.umpDev).remoteDevicesInternal[opts.currentMuid].umpDev);
                              });
                         }
                     }

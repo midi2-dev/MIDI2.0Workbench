@@ -181,6 +181,11 @@ declare module "windows.devices.midi2" {
     endUmp,
   }
 
+  export class IMidiEndpointConnectionSource {
+    constructor();
+
+  }
+
   export class IMidiEndpointDefinedConnectionSettings {
     isDirty: Boolean;
     settingsJson: String;
@@ -195,7 +200,7 @@ declare module "windows.devices.midi2" {
     tag: Object;
     constructor();
 
-    initialize(endpointConnection: MidiEndpointConnection): void;
+    initialize(endpointConnection: IMidiEndpointConnectionSource): void;
 
     onEndpointConnectionOpened(): void;
 
@@ -238,15 +243,9 @@ declare module "windows.devices.midi2" {
 
   }
 
-  export class MidiCIMessageUtility {
-    constructor();
-
-    static foo(): void;
-
-
-  }
-
   export class MidiChannel {
+    static labelFull: String;
+    static labelShort: String;
     index: Number;
     numberForDisplay: Number;
     constructor();
@@ -268,7 +267,7 @@ declare module "windows.devices.midi2" {
     id: String;
     constructor();
 
-    initialize(endpointConnection: MidiEndpointConnection): void;
+    initialize(endpointConnection: IMidiEndpointConnectionSource): void;
 
     onEndpointConnectionOpened(): void;
 
@@ -482,6 +481,8 @@ declare module "windows.devices.midi2" {
   }
 
   export class MidiGroup {
+    static labelFull: String;
+    static labelShort: String;
     index: Number;
     numberForDisplay: Number;
     constructor();
@@ -500,7 +501,7 @@ declare module "windows.devices.midi2" {
     includeGroups: Object;
     constructor();
 
-    initialize(endpointConnection: MidiEndpointConnection): void;
+    initialize(endpointConnection: IMidiEndpointConnectionSource): void;
 
     onEndpointConnectionOpened(): void;
 
@@ -522,11 +523,13 @@ declare module "windows.devices.midi2" {
   }
 
   export class MidiGroupTerminalBlock {
+    calculatedMaxDeviceInputBandwidthBitsPerSecond: Number;
+    calculatedMaxDeviceOutputBandwidthBitsPerSecond: Number;
     direction: MidiGroupTerminalBlockDirection;
     firstGroupIndex: Number;
     groupCount: Number;
-    maxDeviceInputBandwidthIn4KBSecondUnits: Number;
-    maxDeviceOutputBandwidthIn4KBSecondUnits: Number;
+    maxDeviceInputBandwidthIn4KBitsPerSecondUnits: Number;
+    maxDeviceOutputBandwidthIn4KBitsPerSecondUnits: Number;
     name: String;
     number: Number;
     protocol: MidiGroupTerminalBlockProtocol;
@@ -691,6 +694,23 @@ declare module "windows.devices.midi2" {
 
   }
 
+  export class MidiMessageProcessingPluginInformation {
+    author: String;
+    classId: String;
+    clientConfigurationAssemblyName: String;
+    description: String;
+    iconPath: String;
+    isClientConfigurable: Boolean;
+    isEnabled: Boolean;
+    isSystemManaged: Boolean;
+    name: String;
+    registryKey: String;
+    servicePluginFileName: String;
+    shortName: String;
+    constructor();
+
+  }
+
   export class MidiMessageReceivedEventArgs {
     messageType: MidiMessageType;
     packetType: MidiPacketType;
@@ -741,7 +761,7 @@ declare module "windows.devices.midi2" {
     includeMessageTypes: Object;
     constructor();
 
-    initialize(endpointConnection: MidiEndpointConnection): void;
+    initialize(endpointConnection: IMidiEndpointConnectionSource): void;
 
     onEndpointConnectionOpened(): void;
 
@@ -842,16 +862,6 @@ declare module "windows.devices.midi2" {
 
   }
 
-  export class MidiProfile {
-    constructor();
-
-  }
-
-  export class MidiProperty {
-    constructor();
-
-  }
-
   export class MidiService {
     constructor();
 
@@ -859,7 +869,10 @@ declare module "windows.devices.midi2" {
     static pingService(pingCount: Number, timeoutMilliseconds: Number): MidiServicePingResponseSummary;
 
 
-    static getInstalledTransports(): Object;
+    static getInstalledTransportPlugins(): Object;
+
+
+    static getInstalledMessageProcessingPlugins(): Object;
 
 
     static getOutgoingMessageQueueMaxMessageCapacity(): Number;
@@ -971,19 +984,27 @@ declare module "windows.devices.midi2" {
 
   }
 
-  export class MidiTransportInformation {
+  export class MidiTransportPluginInformation {
     author: String;
+    classId: String;
+    clientConfigurationAssemblyName: String;
+    description: String;
     iconPath: String;
-    id: String;
+    isClientConfigurable: Boolean;
+    isEnabled: Boolean;
     isRuntimeCreatable: Boolean;
+    isSystemManaged: Boolean;
+    mnemonic: String;
     name: String;
-    servicePluginFileName: String;
+    registryKey: String;
     shortName: String;
     constructor();
 
   }
 
   export class MidiUniqueId {
+    static labelFull: String;
+    static labelShort: String;
     byte4: Number;
     byte3: Number;
     byte2: Number;
@@ -999,7 +1020,6 @@ declare module "windows.devices.midi2" {
     isEnabled: Boolean;
     id: String;
     suppressHandledMessages: Boolean;
-    isMidiCIDevice: Boolean;
     endpointProductInstanceId: String;
     endpointName: String;
     areFunctionBlocksStatic: Boolean;
@@ -1012,7 +1032,7 @@ declare module "windows.devices.midi2" {
 
     removeFunctionBlock(functionBlockNumber: Number): void;
 
-    initialize(endpointConnection: MidiEndpointConnection): void;
+    initialize(endpointConnection: IMidiEndpointConnectionSource): void;
 
     onEndpointConnectionOpened(): void;
 

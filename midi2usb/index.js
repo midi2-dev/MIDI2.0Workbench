@@ -156,6 +156,7 @@ if(os.platform()==='win32'){
 
                 for (var i = 0; i < epList.size; i++) {
                     const endpoint = epList.getAt(i);
+                    //console.log(`New USB ${endpoint.name}`);
                     const id = endpoint.deviceInstanceId.replaceAll('\\', '_');
                     if(endpoint.name==='Diagnostics Loopback A'){
                         continue;
@@ -173,7 +174,33 @@ if(os.platform()==='win32'){
                             _description: endpoint.description,
                             _deviceInstanceId: endpoint.deviceInstanceId
 
+
+
                         };
+                        if(endpoint.transportMnemonic==='KS'){
+                            MIDI2Devices[id].usbDetails ={
+                                iManufacturer: '',
+                                    iProduct: endpoint.transportSuppliedName,
+                                    iSerialNumber: '',
+                                    groupBlocks: [],
+                            };
+
+                            for (var j = 0; j < endpoint.groupTerminalBlocks.size; j++) {
+                                const gtb = endpoint.groupTerminalBlocks.getAt(j);
+                                let block = {
+                                    gbIdx:gtb.number,
+                                    name: gtb.name,
+                                    numberGroups: gtb.groupCount,
+                                    firstGroup: gtb.firstGroupIndex,
+                                    direction: gtb.direction,
+                                    protocol: gtb.protocol
+                                };
+                                MIDI2Devices[id].usbDetails.groupBlocks.push(block);
+                            }
+                        }
+
+
+
                         MIDI2Devices[id]._connection.on("MessageReceived", messageReceiveHandler);
                         MIDI2Devices[id]._connection.open();
 
@@ -191,6 +218,16 @@ if(os.platform()==='win32'){
                     // console.log("------------------------------------------------");
                     // console.log("");
                 }
+
+                Object.keys(MIDI2Devices).map(k=>{
+                    if(MIDI2Devices[k]['_checkExists']===false){
+                        console.log('Remove EP:'+MIDI2Devices[k].clientName);
+                        alertRemoveDev(k);
+                        delete(MIDI2Devices[k]);
+                    }else{
+                        delete MIDI2Devices[k]['_checkExists'];
+                    }
+                });
 
 
             });

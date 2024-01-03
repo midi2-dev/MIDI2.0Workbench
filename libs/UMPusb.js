@@ -7,6 +7,7 @@ const {sendOutUMPBrokenUp} = require("./utils");
 
 
 midi2usb.setRecvMIDI((umpDev,umpArr)=>{
+    umpDev = "USB"+umpDev;
     if(global.umpDevices[umpDev]){
         global.umpDevices[umpDev].midiToProc(umpDev,umpArr);
     }else{
@@ -20,10 +21,12 @@ midi2usb.setRecvMIDI((umpDev,umpArr)=>{
 });
 
 midi2usb.setNewDeviceAlert((umpDev,m2)=>{
+    umpDev = "USB"+umpDev;
     addDev(umpDev,m2);
 });
 
 midi2usb.setRemoveDeviceAlert((umpDev)=>{
+    umpDev = "USB"+umpDev;
     removeUMPDevice(umpDev);
 });
 

@@ -1027,7 +1027,7 @@ exports.setProfileSetup = function () {
     const jqProfOpt = $('#profileOptions').empty();
 
     //debugger;
-    const profileConfig = ptr.get(window.settings, '/profiles.js') || {};
+    const profileConfig = ptr.get(window.settings, '/profiles') || {};
 
     let pfListRow = [];
     for(let pfid in profileConfig) {

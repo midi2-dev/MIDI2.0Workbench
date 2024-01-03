@@ -542,11 +542,11 @@ exports.ciParts = {
             let profile = {};
 
             if(msgObj.sysex[4] === 0x26){
-                profile = midiCi.getData(msgObj.muid, '/profiles.js/' + profileId);
+                profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId);
                 if (!profile) {
                     profile = {sysex: valSysex};
                     midiCi.buildProfile(profile);
-                    midiCi.setData(msgObj.muid, '/profiles.js/' + profileId, profile);
+                    midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
                     midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
                 }
 
@@ -555,11 +555,11 @@ exports.ciParts = {
             }
 
             if(msgObj.sysex[4] === 0x28 || msgObj.sysex[4] === 0x29){
-                profile = midiCi.getData(msgObj.muid, '/profiles.js/' + profileId);
+                profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId);
                 if (!profile) {
                     profile = {sysex: valSysex};
                     midiCi.buildProfile(profile);
-                    midiCi.setData(msgObj.muid, '/profiles.js/' + profileId, profile);
+                    midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
                     midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
                 }
             }
@@ -570,7 +570,7 @@ exports.ciParts = {
             }
 
             if (msgObj.sysex[4] >= 0x22 && msgObj.sysex[4] <= 0x25) {
-                profile = midiCi.getData(msgObj.muid, '/profiles.js/' + profileId) || {};
+                profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId) || {};
                 const isEnabled = (msgObj.sysex[4] === 0x24 || msgObj.sysex[4] === 0x22);
 
                 midiCi.setData(msgObj.muid, `/profiles/${profileId}/sourceDestinations/${msgObj.group + '_' +msgObj.sourceDestination}/active`, isEnabled);
@@ -692,11 +692,11 @@ exports.ciParts = {
                 }
                 const profileId = profSysex.join('_');
 
-                let profile = midiCi.getData(msgObj.muid, '/profiles.js/' + profileId);
+                let profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId);
                 if (!profile) {
                     profile = {sysex: profSysex};
                     midiCi.buildProfile(profile);
-                    midiCi.setData(msgObj.muid, '/profiles.js/' + profileId, profile);
+                    midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
 
                     midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
                     setRemoteEndpointValueFromMUID(msgObj.muid,
@@ -777,11 +777,11 @@ exports.ciParts = {
                 }
                 const profileId = profSysex.join('_');
 
-                let profile = midiCi.getData(msgObj.muid, '/profiles.js/' + profileId);
+                let profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId);
                 if (!profile) {
                     profile = {sysex: profSysex};
                     midiCi.buildProfile(profile);
-                    midiCi.setData(msgObj.muid, '/profiles.js/' + profileId, profile);
+                    midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
                     midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
                     setRemoteEndpointValueFromMUID(msgObj.muid,
                         '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'),
@@ -808,7 +808,7 @@ exports.ciParts = {
                 }
                 profiles.push(profile);
             }
-            //let profiles.js = this.getData(msgObj.muid, '/profiles.js');
+            //let profiles = this.getData(msgObj.muid, '/profiles');
             let mmaProf = midiCi.getData(msgObj.muid, '/interoperability/pf1.1') || '';
             let manuProf = midiCi.getData(msgObj.muid, '/interoperability/pf1.3') || '';
             Object.keys(profiles).map(pId => {
@@ -816,7 +816,7 @@ exports.ciParts = {
                 mmaProf = out.mmaProf;
                 manuProf = out.manuProf;
             });
-            //profiles.js.disabled.map(pf=>{buildOut(pf,mmaProf,manuProf);});
+            //profiles.disabled.map(pf=>{buildOut(pf,mmaProf,manuProf);});
             midiCi.setData(msgObj.muid, '/interoperability/pf1.1', mmaProf, true);
             midiCi.setData(msgObj.muid, '/interoperability/pf1.3', manuProf, true);
             return profiles;

@@ -65,6 +65,9 @@ using Nan::TryCatch;
 using namespace concurrency;
 
 namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 { 
+  v8::Local<v8::Value> WrapIMidiEndpointConnectionSource(::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ wintRtInstance);
+  ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ UnwrapIMidiEndpointConnectionSource(Local<Value> value);
+  
   v8::Local<v8::Value> WrapIMidiEndpointDefinedConnectionSettings(::Windows::Devices::Midi2::IMidiEndpointDefinedConnectionSettings^ wintRtInstance);
   ::Windows::Devices::Midi2::IMidiEndpointDefinedConnectionSettings^ UnwrapIMidiEndpointDefinedConnectionSettings(Local<Value> value);
   
@@ -79,9 +82,6 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
   
   v8::Local<v8::Value> WrapIMidiUniversalPacket(::Windows::Devices::Midi2::IMidiUniversalPacket^ wintRtInstance);
   ::Windows::Devices::Midi2::IMidiUniversalPacket^ UnwrapIMidiUniversalPacket(Local<Value> value);
-  
-  v8::Local<v8::Value> WrapMidiCIMessageUtility(::Windows::Devices::Midi2::MidiCIMessageUtility^ wintRtInstance);
-  ::Windows::Devices::Midi2::MidiCIMessageUtility^ UnwrapMidiCIMessageUtility(Local<Value> value);
   
   v8::Local<v8::Value> WrapMidiChannel(::Windows::Devices::Midi2::MidiChannel^ wintRtInstance);
   ::Windows::Devices::Midi2::MidiChannel^ UnwrapMidiChannel(Local<Value> value);
@@ -134,6 +134,9 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
   v8::Local<v8::Value> WrapMidiMessageConverter(::Windows::Devices::Midi2::MidiMessageConverter^ wintRtInstance);
   ::Windows::Devices::Midi2::MidiMessageConverter^ UnwrapMidiMessageConverter(Local<Value> value);
   
+  v8::Local<v8::Value> WrapMidiMessageProcessingPluginInformation(::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ wintRtInstance);
+  ::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ UnwrapMidiMessageProcessingPluginInformation(Local<Value> value);
+  
   v8::Local<v8::Value> WrapMidiMessageReceivedEventArgs(::Windows::Devices::Midi2::MidiMessageReceivedEventArgs^ wintRtInstance);
   ::Windows::Devices::Midi2::MidiMessageReceivedEventArgs^ UnwrapMidiMessageReceivedEventArgs(Local<Value> value);
   
@@ -145,12 +148,6 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
   
   v8::Local<v8::Value> WrapMidiMessageUtility(::Windows::Devices::Midi2::MidiMessageUtility^ wintRtInstance);
   ::Windows::Devices::Midi2::MidiMessageUtility^ UnwrapMidiMessageUtility(Local<Value> value);
-  
-  v8::Local<v8::Value> WrapMidiProfile(::Windows::Devices::Midi2::MidiProfile^ wintRtInstance);
-  ::Windows::Devices::Midi2::MidiProfile^ UnwrapMidiProfile(Local<Value> value);
-  
-  v8::Local<v8::Value> WrapMidiProperty(::Windows::Devices::Midi2::MidiProperty^ wintRtInstance);
-  ::Windows::Devices::Midi2::MidiProperty^ UnwrapMidiProperty(Local<Value> value);
   
   v8::Local<v8::Value> WrapMidiService(::Windows::Devices::Midi2::MidiService^ wintRtInstance);
   ::Windows::Devices::Midi2::MidiService^ UnwrapMidiService(Local<Value> value);
@@ -173,8 +170,8 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
   v8::Local<v8::Value> WrapMidiStreamMessageBuilder(::Windows::Devices::Midi2::MidiStreamMessageBuilder^ wintRtInstance);
   ::Windows::Devices::Midi2::MidiStreamMessageBuilder^ UnwrapMidiStreamMessageBuilder(Local<Value> value);
   
-  v8::Local<v8::Value> WrapMidiTransportInformation(::Windows::Devices::Midi2::MidiTransportInformation^ wintRtInstance);
-  ::Windows::Devices::Midi2::MidiTransportInformation^ UnwrapMidiTransportInformation(Local<Value> value);
+  v8::Local<v8::Value> WrapMidiTransportPluginInformation(::Windows::Devices::Midi2::MidiTransportPluginInformation^ wintRtInstance);
+  ::Windows::Devices::Midi2::MidiTransportPluginInformation^ UnwrapMidiTransportPluginInformation(Local<Value> value);
   
   v8::Local<v8::Value> WrapMidiUniqueId(::Windows::Devices::Midi2::MidiUniqueId^ wintRtInstance);
   ::Windows::Devices::Midi2::MidiUniqueId^ UnwrapMidiUniqueId(Local<Value> value);
@@ -546,6 +543,157 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     return scope.Escape(obj);
   }
 
+
+  class IMidiEndpointConnectionSource : public WrapperBase {
+    public:
+      
+      static void Init(const Local<Object> exports) {
+        HandleScope scope;
+
+        Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(New);
+        s_constructorTemplate.Reset(localRef);
+        localRef->SetClassName(Nan::New<String>("IMidiEndpointConnectionSource").ToLocalChecked());
+        localRef->InstanceTemplate()->SetInternalFieldCount(1);
+
+
+
+
+
+
+        Local<Object> constructor = Nan::To<Object>(Nan::GetFunction(localRef).ToLocalChecked()).ToLocalChecked();
+        Nan::SetMethod(constructor, "castFrom", CastFrom);
+
+
+
+        Nan::Set(exports, Nan::New<String>("IMidiEndpointConnectionSource").ToLocalChecked(), constructor);
+      }
+
+      virtual ::Platform::Object^ GetObjectInstance() const override {
+        return _instance;
+      }
+
+    private:
+
+      IMidiEndpointConnectionSource(::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ instance) {
+        _instance = instance;
+      }
+
+      
+    static void New(Nan::NAN_METHOD_ARGS_TYPE info) {
+      HandleScope scope;
+
+      Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(s_constructorTemplate);
+
+      // in case the constructor was called without the new operator
+      if (!localRef->HasInstance(info.This())) {
+        if (info.Length() > 0) {
+          std::unique_ptr<Local<Value> []> constructorArgs(new Local<Value>[info.Length()]);
+
+          Local<Value> *argsPtr = constructorArgs.get();
+          for (int i = 0; i < info.Length(); i++) {
+            argsPtr[i] = info[i];
+          }
+
+          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), constructorArgs.get());
+          if (res.IsEmpty()) {
+            return;
+          }
+
+          info.GetReturnValue().Set(res.ToLocalChecked());
+          return;
+        } else {
+          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), nullptr);
+
+          if (res.IsEmpty()) {
+            return;
+          }
+
+          info.GetReturnValue().Set(res.ToLocalChecked());
+          return;
+        }
+      }
+
+      ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ winRtInstance;
+
+
+      if (info.Length() == 1 && OpaqueWrapper::IsOpaqueWrapper(info[0]) &&
+        NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::IMidiEndpointConnectionSource^>(info[0])) {
+        try {
+          winRtInstance = (::Windows::Devices::Midi2::IMidiEndpointConnectionSource^) NodeRT::Utils::GetObjectInstance(info[0]);
+        } catch (Platform::Exception ^exception) {
+          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+          return;
+        }
+      }
+ else {
+        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no suitable constructor found")));
+        return;
+      }
+
+      NodeRT::Utils::SetHiddenValue(info.This(), Nan::New<String>("__winRtInstance__").ToLocalChecked(), True());
+
+      IMidiEndpointConnectionSource *wrapperInstance = new IMidiEndpointConnectionSource(winRtInstance);
+      wrapperInstance->Wrap(info.This());
+
+      info.GetReturnValue().Set(info.This());
+    }
+
+
+      
+    static void CastFrom(Nan::NAN_METHOD_ARGS_TYPE info) {
+      HandleScope scope;
+      if (info.Length() < 1 || !NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::IMidiEndpointConnectionSource^>(info[0])) {
+        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no object provided, or given object could not be casted to requested type")));
+        return;
+      }
+
+      ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ winRtInstance;
+      try {
+        winRtInstance = (::Windows::Devices::Midi2::IMidiEndpointConnectionSource^) NodeRT::Utils::GetObjectInstance(info[0]);
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+
+      info.GetReturnValue().Set(WrapIMidiEndpointConnectionSource(winRtInstance));
+    }
+
+
+
+
+
+
+
+    private:
+      ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ _instance;
+      static Persistent<FunctionTemplate> s_constructorTemplate;
+
+      friend v8::Local<v8::Value> WrapIMidiEndpointConnectionSource(::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ wintRtInstance);
+      friend ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ UnwrapIMidiEndpointConnectionSource(Local<Value> value);
+  };
+
+  Persistent<FunctionTemplate> IMidiEndpointConnectionSource::s_constructorTemplate;
+
+  v8::Local<v8::Value> WrapIMidiEndpointConnectionSource(::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ winRtInstance) {
+    EscapableHandleScope scope;
+
+    if (winRtInstance == nullptr) {
+      return scope.Escape(Undefined());
+    }
+
+    Local<Value> opaqueWrapper = CreateOpaqueWrapper(winRtInstance);
+    Local<Value> args[] = {opaqueWrapper};
+    Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(IMidiEndpointConnectionSource::s_constructorTemplate);
+    return scope.Escape(Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(),_countof(args), args).ToLocalChecked());
+  }
+
+  ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ UnwrapIMidiEndpointConnectionSource(Local<Value> value) {
+     return IMidiEndpointConnectionSource::Unwrap<IMidiEndpointConnectionSource>(Nan::To<Object>(value).ToLocalChecked())->_instance;
+  }
+
+  void InitIMidiEndpointConnectionSource(Local<Object> exports) {
+    IMidiEndpointConnectionSource::Init(exports);
+  }
 
   class IMidiEndpointDefinedConnectionSettings : public WrapperBase {
     public:
@@ -923,11 +1071,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       IMidiEndpointMessageProcessingPlugin *wrapper = IMidiEndpointMessageProcessingPlugin::Unwrap<IMidiEndpointMessageProcessingPlugin>(info.This());
 
       if (info.Length() == 1
-        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiEndpointConnection^>(info[0]))
+        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::IMidiEndpointConnectionSource^>(info[0]))
       {
         try
         {
-          ::Windows::Devices::Midi2::MidiEndpointConnection^ arg0 = UnwrapMidiEndpointConnection(info[0]);
+          ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ arg0 = UnwrapIMidiEndpointConnectionSource(info[0]);
           
           wrapper->_instance->Initialize(arg0);
           return;
@@ -2057,180 +2205,6 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     IMidiUniversalPacket::Init(exports);
   }
 
-  class MidiCIMessageUtility : public WrapperBase {
-    public:
-      
-      static void Init(const Local<Object> exports) {
-        HandleScope scope;
-
-        Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(New);
-        s_constructorTemplate.Reset(localRef);
-        localRef->SetClassName(Nan::New<String>("MidiCIMessageUtility").ToLocalChecked());
-        localRef->InstanceTemplate()->SetInternalFieldCount(1);
-
-
-
-
-
-
-        Local<Object> constructor = Nan::To<Object>(Nan::GetFunction(localRef).ToLocalChecked()).ToLocalChecked();
-        Nan::SetMethod(constructor, "castFrom", CastFrom);
-
-        Nan::SetMethod(constructor, "foo", Foo);
-
-
-        Nan::Set(exports, Nan::New<String>("MidiCIMessageUtility").ToLocalChecked(), constructor);
-      }
-
-      virtual ::Platform::Object^ GetObjectInstance() const override {
-        return _instance;
-      }
-
-    private:
-
-      MidiCIMessageUtility(::Windows::Devices::Midi2::MidiCIMessageUtility^ instance) {
-        _instance = instance;
-      }
-
-      
-    static void New(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
-
-      Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(s_constructorTemplate);
-
-      // in case the constructor was called without the new operator
-      if (!localRef->HasInstance(info.This())) {
-        if (info.Length() > 0) {
-          std::unique_ptr<Local<Value> []> constructorArgs(new Local<Value>[info.Length()]);
-
-          Local<Value> *argsPtr = constructorArgs.get();
-          for (int i = 0; i < info.Length(); i++) {
-            argsPtr[i] = info[i];
-          }
-
-          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), constructorArgs.get());
-          if (res.IsEmpty()) {
-            return;
-          }
-
-          info.GetReturnValue().Set(res.ToLocalChecked());
-          return;
-        } else {
-          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), nullptr);
-
-          if (res.IsEmpty()) {
-            return;
-          }
-
-          info.GetReturnValue().Set(res.ToLocalChecked());
-          return;
-        }
-      }
-
-      ::Windows::Devices::Midi2::MidiCIMessageUtility^ winRtInstance;
-
-
-      if (info.Length() == 1 && OpaqueWrapper::IsOpaqueWrapper(info[0]) &&
-        NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiCIMessageUtility^>(info[0])) {
-        try {
-          winRtInstance = (::Windows::Devices::Midi2::MidiCIMessageUtility^) NodeRT::Utils::GetObjectInstance(info[0]);
-        } catch (Platform::Exception ^exception) {
-          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-          return;
-        }
-      }
- else {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no suitable constructor found")));
-        return;
-      }
-
-      NodeRT::Utils::SetHiddenValue(info.This(), Nan::New<String>("__winRtInstance__").ToLocalChecked(), True());
-
-      MidiCIMessageUtility *wrapperInstance = new MidiCIMessageUtility(winRtInstance);
-      wrapperInstance->Wrap(info.This());
-
-      info.GetReturnValue().Set(info.This());
-    }
-
-
-      
-    static void CastFrom(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
-      if (info.Length() < 1 || !NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiCIMessageUtility^>(info[0])) {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no object provided, or given object could not be casted to requested type")));
-        return;
-      }
-
-      ::Windows::Devices::Midi2::MidiCIMessageUtility^ winRtInstance;
-      try {
-        winRtInstance = (::Windows::Devices::Midi2::MidiCIMessageUtility^) NodeRT::Utils::GetObjectInstance(info[0]);
-      } catch (Platform::Exception ^exception) {
-        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-        return;
-      }
-
-      info.GetReturnValue().Set(WrapMidiCIMessageUtility(winRtInstance));
-    }
-
-
-
-
-
-    static void Foo(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
-
-      if (info.Length() == 0)
-      {
-        try
-        {
-          ::Windows::Devices::Midi2::MidiCIMessageUtility::Foo();
-          return;
-        }
-        catch (Platform::Exception ^exception)
-        {
-          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-          return;
-        }
-      }
- else  {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Bad arguments: no suitable overload found")));
-        return;
-      }
-    }
-
-
-
-    private:
-      ::Windows::Devices::Midi2::MidiCIMessageUtility^ _instance;
-      static Persistent<FunctionTemplate> s_constructorTemplate;
-
-      friend v8::Local<v8::Value> WrapMidiCIMessageUtility(::Windows::Devices::Midi2::MidiCIMessageUtility^ wintRtInstance);
-      friend ::Windows::Devices::Midi2::MidiCIMessageUtility^ UnwrapMidiCIMessageUtility(Local<Value> value);
-  };
-
-  Persistent<FunctionTemplate> MidiCIMessageUtility::s_constructorTemplate;
-
-  v8::Local<v8::Value> WrapMidiCIMessageUtility(::Windows::Devices::Midi2::MidiCIMessageUtility^ winRtInstance) {
-    EscapableHandleScope scope;
-
-    if (winRtInstance == nullptr) {
-      return scope.Escape(Undefined());
-    }
-
-    Local<Value> opaqueWrapper = CreateOpaqueWrapper(winRtInstance);
-    Local<Value> args[] = {opaqueWrapper};
-    Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(MidiCIMessageUtility::s_constructorTemplate);
-    return scope.Escape(Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(),_countof(args), args).ToLocalChecked());
-  }
-
-  ::Windows::Devices::Midi2::MidiCIMessageUtility^ UnwrapMidiCIMessageUtility(Local<Value> value) {
-     return MidiCIMessageUtility::Unwrap<MidiCIMessageUtility>(Nan::To<Object>(value).ToLocalChecked())->_instance;
-  }
-
-  void InitMidiCIMessageUtility(Local<Object> exports) {
-    MidiCIMessageUtility::Init(exports);
-  }
-
   class MidiChannel : public WrapperBase {
     public:
       
@@ -2254,6 +2228,8 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
         Nan::SetMethod(constructor, "castFrom", CastFrom);
 
         Nan::SetMethod(constructor, "isValidChannelIndex", IsValidChannelIndex);
+        Nan::SetAccessor(constructor, Nan::New<String>("labelFull").ToLocalChecked(), LabelFullGetter);
+        Nan::SetAccessor(constructor, Nan::New<String>("labelShort").ToLocalChecked(), LabelShortGetter);
 
 
         Nan::Set(exports, Nan::New<String>("MidiChannel").ToLocalChecked(), constructor);
@@ -2465,6 +2441,36 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       
 
 
+    static void LabelFullGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      try
+      {
+        Platform::String^ result = ::Windows::Devices::Midi2::MidiChannel::LabelFull;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+
+    static void LabelShortGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      try
+      {
+        Platform::String^ result = ::Windows::Devices::Midi2::MidiChannel::LabelShort;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+
     private:
       ::Windows::Devices::Midi2::MidiChannel^ _instance;
       static Persistent<FunctionTemplate> s_constructorTemplate;
@@ -2650,11 +2656,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       MidiChannelEndpointListener *wrapper = MidiChannelEndpointListener::Unwrap<MidiChannelEndpointListener>(info.This());
 
       if (info.Length() == 1
-        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiEndpointConnection^>(info[0]))
+        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::IMidiEndpointConnectionSource^>(info[0]))
       {
         try
         {
-          ::Windows::Devices::Midi2::MidiEndpointConnection^ arg0 = UnwrapMidiEndpointConnection(info[0]);
+          ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ arg0 = UnwrapIMidiEndpointConnectionSource(info[0]);
           
           wrapper->_instance->Initialize(arg0);
           return;
@@ -3600,7 +3606,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
           
             Nan::SetPrototypeMethod(localRef, "open", Open);
             Nan::SetPrototypeMethod(localRef, "sendMessagePacket", SendMessagePacket);
-           // Nan::SetPrototypeMethod(localRef, "sendMessageStruct", SendMessageStruct);
+            //Nan::SetPrototypeMethod(localRef, "sendMessageStruct", SendMessageStruct);
             Nan::SetPrototypeMethod(localRef, "sendMessageWordArray", SendMessageWordArray);
             Nan::SetPrototypeMethod(localRef, "sendMessageWords", SendMessageWords);
             Nan::SetPrototypeMethod(localRef, "sendMessageBuffer", SendMessageBuffer);
@@ -6857,6 +6863,8 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
         Nan::SetMethod(constructor, "castFrom", CastFrom);
 
         Nan::SetMethod(constructor, "isValidGroupIndex", IsValidGroupIndex);
+        Nan::SetAccessor(constructor, Nan::New<String>("labelFull").ToLocalChecked(), LabelFullGetter);
+        Nan::SetAccessor(constructor, Nan::New<String>("labelShort").ToLocalChecked(), LabelShortGetter);
 
 
         Nan::Set(exports, Nan::New<String>("MidiGroup").ToLocalChecked(), constructor);
@@ -7068,6 +7076,36 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       
 
 
+    static void LabelFullGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      try
+      {
+        Platform::String^ result = ::Windows::Devices::Midi2::MidiGroup::LabelFull;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+
+    static void LabelShortGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      try
+      {
+        Platform::String^ result = ::Windows::Devices::Midi2::MidiGroup::LabelShort;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+
     private:
       ::Windows::Devices::Midi2::MidiGroup^ _instance;
       static Persistent<FunctionTemplate> s_constructorTemplate;
@@ -7250,11 +7288,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       MidiGroupEndpointListener *wrapper = MidiGroupEndpointListener::Unwrap<MidiGroupEndpointListener>(info.This());
 
       if (info.Length() == 1
-        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiEndpointConnection^>(info[0]))
+        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::IMidiEndpointConnectionSource^>(info[0]))
       {
         try
         {
-          ::Windows::Devices::Midi2::MidiEndpointConnection^ arg0 = UnwrapMidiEndpointConnection(info[0]);
+          ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ arg0 = UnwrapIMidiEndpointConnectionSource(info[0]);
           
           wrapper->_instance->Initialize(arg0);
           return;
@@ -7746,11 +7784,13 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
 
           
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("calculatedMaxDeviceInputBandwidthBitsPerSecond").ToLocalChecked(), CalculatedMaxDeviceInputBandwidthBitsPerSecondGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("calculatedMaxDeviceOutputBandwidthBitsPerSecond").ToLocalChecked(), CalculatedMaxDeviceOutputBandwidthBitsPerSecondGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("direction").ToLocalChecked(), DirectionGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("firstGroupIndex").ToLocalChecked(), FirstGroupIndexGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("groupCount").ToLocalChecked(), GroupCountGetter);
-            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("maxDeviceInputBandwidthIn4KBSecondUnits").ToLocalChecked(), MaxDeviceInputBandwidthIn4KBSecondUnitsGetter);
-            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("maxDeviceOutputBandwidthIn4KBSecondUnits").ToLocalChecked(), MaxDeviceOutputBandwidthIn4KBSecondUnitsGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("maxDeviceInputBandwidthIn4KBitsPerSecondUnits").ToLocalChecked(), MaxDeviceInputBandwidthIn4KBitsPerSecondUnitsGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("maxDeviceOutputBandwidthIn4KBitsPerSecondUnits").ToLocalChecked(), MaxDeviceOutputBandwidthIn4KBitsPerSecondUnitsGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("name").ToLocalChecked(), NameGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("number").ToLocalChecked(), NumberGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("protocol").ToLocalChecked(), ProtocolGetter);
@@ -7887,6 +7927,44 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
 
 
+    static void CalculatedMaxDeviceInputBandwidthBitsPerSecondGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiGroupTerminalBlock^>(info.This())) {
+        return;
+      }
+
+      MidiGroupTerminalBlock *wrapper = MidiGroupTerminalBlock::Unwrap<MidiGroupTerminalBlock>(info.This());
+
+      try  {
+        unsigned int result = wrapper->_instance->CalculatedMaxDeviceInputBandwidthBitsPerSecond;
+        info.GetReturnValue().Set(Nan::New<Integer>(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void CalculatedMaxDeviceOutputBandwidthBitsPerSecondGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiGroupTerminalBlock^>(info.This())) {
+        return;
+      }
+
+      MidiGroupTerminalBlock *wrapper = MidiGroupTerminalBlock::Unwrap<MidiGroupTerminalBlock>(info.This());
+
+      try  {
+        unsigned int result = wrapper->_instance->CalculatedMaxDeviceOutputBandwidthBitsPerSecond;
+        info.GetReturnValue().Set(Nan::New<Integer>(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
     static void DirectionGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
@@ -7944,7 +8022,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
       
-    static void MaxDeviceInputBandwidthIn4KBSecondUnitsGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+    static void MaxDeviceInputBandwidthIn4KBitsPerSecondUnitsGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
       if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiGroupTerminalBlock^>(info.This())) {
@@ -7954,7 +8032,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       MidiGroupTerminalBlock *wrapper = MidiGroupTerminalBlock::Unwrap<MidiGroupTerminalBlock>(info.This());
 
       try  {
-        unsigned short result = wrapper->_instance->MaxDeviceInputBandwidthIn4KBSecondUnits;
+        unsigned short result = wrapper->_instance->MaxDeviceInputBandwidthIn4KBitsPerSecondUnits;
         info.GetReturnValue().Set(Nan::New<Integer>(result));
         return;
       } catch (Platform::Exception ^exception) {
@@ -7963,7 +8041,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
       
-    static void MaxDeviceOutputBandwidthIn4KBSecondUnitsGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+    static void MaxDeviceOutputBandwidthIn4KBitsPerSecondUnitsGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
       if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiGroupTerminalBlock^>(info.This())) {
@@ -7973,7 +8051,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       MidiGroupTerminalBlock *wrapper = MidiGroupTerminalBlock::Unwrap<MidiGroupTerminalBlock>(info.This());
 
       try  {
-        unsigned short result = wrapper->_instance->MaxDeviceOutputBandwidthIn4KBSecondUnits;
+        unsigned short result = wrapper->_instance->MaxDeviceOutputBandwidthIn4KBitsPerSecondUnits;
         info.GetReturnValue().Set(Nan::New<Integer>(result));
         return;
       } catch (Platform::Exception ^exception) {
@@ -11292,6 +11370,398 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     MidiMessageConverter::Init(exports);
   }
 
+  class MidiMessageProcessingPluginInformation : public WrapperBase {
+    public:
+      
+      static void Init(const Local<Object> exports) {
+        HandleScope scope;
+
+        Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(New);
+        s_constructorTemplate.Reset(localRef);
+        localRef->SetClassName(Nan::New<String>("MidiMessageProcessingPluginInformation").ToLocalChecked());
+        localRef->InstanceTemplate()->SetInternalFieldCount(1);
+
+
+
+
+
+          
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("author").ToLocalChecked(), AuthorGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("classId").ToLocalChecked(), ClassIdGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("clientConfigurationAssemblyName").ToLocalChecked(), ClientConfigurationAssemblyNameGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("description").ToLocalChecked(), DescriptionGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("iconPath").ToLocalChecked(), IconPathGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isClientConfigurable").ToLocalChecked(), IsClientConfigurableGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isEnabled").ToLocalChecked(), IsEnabledGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isSystemManaged").ToLocalChecked(), IsSystemManagedGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("name").ToLocalChecked(), NameGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("registryKey").ToLocalChecked(), RegistryKeyGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("servicePluginFileName").ToLocalChecked(), ServicePluginFileNameGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("shortName").ToLocalChecked(), ShortNameGetter);
+
+        Local<Object> constructor = Nan::To<Object>(Nan::GetFunction(localRef).ToLocalChecked()).ToLocalChecked();
+        Nan::SetMethod(constructor, "castFrom", CastFrom);
+
+
+
+        Nan::Set(exports, Nan::New<String>("MidiMessageProcessingPluginInformation").ToLocalChecked(), constructor);
+      }
+
+      virtual ::Platform::Object^ GetObjectInstance() const override {
+        return _instance;
+      }
+
+    private:
+
+      MidiMessageProcessingPluginInformation(::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ instance) {
+        _instance = instance;
+      }
+
+      
+    static void New(Nan::NAN_METHOD_ARGS_TYPE info) {
+      HandleScope scope;
+
+      Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(s_constructorTemplate);
+
+      // in case the constructor was called without the new operator
+      if (!localRef->HasInstance(info.This())) {
+        if (info.Length() > 0) {
+          std::unique_ptr<Local<Value> []> constructorArgs(new Local<Value>[info.Length()]);
+
+          Local<Value> *argsPtr = constructorArgs.get();
+          for (int i = 0; i < info.Length(); i++) {
+            argsPtr[i] = info[i];
+          }
+
+          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), constructorArgs.get());
+          if (res.IsEmpty()) {
+            return;
+          }
+
+          info.GetReturnValue().Set(res.ToLocalChecked());
+          return;
+        } else {
+          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), nullptr);
+
+          if (res.IsEmpty()) {
+            return;
+          }
+
+          info.GetReturnValue().Set(res.ToLocalChecked());
+          return;
+        }
+      }
+
+      ::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ winRtInstance;
+
+
+      if (info.Length() == 1 && OpaqueWrapper::IsOpaqueWrapper(info[0]) &&
+        NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info[0])) {
+        try {
+          winRtInstance = (::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^) NodeRT::Utils::GetObjectInstance(info[0]);
+        } catch (Platform::Exception ^exception) {
+          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+          return;
+        }
+      }
+ else {
+        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no suitable constructor found")));
+        return;
+      }
+
+      NodeRT::Utils::SetHiddenValue(info.This(), Nan::New<String>("__winRtInstance__").ToLocalChecked(), True());
+
+      MidiMessageProcessingPluginInformation *wrapperInstance = new MidiMessageProcessingPluginInformation(winRtInstance);
+      wrapperInstance->Wrap(info.This());
+
+      info.GetReturnValue().Set(info.This());
+    }
+
+
+      
+    static void CastFrom(Nan::NAN_METHOD_ARGS_TYPE info) {
+      HandleScope scope;
+      if (info.Length() < 1 || !NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info[0])) {
+        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no object provided, or given object could not be casted to requested type")));
+        return;
+      }
+
+      ::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ winRtInstance;
+      try {
+        winRtInstance = (::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^) NodeRT::Utils::GetObjectInstance(info[0]);
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+
+      info.GetReturnValue().Set(WrapMidiMessageProcessingPluginInformation(winRtInstance));
+    }
+
+
+
+
+
+    static void AuthorGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->Author;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void ClassIdGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        ::Platform::Guid result = wrapper->_instance->ClassId;
+        info.GetReturnValue().Set(NodeRT::Utils::GuidToJs(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void ClientConfigurationAssemblyNameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->ClientConfigurationAssemblyName;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void DescriptionGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->Description;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void IconPathGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->IconPath;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void IsClientConfigurableGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        bool result = wrapper->_instance->IsClientConfigurable;
+        info.GetReturnValue().Set(Nan::New<Boolean>(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void IsEnabledGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        bool result = wrapper->_instance->IsEnabled;
+        info.GetReturnValue().Set(Nan::New<Boolean>(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void IsSystemManagedGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        bool result = wrapper->_instance->IsSystemManaged;
+        info.GetReturnValue().Set(Nan::New<Boolean>(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void NameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->Name;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void RegistryKeyGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->RegistryKey;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void ServicePluginFileNameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->ServicePluginFileName;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void ShortNameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiMessageProcessingPluginInformation *wrapper = MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->ShortName;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+
+
+    private:
+      ::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ _instance;
+      static Persistent<FunctionTemplate> s_constructorTemplate;
+
+      friend v8::Local<v8::Value> WrapMidiMessageProcessingPluginInformation(::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ wintRtInstance);
+      friend ::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ UnwrapMidiMessageProcessingPluginInformation(Local<Value> value);
+  };
+
+  Persistent<FunctionTemplate> MidiMessageProcessingPluginInformation::s_constructorTemplate;
+
+  v8::Local<v8::Value> WrapMidiMessageProcessingPluginInformation(::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ winRtInstance) {
+    EscapableHandleScope scope;
+
+    if (winRtInstance == nullptr) {
+      return scope.Escape(Undefined());
+    }
+
+    Local<Value> opaqueWrapper = CreateOpaqueWrapper(winRtInstance);
+    Local<Value> args[] = {opaqueWrapper};
+    Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(MidiMessageProcessingPluginInformation::s_constructorTemplate);
+    return scope.Escape(Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(),_countof(args), args).ToLocalChecked());
+  }
+
+  ::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ UnwrapMidiMessageProcessingPluginInformation(Local<Value> value) {
+     return MidiMessageProcessingPluginInformation::Unwrap<MidiMessageProcessingPluginInformation>(Nan::To<Object>(value).ToLocalChecked())->_instance;
+  }
+
+  void InitMidiMessageProcessingPluginInformation(Local<Object> exports) {
+    MidiMessageProcessingPluginInformation::Init(exports);
+  }
+
   class MidiMessageReceivedEventArgs : public WrapperBase {
     public:
       
@@ -11308,7 +11778,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
             Nan::SetPrototypeMethod(localRef, "peekFirstWord", PeekFirstWord);
             Nan::SetPrototypeMethod(localRef, "getMessagePacket", GetMessagePacket);
             Nan::SetPrototypeMethod(localRef, "fillWords", FillWords);
-            Nan::SetPrototypeMethod(localRef, "fillMessageStruct", FillMessageStruct);
+            //Nan::SetPrototypeMethod(localRef, "fillMessageStruct", FillMessageStruct);
             Nan::SetPrototypeMethod(localRef, "fillMessage32", FillMessage32);
             Nan::SetPrototypeMethod(localRef, "fillMessage64", FillMessage64);
             Nan::SetPrototypeMethod(localRef, "fillMessage96", FillMessage96);
@@ -11516,38 +11986,38 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
         return;
       }
     }
-    static void FillMessageStruct(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
+ //   static void FillMessageStruct(Nan::NAN_METHOD_ARGS_TYPE info) {
+ //     HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageReceivedEventArgs^>(info.This())) {
-        return;
-      }
+ //     if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageReceivedEventArgs^>(info.This())) {
+ //       return;
+ //     }
 
-      MidiMessageReceivedEventArgs *wrapper = MidiMessageReceivedEventArgs::Unwrap<MidiMessageReceivedEventArgs>(info.This());
+ //     MidiMessageReceivedEventArgs *wrapper = MidiMessageReceivedEventArgs::Unwrap<MidiMessageReceivedEventArgs>(info.This());
 
-      if (info.Length() == 0)
-      {
-        try
-        {
-          ::Windows::Devices::Midi2::MidiMessageStruct arg0;
-          
-          unsigned char result;
-          result = wrapper->_instance->FillMessageStruct(&arg0);
-          Local<Object> resObj = Nan::New<Object>();
-          Nan::Set(resObj, Nan::New<String>("number").ToLocalChecked(), Nan::New<Integer>(result));
-          Nan::Set(resObj, Nan::New<String>("message").ToLocalChecked(), MidiMessageStructToJsObject(arg0));
-          info.GetReturnValue().Set(resObj);
-          return;
-        } catch (Platform::Exception ^exception) {
-          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-          return;
-        }
-      }
- else {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Bad arguments: no suitable overload found")));
-        return;
-      }
-    }
+ //     if (info.Length() == 0)
+ //     {
+ //       try
+ //       {
+ //         ::Windows::Devices::Midi2::MidiMessageStruct arg0;
+ //         
+ //         unsigned char result;
+ //         result = wrapper->_instance->FillMessageStruct(&arg0);
+ //         Local<Object> resObj = Nan::New<Object>();
+ //         Nan::Set(resObj, Nan::New<String>("number").ToLocalChecked(), Nan::New<Integer>(result));
+ //         Nan::Set(resObj, Nan::New<String>("message").ToLocalChecked(), MidiMessageStructToJsObject(arg0));
+ //         info.GetReturnValue().Set(resObj);
+ //         return;
+ //       } catch (Platform::Exception ^exception) {
+ //         NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+ //         return;
+ //       }
+ //     }
+ //else {
+ //       Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Bad arguments: no suitable overload found")));
+ //       return;
+ //     }
+ //   }
     static void FillMessage32(Nan::NAN_METHOD_ARGS_TYPE info) {
       HandleScope scope;
 
@@ -12231,11 +12701,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       MidiMessageTypeEndpointListener *wrapper = MidiMessageTypeEndpointListener::Unwrap<MidiMessageTypeEndpointListener>(info.This());
 
       if (info.Length() == 1
-        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiEndpointConnection^>(info[0]))
+        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::IMidiEndpointConnectionSource^>(info[0]))
       {
         try
         {
-          ::Windows::Devices::Midi2::MidiEndpointConnection^ arg0 = UnwrapMidiEndpointConnection(info[0]);
+          ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ arg0 = UnwrapIMidiEndpointConnectionSource(info[0]);
           
           wrapper->_instance->Initialize(arg0);
           return;
@@ -13563,308 +14033,6 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     MidiMessageUtility::Init(exports);
   }
 
-  class MidiProfile : public WrapperBase {
-    public:
-      
-      static void Init(const Local<Object> exports) {
-        HandleScope scope;
-
-        Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(New);
-        s_constructorTemplate.Reset(localRef);
-        localRef->SetClassName(Nan::New<String>("MidiProfile").ToLocalChecked());
-        localRef->InstanceTemplate()->SetInternalFieldCount(1);
-
-
-
-
-
-
-        Local<Object> constructor = Nan::To<Object>(Nan::GetFunction(localRef).ToLocalChecked()).ToLocalChecked();
-        Nan::SetMethod(constructor, "castFrom", CastFrom);
-
-
-
-        Nan::Set(exports, Nan::New<String>("MidiProfile").ToLocalChecked(), constructor);
-      }
-
-      virtual ::Platform::Object^ GetObjectInstance() const override {
-        return _instance;
-      }
-
-    private:
-
-      MidiProfile(::Windows::Devices::Midi2::MidiProfile^ instance) {
-        _instance = instance;
-      }
-
-      
-    static void New(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
-
-      Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(s_constructorTemplate);
-
-      // in case the constructor was called without the new operator
-      if (!localRef->HasInstance(info.This())) {
-        if (info.Length() > 0) {
-          std::unique_ptr<Local<Value> []> constructorArgs(new Local<Value>[info.Length()]);
-
-          Local<Value> *argsPtr = constructorArgs.get();
-          for (int i = 0; i < info.Length(); i++) {
-            argsPtr[i] = info[i];
-          }
-
-          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), constructorArgs.get());
-          if (res.IsEmpty()) {
-            return;
-          }
-
-          info.GetReturnValue().Set(res.ToLocalChecked());
-          return;
-        } else {
-          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), nullptr);
-
-          if (res.IsEmpty()) {
-            return;
-          }
-
-          info.GetReturnValue().Set(res.ToLocalChecked());
-          return;
-        }
-      }
-
-      ::Windows::Devices::Midi2::MidiProfile^ winRtInstance;
-
-
-      if (info.Length() == 1 && OpaqueWrapper::IsOpaqueWrapper(info[0]) &&
-        NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiProfile^>(info[0])) {
-        try {
-          winRtInstance = (::Windows::Devices::Midi2::MidiProfile^) NodeRT::Utils::GetObjectInstance(info[0]);
-        } catch (Platform::Exception ^exception) {
-          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-          return;
-        }
-      }
- else {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no suitable constructor found")));
-        return;
-      }
-
-      NodeRT::Utils::SetHiddenValue(info.This(), Nan::New<String>("__winRtInstance__").ToLocalChecked(), True());
-
-      MidiProfile *wrapperInstance = new MidiProfile(winRtInstance);
-      wrapperInstance->Wrap(info.This());
-
-      info.GetReturnValue().Set(info.This());
-    }
-
-
-      
-    static void CastFrom(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
-      if (info.Length() < 1 || !NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiProfile^>(info[0])) {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no object provided, or given object could not be casted to requested type")));
-        return;
-      }
-
-      ::Windows::Devices::Midi2::MidiProfile^ winRtInstance;
-      try {
-        winRtInstance = (::Windows::Devices::Midi2::MidiProfile^) NodeRT::Utils::GetObjectInstance(info[0]);
-      } catch (Platform::Exception ^exception) {
-        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-        return;
-      }
-
-      info.GetReturnValue().Set(WrapMidiProfile(winRtInstance));
-    }
-
-
-
-
-
-
-
-    private:
-      ::Windows::Devices::Midi2::MidiProfile^ _instance;
-      static Persistent<FunctionTemplate> s_constructorTemplate;
-
-      friend v8::Local<v8::Value> WrapMidiProfile(::Windows::Devices::Midi2::MidiProfile^ wintRtInstance);
-      friend ::Windows::Devices::Midi2::MidiProfile^ UnwrapMidiProfile(Local<Value> value);
-  };
-
-  Persistent<FunctionTemplate> MidiProfile::s_constructorTemplate;
-
-  v8::Local<v8::Value> WrapMidiProfile(::Windows::Devices::Midi2::MidiProfile^ winRtInstance) {
-    EscapableHandleScope scope;
-
-    if (winRtInstance == nullptr) {
-      return scope.Escape(Undefined());
-    }
-
-    Local<Value> opaqueWrapper = CreateOpaqueWrapper(winRtInstance);
-    Local<Value> args[] = {opaqueWrapper};
-    Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(MidiProfile::s_constructorTemplate);
-    return scope.Escape(Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(),_countof(args), args).ToLocalChecked());
-  }
-
-  ::Windows::Devices::Midi2::MidiProfile^ UnwrapMidiProfile(Local<Value> value) {
-     return MidiProfile::Unwrap<MidiProfile>(Nan::To<Object>(value).ToLocalChecked())->_instance;
-  }
-
-  void InitMidiProfile(Local<Object> exports) {
-    MidiProfile::Init(exports);
-  }
-
-  class MidiProperty : public WrapperBase {
-    public:
-      
-      static void Init(const Local<Object> exports) {
-        HandleScope scope;
-
-        Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(New);
-        s_constructorTemplate.Reset(localRef);
-        localRef->SetClassName(Nan::New<String>("MidiProperty").ToLocalChecked());
-        localRef->InstanceTemplate()->SetInternalFieldCount(1);
-
-
-
-
-
-
-        Local<Object> constructor = Nan::To<Object>(Nan::GetFunction(localRef).ToLocalChecked()).ToLocalChecked();
-        Nan::SetMethod(constructor, "castFrom", CastFrom);
-
-
-
-        Nan::Set(exports, Nan::New<String>("MidiProperty").ToLocalChecked(), constructor);
-      }
-
-      virtual ::Platform::Object^ GetObjectInstance() const override {
-        return _instance;
-      }
-
-    private:
-
-      MidiProperty(::Windows::Devices::Midi2::MidiProperty^ instance) {
-        _instance = instance;
-      }
-
-      
-    static void New(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
-
-      Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(s_constructorTemplate);
-
-      // in case the constructor was called without the new operator
-      if (!localRef->HasInstance(info.This())) {
-        if (info.Length() > 0) {
-          std::unique_ptr<Local<Value> []> constructorArgs(new Local<Value>[info.Length()]);
-
-          Local<Value> *argsPtr = constructorArgs.get();
-          for (int i = 0; i < info.Length(); i++) {
-            argsPtr[i] = info[i];
-          }
-
-          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), constructorArgs.get());
-          if (res.IsEmpty()) {
-            return;
-          }
-
-          info.GetReturnValue().Set(res.ToLocalChecked());
-          return;
-        } else {
-          MaybeLocal<Object> res = Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(), info.Length(), nullptr);
-
-          if (res.IsEmpty()) {
-            return;
-          }
-
-          info.GetReturnValue().Set(res.ToLocalChecked());
-          return;
-        }
-      }
-
-      ::Windows::Devices::Midi2::MidiProperty^ winRtInstance;
-
-
-      if (info.Length() == 1 && OpaqueWrapper::IsOpaqueWrapper(info[0]) &&
-        NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiProperty^>(info[0])) {
-        try {
-          winRtInstance = (::Windows::Devices::Midi2::MidiProperty^) NodeRT::Utils::GetObjectInstance(info[0]);
-        } catch (Platform::Exception ^exception) {
-          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-          return;
-        }
-      }
- else {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no suitable constructor found")));
-        return;
-      }
-
-      NodeRT::Utils::SetHiddenValue(info.This(), Nan::New<String>("__winRtInstance__").ToLocalChecked(), True());
-
-      MidiProperty *wrapperInstance = new MidiProperty(winRtInstance);
-      wrapperInstance->Wrap(info.This());
-
-      info.GetReturnValue().Set(info.This());
-    }
-
-
-      
-    static void CastFrom(Nan::NAN_METHOD_ARGS_TYPE info) {
-      HandleScope scope;
-      if (info.Length() < 1 || !NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiProperty^>(info[0])) {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no object provided, or given object could not be casted to requested type")));
-        return;
-      }
-
-      ::Windows::Devices::Midi2::MidiProperty^ winRtInstance;
-      try {
-        winRtInstance = (::Windows::Devices::Midi2::MidiProperty^) NodeRT::Utils::GetObjectInstance(info[0]);
-      } catch (Platform::Exception ^exception) {
-        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-        return;
-      }
-
-      info.GetReturnValue().Set(WrapMidiProperty(winRtInstance));
-    }
-
-
-
-
-
-
-
-    private:
-      ::Windows::Devices::Midi2::MidiProperty^ _instance;
-      static Persistent<FunctionTemplate> s_constructorTemplate;
-
-      friend v8::Local<v8::Value> WrapMidiProperty(::Windows::Devices::Midi2::MidiProperty^ wintRtInstance);
-      friend ::Windows::Devices::Midi2::MidiProperty^ UnwrapMidiProperty(Local<Value> value);
-  };
-
-  Persistent<FunctionTemplate> MidiProperty::s_constructorTemplate;
-
-  v8::Local<v8::Value> WrapMidiProperty(::Windows::Devices::Midi2::MidiProperty^ winRtInstance) {
-    EscapableHandleScope scope;
-
-    if (winRtInstance == nullptr) {
-      return scope.Escape(Undefined());
-    }
-
-    Local<Value> opaqueWrapper = CreateOpaqueWrapper(winRtInstance);
-    Local<Value> args[] = {opaqueWrapper};
-    Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(MidiProperty::s_constructorTemplate);
-    return scope.Escape(Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(),_countof(args), args).ToLocalChecked());
-  }
-
-  ::Windows::Devices::Midi2::MidiProperty^ UnwrapMidiProperty(Local<Value> value) {
-     return MidiProperty::Unwrap<MidiProperty>(Nan::To<Object>(value).ToLocalChecked())->_instance;
-  }
-
-  void InitMidiProperty(Local<Object> exports) {
-    MidiProperty::Init(exports);
-  }
-
   class MidiService : public WrapperBase {
     public:
       
@@ -13885,7 +14053,8 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
         Nan::SetMethod(constructor, "castFrom", CastFrom);
 
         Nan::SetMethod(constructor, "pingService", PingService);
-        Nan::SetMethod(constructor, "getInstalledTransports", GetInstalledTransports);
+        Nan::SetMethod(constructor, "getInstalledTransportPlugins", GetInstalledTransportPlugins);
+        Nan::SetMethod(constructor, "getInstalledMessageProcessingPlugins", GetInstalledMessageProcessingPlugins);
         Nan::SetMethod(constructor, "getOutgoingMessageQueueMaxMessageCapacity", GetOutgoingMessageQueueMaxMessageCapacity);
 
 
@@ -14033,24 +14202,58 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
 
-    static void GetInstalledTransports(Nan::NAN_METHOD_ARGS_TYPE info) {
+    static void GetInstalledTransportPlugins(Nan::NAN_METHOD_ARGS_TYPE info) {
       HandleScope scope;
 
       if (info.Length() == 0)
       {
         try
         {
-          ::Windows::Foundation::Collections::IVectorView<::Windows::Devices::Midi2::MidiTransportInformation^>^ result;
-          result = ::Windows::Devices::Midi2::MidiService::GetInstalledTransports();
-          info.GetReturnValue().Set(NodeRT::Collections::VectorViewWrapper<::Windows::Devices::Midi2::MidiTransportInformation^>::CreateVectorViewWrapper(result, 
-            [](::Windows::Devices::Midi2::MidiTransportInformation^ val) -> Local<Value> {
-              return WrapMidiTransportInformation(val);
+          ::Windows::Foundation::Collections::IVectorView<::Windows::Devices::Midi2::MidiTransportPluginInformation^>^ result;
+          result = ::Windows::Devices::Midi2::MidiService::GetInstalledTransportPlugins();
+          info.GetReturnValue().Set(NodeRT::Collections::VectorViewWrapper<::Windows::Devices::Midi2::MidiTransportPluginInformation^>::CreateVectorViewWrapper(result, 
+            [](::Windows::Devices::Midi2::MidiTransportPluginInformation^ val) -> Local<Value> {
+              return WrapMidiTransportPluginInformation(val);
             },
             [](Local<Value> value) -> bool {
-              return NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(value);
+              return NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(value);
             },
-            [](Local<Value> value) -> ::Windows::Devices::Midi2::MidiTransportInformation^ {
-              return UnwrapMidiTransportInformation(value);
+            [](Local<Value> value) -> ::Windows::Devices::Midi2::MidiTransportPluginInformation^ {
+              return UnwrapMidiTransportPluginInformation(value);
+            }
+          ));
+          return;
+        }
+        catch (Platform::Exception ^exception)
+        {
+          NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+          return;
+        }
+      }
+ else  {
+        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Bad arguments: no suitable overload found")));
+        return;
+      }
+    }
+
+    static void GetInstalledMessageProcessingPlugins(Nan::NAN_METHOD_ARGS_TYPE info) {
+      HandleScope scope;
+
+      if (info.Length() == 0)
+      {
+        try
+        {
+          ::Windows::Foundation::Collections::IVectorView<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>^ result;
+          result = ::Windows::Devices::Midi2::MidiService::GetInstalledMessageProcessingPlugins();
+          info.GetReturnValue().Set(NodeRT::Collections::VectorViewWrapper<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>::CreateVectorViewWrapper(result, 
+            [](::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ val) -> Local<Value> {
+              return WrapMidiMessageProcessingPluginInformation(val);
+            },
+            [](Local<Value> value) -> bool {
+              return NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^>(value);
+            },
+            [](Local<Value> value) -> ::Windows::Devices::Midi2::MidiMessageProcessingPluginInformation^ {
+              return UnwrapMidiMessageProcessingPluginInformation(value);
             }
           ));
           return;
@@ -16400,7 +16603,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     MidiStreamMessageBuilder::Init(exports);
   }
 
-  class MidiTransportInformation : public WrapperBase {
+  class MidiTransportPluginInformation : public WrapperBase {
     public:
       
       static void Init(const Local<Object> exports) {
@@ -16408,7 +16611,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
         Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(New);
         s_constructorTemplate.Reset(localRef);
-        localRef->SetClassName(Nan::New<String>("MidiTransportInformation").ToLocalChecked());
+        localRef->SetClassName(Nan::New<String>("MidiTransportPluginInformation").ToLocalChecked());
         localRef->InstanceTemplate()->SetInternalFieldCount(1);
 
 
@@ -16417,11 +16620,17 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
           
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("author").ToLocalChecked(), AuthorGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("classId").ToLocalChecked(), ClassIdGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("clientConfigurationAssemblyName").ToLocalChecked(), ClientConfigurationAssemblyNameGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("description").ToLocalChecked(), DescriptionGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("iconPath").ToLocalChecked(), IconPathGetter);
-            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("id").ToLocalChecked(), IdGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isClientConfigurable").ToLocalChecked(), IsClientConfigurableGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isEnabled").ToLocalChecked(), IsEnabledGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isRuntimeCreatable").ToLocalChecked(), IsRuntimeCreatableGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isSystemManaged").ToLocalChecked(), IsSystemManagedGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("mnemonic").ToLocalChecked(), MnemonicGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("name").ToLocalChecked(), NameGetter);
-            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("servicePluginFileName").ToLocalChecked(), ServicePluginFileNameGetter);
+            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("registryKey").ToLocalChecked(), RegistryKeyGetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("shortName").ToLocalChecked(), ShortNameGetter);
 
         Local<Object> constructor = Nan::To<Object>(Nan::GetFunction(localRef).ToLocalChecked()).ToLocalChecked();
@@ -16429,7 +16638,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
 
 
-        Nan::Set(exports, Nan::New<String>("MidiTransportInformation").ToLocalChecked(), constructor);
+        Nan::Set(exports, Nan::New<String>("MidiTransportPluginInformation").ToLocalChecked(), constructor);
       }
 
       virtual ::Platform::Object^ GetObjectInstance() const override {
@@ -16438,7 +16647,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
     private:
 
-      MidiTransportInformation(::Windows::Devices::Midi2::MidiTransportInformation^ instance) {
+      MidiTransportPluginInformation(::Windows::Devices::Midi2::MidiTransportPluginInformation^ instance) {
         _instance = instance;
       }
 
@@ -16477,13 +16686,13 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
         }
       }
 
-      ::Windows::Devices::Midi2::MidiTransportInformation^ winRtInstance;
+      ::Windows::Devices::Midi2::MidiTransportPluginInformation^ winRtInstance;
 
 
       if (info.Length() == 1 && OpaqueWrapper::IsOpaqueWrapper(info[0]) &&
-        NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info[0])) {
+        NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info[0])) {
         try {
-          winRtInstance = (::Windows::Devices::Midi2::MidiTransportInformation^) NodeRT::Utils::GetObjectInstance(info[0]);
+          winRtInstance = (::Windows::Devices::Midi2::MidiTransportPluginInformation^) NodeRT::Utils::GetObjectInstance(info[0]);
         } catch (Platform::Exception ^exception) {
           NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
           return;
@@ -16496,7 +16705,7 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
       NodeRT::Utils::SetHiddenValue(info.This(), Nan::New<String>("__winRtInstance__").ToLocalChecked(), True());
 
-      MidiTransportInformation *wrapperInstance = new MidiTransportInformation(winRtInstance);
+      MidiTransportPluginInformation *wrapperInstance = new MidiTransportPluginInformation(winRtInstance);
       wrapperInstance->Wrap(info.This());
 
       info.GetReturnValue().Set(info.This());
@@ -16506,20 +16715,20 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       
     static void CastFrom(Nan::NAN_METHOD_ARGS_TYPE info) {
       HandleScope scope;
-      if (info.Length() < 1 || !NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info[0])) {
+      if (info.Length() < 1 || !NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info[0])) {
         Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Invalid arguments, no object provided, or given object could not be casted to requested type")));
         return;
       }
 
-      ::Windows::Devices::Midi2::MidiTransportInformation^ winRtInstance;
+      ::Windows::Devices::Midi2::MidiTransportPluginInformation^ winRtInstance;
       try {
-        winRtInstance = (::Windows::Devices::Midi2::MidiTransportInformation^) NodeRT::Utils::GetObjectInstance(info[0]);
+        winRtInstance = (::Windows::Devices::Midi2::MidiTransportPluginInformation^) NodeRT::Utils::GetObjectInstance(info[0]);
       } catch (Platform::Exception ^exception) {
         NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
         return;
       }
 
-      info.GetReturnValue().Set(WrapMidiTransportInformation(winRtInstance));
+      info.GetReturnValue().Set(WrapMidiTransportPluginInformation(winRtInstance));
     }
 
 
@@ -16529,11 +16738,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     static void AuthorGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info.This())) {
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
         return;
       }
 
-      MidiTransportInformation *wrapper = MidiTransportInformation::Unwrap<MidiTransportInformation>(info.This());
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
 
       try  {
         Platform::String^ result = wrapper->_instance->Author;
@@ -16545,14 +16754,71 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
       
-    static void IconPathGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+    static void ClassIdGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info.This())) {
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
         return;
       }
 
-      MidiTransportInformation *wrapper = MidiTransportInformation::Unwrap<MidiTransportInformation>(info.This());
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
+
+      try  {
+        ::Platform::Guid result = wrapper->_instance->ClassId;
+        info.GetReturnValue().Set(NodeRT::Utils::GuidToJs(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void ClientConfigurationAssemblyNameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->ClientConfigurationAssemblyName;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void DescriptionGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->Description;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void IconPathGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
 
       try  {
         Platform::String^ result = wrapper->_instance->IconPath;
@@ -16564,18 +16830,37 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
       
-    static void IdGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+    static void IsClientConfigurableGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info.This())) {
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
         return;
       }
 
-      MidiTransportInformation *wrapper = MidiTransportInformation::Unwrap<MidiTransportInformation>(info.This());
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
 
       try  {
-        Platform::String^ result = wrapper->_instance->Id;
-        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        bool result = wrapper->_instance->IsClientConfigurable;
+        info.GetReturnValue().Set(Nan::New<Boolean>(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void IsEnabledGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
+
+      try  {
+        bool result = wrapper->_instance->IsEnabled;
+        info.GetReturnValue().Set(Nan::New<Boolean>(result));
         return;
       } catch (Platform::Exception ^exception) {
         NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
@@ -16586,11 +16871,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     static void IsRuntimeCreatableGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info.This())) {
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
         return;
       }
 
-      MidiTransportInformation *wrapper = MidiTransportInformation::Unwrap<MidiTransportInformation>(info.This());
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
 
       try  {
         bool result = wrapper->_instance->IsRuntimeCreatable;
@@ -16602,14 +16887,52 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
       
-    static void NameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+    static void IsSystemManagedGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info.This())) {
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
         return;
       }
 
-      MidiTransportInformation *wrapper = MidiTransportInformation::Unwrap<MidiTransportInformation>(info.This());
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
+
+      try  {
+        bool result = wrapper->_instance->IsSystemManaged;
+        info.GetReturnValue().Set(Nan::New<Boolean>(result));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void MnemonicGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
+
+      try  {
+        Platform::String^ result = wrapper->_instance->Mnemonic;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+    static void NameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
+        return;
+      }
+
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
 
       try  {
         Platform::String^ result = wrapper->_instance->Name;
@@ -16621,17 +16944,17 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
       
-    static void ServicePluginFileNameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+    static void RegistryKeyGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info.This())) {
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
         return;
       }
 
-      MidiTransportInformation *wrapper = MidiTransportInformation::Unwrap<MidiTransportInformation>(info.This());
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
 
       try  {
-        Platform::String^ result = wrapper->_instance->ServicePluginFileName;
+        Platform::String^ result = wrapper->_instance->RegistryKey;
         info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
         return;
       } catch (Platform::Exception ^exception) {
@@ -16643,11 +16966,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
     static void ShortNameGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportInformation^>(info.This())) {
+      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiTransportPluginInformation^>(info.This())) {
         return;
       }
 
-      MidiTransportInformation *wrapper = MidiTransportInformation::Unwrap<MidiTransportInformation>(info.This());
+      MidiTransportPluginInformation *wrapper = MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(info.This());
 
       try  {
         Platform::String^ result = wrapper->_instance->ShortName;
@@ -16662,16 +16985,16 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
 
     private:
-      ::Windows::Devices::Midi2::MidiTransportInformation^ _instance;
+      ::Windows::Devices::Midi2::MidiTransportPluginInformation^ _instance;
       static Persistent<FunctionTemplate> s_constructorTemplate;
 
-      friend v8::Local<v8::Value> WrapMidiTransportInformation(::Windows::Devices::Midi2::MidiTransportInformation^ wintRtInstance);
-      friend ::Windows::Devices::Midi2::MidiTransportInformation^ UnwrapMidiTransportInformation(Local<Value> value);
+      friend v8::Local<v8::Value> WrapMidiTransportPluginInformation(::Windows::Devices::Midi2::MidiTransportPluginInformation^ wintRtInstance);
+      friend ::Windows::Devices::Midi2::MidiTransportPluginInformation^ UnwrapMidiTransportPluginInformation(Local<Value> value);
   };
 
-  Persistent<FunctionTemplate> MidiTransportInformation::s_constructorTemplate;
+  Persistent<FunctionTemplate> MidiTransportPluginInformation::s_constructorTemplate;
 
-  v8::Local<v8::Value> WrapMidiTransportInformation(::Windows::Devices::Midi2::MidiTransportInformation^ winRtInstance) {
+  v8::Local<v8::Value> WrapMidiTransportPluginInformation(::Windows::Devices::Midi2::MidiTransportPluginInformation^ winRtInstance) {
     EscapableHandleScope scope;
 
     if (winRtInstance == nullptr) {
@@ -16680,16 +17003,16 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
 
     Local<Value> opaqueWrapper = CreateOpaqueWrapper(winRtInstance);
     Local<Value> args[] = {opaqueWrapper};
-    Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(MidiTransportInformation::s_constructorTemplate);
+    Local<FunctionTemplate> localRef = Nan::New<FunctionTemplate>(MidiTransportPluginInformation::s_constructorTemplate);
     return scope.Escape(Nan::NewInstance(Nan::GetFunction(localRef).ToLocalChecked(),_countof(args), args).ToLocalChecked());
   }
 
-  ::Windows::Devices::Midi2::MidiTransportInformation^ UnwrapMidiTransportInformation(Local<Value> value) {
-     return MidiTransportInformation::Unwrap<MidiTransportInformation>(Nan::To<Object>(value).ToLocalChecked())->_instance;
+  ::Windows::Devices::Midi2::MidiTransportPluginInformation^ UnwrapMidiTransportPluginInformation(Local<Value> value) {
+     return MidiTransportPluginInformation::Unwrap<MidiTransportPluginInformation>(Nan::To<Object>(value).ToLocalChecked())->_instance;
   }
 
-  void InitMidiTransportInformation(Local<Object> exports) {
-    MidiTransportInformation::Init(exports);
+  void InitMidiTransportPluginInformation(Local<Object> exports) {
+    MidiTransportPluginInformation::Init(exports);
   }
 
   class MidiUniqueId : public WrapperBase {
@@ -16716,6 +17039,8 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
         Local<Object> constructor = Nan::To<Object>(Nan::GetFunction(localRef).ToLocalChecked()).ToLocalChecked();
         Nan::SetMethod(constructor, "castFrom", CastFrom);
 
+        Nan::SetAccessor(constructor, Nan::New<String>("labelFull").ToLocalChecked(), LabelFullGetter);
+        Nan::SetAccessor(constructor, Nan::New<String>("labelShort").ToLocalChecked(), LabelShortGetter);
 
 
         Nan::Set(exports, Nan::New<String>("MidiUniqueId").ToLocalChecked(), constructor);
@@ -17016,6 +17341,36 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       
 
 
+    static void LabelFullGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      try
+      {
+        Platform::String^ result = ::Windows::Devices::Midi2::MidiUniqueId::LabelFull;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+
+    static void LabelShortGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
+      HandleScope scope;
+
+      try
+      {
+        Platform::String^ result = ::Windows::Devices::Midi2::MidiUniqueId::LabelShort;
+        info.GetReturnValue().Set(NodeRT::Utils::NewString(result->Data()));
+        return;
+      } catch (Platform::Exception ^exception) {
+        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
+        return;
+      }
+    }
+      
+
     private:
       ::Windows::Devices::Midi2::MidiUniqueId^ _instance;
       static Persistent<FunctionTemplate> s_constructorTemplate;
@@ -17077,7 +17432,6 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isEnabled").ToLocalChecked(), IsEnabledGetter, IsEnabledSetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("id").ToLocalChecked(), IdGetter, IdSetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("suppressHandledMessages").ToLocalChecked(), SuppressHandledMessagesGetter, SuppressHandledMessagesSetter);
-            Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("isMidiCIDevice").ToLocalChecked(), IsMidiCIDeviceGetter, IsMidiCIDeviceSetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("endpointProductInstanceId").ToLocalChecked(), EndpointProductInstanceIdGetter, EndpointProductInstanceIdSetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("endpointName").ToLocalChecked(), EndpointNameGetter, EndpointNameSetter);
             Nan::SetAccessor(localRef->PrototypeTemplate(), Nan::New<String>("areFunctionBlocksStatic").ToLocalChecked(), AreFunctionBlocksStaticGetter, AreFunctionBlocksStaticSetter);
@@ -17287,11 +17641,11 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       MidiVirtualDevice *wrapper = MidiVirtualDevice::Unwrap<MidiVirtualDevice>(info.This());
 
       if (info.Length() == 1
-        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiEndpointConnection^>(info[0]))
+        && NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::IMidiEndpointConnectionSource^>(info[0]))
       {
         try
         {
-          ::Windows::Devices::Midi2::MidiEndpointConnection^ arg0 = UnwrapMidiEndpointConnection(info[0]);
+          ::Windows::Devices::Midi2::IMidiEndpointConnectionSource^ arg0 = UnwrapIMidiEndpointConnectionSource(info[0]);
           
           wrapper->_instance->Initialize(arg0);
           return;
@@ -17607,49 +17961,6 @@ namespace NodeRT { namespace Windows { namespace Devices { namespace Midi2 {
       }
     }
       
-    static void IsMidiCIDeviceGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
-      HandleScope scope;
-
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiVirtualDevice^>(info.This())) {
-        return;
-      }
-
-      MidiVirtualDevice *wrapper = MidiVirtualDevice::Unwrap<MidiVirtualDevice>(info.This());
-
-      try  {
-        bool result = wrapper->_instance->IsMidiCIDevice;
-        info.GetReturnValue().Set(Nan::New<Boolean>(result));
-        return;
-      } catch (Platform::Exception ^exception) {
-        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-        return;
-      }
-    }
-      
-    static void IsMidiCIDeviceSetter(Local<String> property, Local<Value> value, const Nan::PropertyCallbackInfo<void> &info) {
-      HandleScope scope;
-
-      if (!value->IsBoolean()) {
-        Nan::ThrowError(Nan::Error(NodeRT::Utils::NewString(L"Value to set is of unexpected type")));
-        return;
-      }
-
-      if (!NodeRT::Utils::IsWinRtWrapperOf<::Windows::Devices::Midi2::MidiVirtualDevice^>(info.This())) {
-        return;
-      }
-
-      MidiVirtualDevice *wrapper = MidiVirtualDevice::Unwrap<MidiVirtualDevice>(info.This());
-
-      try {
-
-        bool winRtValue = Nan::To<bool>(value).FromMaybe(false);
-
-        wrapper->_instance->IsMidiCIDevice = winRtValue;
-      } catch (Platform::Exception ^exception) {
-        NodeRT::Utils::ThrowWinRtExceptionInJs(exception);
-      }
-    }
-      
     static void EndpointProductInstanceIdGetter(Local<String> property, const Nan::PropertyCallbackInfo<v8::Value> &info) {
       HandleScope scope;
 
@@ -17880,12 +18191,12 @@ NAN_MODULE_INIT(init) {
       NodeRT::Windows::Devices::Midi2::InitMidiProtocolEnum(target);
       NodeRT::Windows::Devices::Midi2::InitMidiSendMessageResultEnum(target);
       NodeRT::Windows::Devices::Midi2::InitMidiSystemExclusive8StatusEnum(target);
+      NodeRT::Windows::Devices::Midi2::InitIMidiEndpointConnectionSource(target);
       NodeRT::Windows::Devices::Midi2::InitIMidiEndpointDefinedConnectionSettings(target);
       NodeRT::Windows::Devices::Midi2::InitIMidiEndpointMessageProcessingPlugin(target);
       NodeRT::Windows::Devices::Midi2::InitIMidiMessageReceivedEventSource(target);
       NodeRT::Windows::Devices::Midi2::InitIMidiTransportSettingsData(target);
       NodeRT::Windows::Devices::Midi2::InitIMidiUniversalPacket(target);
-      NodeRT::Windows::Devices::Midi2::InitMidiCIMessageUtility(target);
       NodeRT::Windows::Devices::Midi2::InitMidiChannel(target);
       NodeRT::Windows::Devices::Midi2::InitMidiChannelEndpointListener(target);
       NodeRT::Windows::Devices::Midi2::InitMidiClock(target);
@@ -17903,12 +18214,11 @@ NAN_MODULE_INIT(init) {
       NodeRT::Windows::Devices::Midi2::InitMidiMessage96(target);
       NodeRT::Windows::Devices::Midi2::InitMidiMessageBuilder(target);
       NodeRT::Windows::Devices::Midi2::InitMidiMessageConverter(target);
+      NodeRT::Windows::Devices::Midi2::InitMidiMessageProcessingPluginInformation(target);
       NodeRT::Windows::Devices::Midi2::InitMidiMessageReceivedEventArgs(target);
       NodeRT::Windows::Devices::Midi2::InitMidiMessageTranslator(target);
       NodeRT::Windows::Devices::Midi2::InitMidiMessageTypeEndpointListener(target);
       NodeRT::Windows::Devices::Midi2::InitMidiMessageUtility(target);
-      NodeRT::Windows::Devices::Midi2::InitMidiProfile(target);
-      NodeRT::Windows::Devices::Midi2::InitMidiProperty(target);
       NodeRT::Windows::Devices::Midi2::InitMidiService(target);
       NodeRT::Windows::Devices::Midi2::InitMidiServicePingResponse(target);
       NodeRT::Windows::Devices::Midi2::InitMidiServicePingResponseSummary(target);
@@ -17916,7 +18226,7 @@ NAN_MODULE_INIT(init) {
       NodeRT::Windows::Devices::Midi2::InitMidiSessionSettings(target);
       NodeRT::Windows::Devices::Midi2::InitMidiStreamConfigurationRequestedSettings(target);
       NodeRT::Windows::Devices::Midi2::InitMidiStreamMessageBuilder(target);
-      NodeRT::Windows::Devices::Midi2::InitMidiTransportInformation(target);
+      NodeRT::Windows::Devices::Midi2::InitMidiTransportPluginInformation(target);
       NodeRT::Windows::Devices::Midi2::InitMidiUniqueId(target);
       NodeRT::Windows::Devices::Midi2::InitMidiVirtualDevice(target);
 
