@@ -34,6 +34,7 @@ available, and this project should not been seen as reference code.
 ### How To Build this Project
 -----------------------
 Use version 16.x of NodeJS. Later versions have issues with the C++ plugins.
+On Mac please make sure the Xcode command line tools are installed.
 
 After you cloned this repository
 please run:
