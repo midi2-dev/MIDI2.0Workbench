@@ -370,7 +370,7 @@ NAN_METHOD(sendUMP){
     //std::cout << " - client " << client << " \n";
 #ifdef __ALSA_UMP_H
     snd_seq_ump_event_t ev;
-    snd_seq_ev_clear(&ev);
+    snd_seq_ump_ev_clear(&ev);
     snd_seq_ev_set_direct(&ev);
     snd_seq_ev_set_source(&ev, localPort );
     snd_seq_ev_set_dest(&ev, client, 0);
