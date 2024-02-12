@@ -47,8 +47,23 @@ To run the application:
 yarn run start
 ```
 
+#### Installation FAQ's
 _Q: Why are there no binary releases?_<br/>
 A: This will happen eventually. Once code-signing is set up and working this will occur.
+
+_Q: Later Ubuntu distro's don't support Node 16. How do I get it work?_<br/>
+A: Use yarnpkg and nvm
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+nvm install 16
+nvm use 16
+git clone https://github.com/midi2-dev/MIDI2.0Workbench.git
+cd MIDI2.0Workbench
+sudo apt-get install yarnpkg
+yanrpkg
+yanrpkg run build
+yanrpkg run start
+```
 
 #### Issues and Updates
 -----------------
