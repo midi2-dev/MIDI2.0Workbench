@@ -18,7 +18,7 @@
     "async": "^3.2.3",
     "bindings": "^1.5.0",
     "nan": "latest",
-    "usb": "^2.9.0",
+    "usb": "^2.12.1",
     "winmidi2": "./winmidi2"
   }
 }

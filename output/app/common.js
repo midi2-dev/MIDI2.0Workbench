@@ -451,6 +451,7 @@ exports.setPESetup = function(retry=0) {
         return;
     }
     const jqpeDi = $('#peDeviceLinks');
+    if(resListOrder.indexOf('DeviceInfo')!==-1) {
     sendPE(0x34, {resource:"DeviceInfo"}, null).then(([resHead, deviceInfo]) => {
         $('#peDeviceLinks').empty();
         const html = prettyPrintJson.toHtml(deviceInfo, {quoteKeys: true});
@@ -484,6 +485,7 @@ exports.setPESetup = function(retry=0) {
 
     });
 
+    }
     //*** Simple Resources
     const jqSimpRE = $('#peSimpleResources').empty();
     Object.values(midi2Tables.resourceSchema).forEach(simpResource => {

@@ -10,6 +10,8 @@ Each Profile supported by the Device will show in the list below. Profiles highl
 Channel Profiles will also show a ![icon](sliderIcon.png) Slider Icon. Clicking this Icon will show a list of Channel 
 Voice Message Controllers for this Profile. 
 
-Profile may also have a ![icon](cogIcon.png) Cog Icon to signify a custom Profile window is available. 
+Profile may also have a ![icon](cogIcon.png) Cog Icon to signify a custom Profile window is available. For example this 
+is a special window available for the Drawbar Organ:
+![Drawbar Organ window](drawbarOrgan.png)
 
 

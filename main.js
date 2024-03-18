@@ -1146,8 +1146,6 @@ function ciEventHandler(umpDev, group, event,...args){
 			this.findMatchingFile(muidRemote,homedir,()=>{
 				const funcBlock = global.umpDevices[umpDev].remoteEndpoint.blocks[fbIdx] || {};
 
-				//this.setData(muidRemote,'/funcBlock',funcBlock);
-
 				if(!funcBlock.muids){funcBlock.muids = {};}
 				funcBlock.muids[muidRemote] = this.remoteDevices[muidRemote];
 				funcBlock.muids[muidRemote].muidRemote = muidRemote;
@@ -1357,6 +1355,7 @@ function ciEventHandler(umpDev, group, event,...args){
 			break;
 		}
 
+		case 'endpointInformation':
 		case 'processInquiryCapabilitiesReply':
 		{
 			break;

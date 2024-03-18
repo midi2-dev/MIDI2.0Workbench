@@ -202,7 +202,14 @@ exports.ciParts = {
         length: 1,
         type: 'number',
         path:'/fbIdx',
-        assignoOptsForReply:true
+        assignoOptsForReply:true,
+        incomingErrorCheck : (val, msgObj,umpDev,group) => {
+            if(val===0x7F)return;
+            if(!global.umpDevices[umpDev].checkFBBasedOnGroup(val,group)){
+                msgObj.debug.addError("UMP Group Does not match FB Index",0x00);
+            }
+
+        }
     },
     productInstanceIdLength:{
         title: 'Number of bytes in Product Instance Id (pl)',

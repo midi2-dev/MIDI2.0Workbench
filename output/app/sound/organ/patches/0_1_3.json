@@ -1,0 +1,18 @@
+{
+  "name": "Standard Jazz Lower 2",
+  "volume": 100,
+  "expression": 100,
+  "drawbars": [0,0, 8,6,0,0, 0,0,0],
+  "chorusVibrato": {
+    "type": "C3",
+    "on": false
+  },
+  "perc": {
+    "on": false,
+    "volume": "soft",
+    "decay": "fast",
+    "harmonic": "3rd"
+  },
+  "keyClick": true,
+  "crosstalk": 10
+}

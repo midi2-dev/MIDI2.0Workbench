@@ -1,0 +1,18 @@
+{
+  "name": "Standard Jazz Upper 2",
+  "volume": 100,
+  "expression": 100,
+  "drawbars": [8,8, 8,8,8,8, 8,8,8],
+  "chorusVibrato": {
+    "type": "C3",
+    "on": true
+  },
+  "perc": {
+    "on": false,
+    "volume": "soft",
+    "decay": "fast",
+    "harmonic": "3rd"
+  },
+  "keyClick": true,
+  "crosstalk": 10
+}

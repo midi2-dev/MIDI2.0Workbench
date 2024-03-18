@@ -21,6 +21,7 @@ const draft6MetaSchema = require("ajv/dist/refs/json-schema-draft-06.json");
 const {getRandomInt, setRemoteEndpointValueFromMUID} = require("./utils");
 const {getManufacturer16bit} = require("./manufactuers");
 const {ciParts} = require("./ciParts");
+const {prettyPrintJson} = require("pretty-print-json");
 
 class midici {
 	constructor(opts) {
@@ -571,7 +572,7 @@ class midici {
 						}
 
 						if (part.incomingErrorCheck) {
-							part.incomingErrorCheck(valPart, msgObj);
+							part.incomingErrorCheck(valPart, msgObj,umpDev,group);
 						}
 
 						let debugText = valPart;
@@ -901,7 +902,7 @@ class midici {
 							return;
 						}
 					}
-					if(streamObjVals.totalChunks !== streamObjVals.currentChunk && stream.data.reqHeader.receiptReq){
+					if(streamObjVals.totalChunks !== streamObjVals.currentChunk && stream.data.reqHeader.flowControl){
 
 							this.sendNAK(msgObj, msgObj.muid,msgObj.sourceDestination,
 								{
@@ -1392,12 +1393,14 @@ class midici {
 						resListOrder.push(resourceObj.resource);
 						this.setData(remoteMuid, '/pe/ResourceList/' + resourceObj.resource, resourceObj);
 
-						switch (resourceObj.resource) {
-							case 'DeviceInfo':
+						if (resourceObj.resource=== 'DeviceInfo'){
 								this.sendPE(0x34, remoteMuid, {resource: 'DeviceInfo'});
-								break;
 						}
 					});
+
+					if(resListOrder.indexOf('DeviceInfo')===-1) {
+						warnings.push(`ResourceList does not contain a "deviceInfo" Resource`);
+					}
 
 					if (errors.length || warnings.length) {
 						const debugData = {

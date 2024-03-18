@@ -37,7 +37,7 @@ module.exports = {
             ){
                 return u;
             }
-        };
+        }
         return {};
     },
     getMIDI2Devices: ()=>{
@@ -374,6 +374,20 @@ else if(os.platform()==='darwin' && (release[0] * 100) + release[1] >= 2104){
                     MIDI2Devices[nep.MIDIDeviceRef]['_checkExists']=true;
                     MIDI2DevicesRecvInterfaces[nep.InportRef] = nep.MIDIDeviceRef;
 
+                    console.log('New EP:'+ nep.clientName);
+
+                    let Ulist = USBDevices.getListOfUSBMIDI2Devices();
+                    let UIListIds = Object.keys(Ulist);
+                    let usbDetails = {};
+                    for(let i=0; i< UIListIds.length;i++){
+                        let u = Ulist[UIListIds[i]];
+                        if (
+                            nep.clientName === u.iProduct
+                            //&& d.kMIDIPropertyDriverVersion===0
+                        ){
+                            MIDI2Devices[nep.MIDIDeviceRef].usbDetails = u;
+                        }
+                    }
 
 
                     console.log('New EP:'+ nep.clientName);

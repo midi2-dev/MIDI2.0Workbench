@@ -39,6 +39,15 @@ module.exports = {
                 });
                 return fbIdx;
             },
+            checkFBBasedOnGroup: (fbIdx, group) =>{
+                let res = false;
+                (classFunc.remoteEndpoint.blocks || []).map(gb => {
+                    if (fbIdx === gb.fbIdx && gb.direction === 0b11 && gb.firstGroup <= group && gb.firstGroup+gb.numberGroups > group) {
+                        res = true;
+                    }
+                });
+                return res;
+            },
             ...umpClassFunc,
             midiToProc: midiToProc,
             remoteEndpoint:{

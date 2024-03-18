@@ -217,12 +217,10 @@ function descriptorLookupTrigger(id, dev,ii,uinterface=false){
         console.log(e);
                         return;
     }
-
-
             }else{
+                USBDevices[id] = usbEndpoint;
                 alertNewDev(id,usbEndpoint);
             }
-
         });
 }
 

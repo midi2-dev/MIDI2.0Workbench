@@ -375,5 +375,271 @@ exports.profiles=[
 				}
 			]
 		}
+	},
+	{
+		bank:0x00
+		,number:0x00
+		,name:'General MIDI 2'
+		,type:'functionBlock'
+		,channels:[]
+		,profileLevels:{
+			0x00:'Some Implementation but Not to Minimum Requirements'
+			,0x01:'Meets Minimum Requirements'
+		}
+		,CtrlList:[
+
+		]
+		,interoperability:{
+			"title":"Profile: " + "General MIDI 2",
+			sections:[
+				{
+					"title": "PfGM2GroupCon1: After Profile is Enabled",
+					questions: [
+						{
+							id: "PfGM2GroupCon1.1", required:true,
+							text: "Device has the assignment of controller message destinations/functions set to the " +
+								"common, default definitions. Details of destinations/functions are in Appendix A."
+						}
+					]
+				}
+			]
+		}
+	},
+
+	{
+		bank:0x21
+		,number:0x02
+		,name:'General MIDI 2 Single Channel'
+		,type:'singleChannel'
+		,channels:[]
+		,profileLevels:{
+			0x00:'Some Implementation but Not to Minimum Requirements'
+			,0x01:'Meets Minimum Requirements'
+		}
+		,CtrlList:[
+
+		]
+		,interoperability:{
+			"title":"Profile: " + "General MIDI 2 Single Channel",
+			sections:[
+				{
+					"title": "PfGM2SingleCon1: After Profile is Enabled",
+					questions: [
+						{
+							id: "PfGM2SingleCon1.1", required:true,
+							text: "Device has the assignment of controller message destinations/functions set to the " +
+								"common, default definitions. Details of destinations/functions are in Appendix A."
+						}
+					]
+				}
+			]
+		}
+	},
+	{
+		bank:0x31
+		,number:0x04
+		,name:'MPE'
+		,type:'multiChannel'
+		,channels:[]
+		,profileLevels:{
+			0x00:'Some Implementation but Not to Minimum Requirements'
+			,0x01:'Meets Minimum Requirements'
+		},
+		profileDetailsInquiry: {
+			0x00: "Number of MIDI Channels",
+			0x01: "Get MPE Profile Optional Features"
+		},
+		profileDetailsReplyProcess: (msgObj, midiCi, valSysex,oOptsForReply) => {
+
+			if(oOptsForReply.inquiryTarget===0x00) {
+				let data =  {
+					channelsInUse: valSysex[0]  + (valSysex[1]<<7),
+					channelsAvailable: valSysex[2]  + (valSysex[3]<<7),
+				};
+				oOptsForReply.dataDebug = `Channels In Use: ${data.channelsInUse} Available:${data.channelsAvailable}`;
+				return data;
+
+			}else if(oOptsForReply.inquiryTarget===0x01){
+				const typeSupport = ['none', 'CC', 'bipolarRPN'];
+				let data =  {
+					channelResponceNotification: !!(valSysex[0] & 0b1),
+					pitchBend: !!(valSysex[1]),
+					pressure: typeSupport[valSysex[2]],
+					thirdDimension: typeSupport[valSysex[3]]
+				};
+				oOptsForReply.dataDebug = `Supported params: Channel-Response-Notification: ${data.channelResponceNotification?' yes':'no'},
+				Pitchbend:${data.pitchBend?'yes':'no'}, Pressure:${data.pressure}, 3rd Dimension of Control: ${data.thirdDimension}`;
+				return data;
+			}else {
+				return valSysex;
+			}
+		},
+		CtrlList:[
+
+		]
+		,interoperability:{
+			"title":"Profile: " + "MPE",
+			sections:[
+				{
+					"title": "PfMPE1: After Profile is Enabled",
+					questions: [
+						/*{
+							id: "PfMPE1.1", required:true,
+							text: "Device has the assignment of controller message destinations/functions set to the " +
+								"common, default definitions. Details of destinations/functions are in Appendix A."
+						}*/
+					]
+				}
+			]
+		}
+	},
+	{
+		bank:0x20
+		,number:0x01
+		,name:'Drawbar Organ'
+		,type:'singleChannel'
+		,profileLevels:{
+			0x00:'Some Implementation but does not comply with minimum requirements'
+			,0x01:'Meets the minimum requirements'
+			,0x02: 'Implements some extended/optional features'
+			,0x7F: 'Highest Level of Profile'
+		},
+		extendedUI:__dirname+'/../output/app/sound/organ/drawbarSingle.html',
+		profileDetailsInquiry: {
+			0x01: "Get Drawbar Organ Profile Optional Features"
+		},
+		profileDetailsReplyProcess: (msgObj, midiCi, valSysex,oOptsForReply) => {
+
+			if(oOptsForReply.inquiryTarget===0x01){
+				let data =  {
+					softPedal: !!(valSysex[0] & 0b1),
+					vibratoChorus: !!(valSysex[0] & 0b10),
+					percussion: !!(valSysex[0] & 0b100),
+					keyClick: !!(valSysex[0] & 0b1000),
+					crosstalk: !!(valSysex[0] & 0b10000),
+				};
+				oOptsForReply.dataDebug = `Supported params: ${data.softPedal?'Soft-Pedal ':''}${data.vibratoChorus?'Vibrato/Chorus ':''}${data.percussion?'Percussion ':''}${data.keyClick?'Key Click ':''}${data.crosstalk?'Crosstalk/Leakage ':''}`;
+				return data;
+			}else {
+				return valSysex;
+			}
+		},
+		ChCtrlList:[
+			{
+				title:"Volume"
+				,ctrlType:"cc"
+				,ctrlIndex:[7]
+				,contMapList: defMapLists['volume']
+				, "paramPath": "/volume"
+			},
+			{
+				title:"Expression"
+				,ctrlType:"cc"
+				,ctrlIndex:[11]
+				,contMapList: defMapLists['volume']
+				, "paramPath": "/expression"
+			},{
+				"title":"All Sound Off"
+				,ctrlType:"cc"
+				,numSigBits:1
+				,ctrlIndex:[120]
+				,typeHint: "button"
+			},{
+				"title":"Reset All Controllers"
+				,ctrlType:"cc"
+				,numSigBits:1
+				,ctrlIndex:[121]
+				,typeHint: "button"
+			},{
+				"title":"Damper Pedal on/off (Sustain)"
+				,ctrlType:"cc"
+				,numSigBits:1
+				,ctrlIndex:[64]
+				,typeHint: "button",
+				default:0
+			},
+			{title:"16’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x30], "paramPath": "/drawbars/0", "stepCount": 8},
+			{title:"5⅓’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x31], "paramPath": "/drawbars/1", "stepCount": 8},
+			{title:"8’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x32], "paramPath": "/drawbars/2", "stepCount": 8},
+			{title:"4’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x33], "paramPath": "/drawbars/3", "stepCount": 8},
+			{title:"2⅔’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x34], "paramPath": "/drawbars/4", "stepCount": 8},
+			{title:"2’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x35], "paramPath": "/drawbars/5", "stepCount": 8},
+			{title:"1⅗’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x36], "paramPath": "/drawbars/6", "stepCount": 8},
+			{title:"1⅓’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x37], "paramPath": "/drawbars/7", "stepCount": 8},
+			{title:"1’ Drawbar",ctrlType:"rpn",ctrlIndex:[0x40,0x38], "paramPath": "/drawbars/8", "stepCount": 8},
+			//optional
+			{
+				"title":"Soft Pedal On/Off"
+				,ctrlType:"cc"
+				,numSigBits:1
+				,ctrlIndex:[67]
+				,typeHint: "button",
+				default:0
+			},
+			{title:"Vibrato / Chorus Type",ctrlType:"rpn",ctrlIndex:[0x40,0x39],managerOnly:true, "paramPath": "/chorusVibrato/type"},
+			{title:"Vibrato Chorus Off/On",ctrlType:"rpn",ctrlIndex:[0x40,0x3A],numSigBits:1,typeHint: "button",default:0, "paramPath": "/chorusVibrato/on"},
+			{title:"Percussion Off/On", "paramPath": "/perc/on",ctrlType:"rpn",ctrlIndex:[0x40,0x3B],managerOnly:true,numSigBits:1,typeHint: "button",default:0},
+			{title:"Percussion Normal/Soft", "paramPath": "/perc/volume",ctrlType:"rpn",ctrlIndex:[0x40,0x3C],managerOnly:true,numSigBits:1,typeHint: "button"},
+			{title:"Percussion Slow/Fast", "paramPath": "/perc/decay",ctrlType:"rpn",ctrlIndex:[0x40,0x3D],managerOnly:true},
+			{title:"Percussion Type 2nd/3rd", "paramPath": "/perc/harmonic",ctrlType:"rpn",ctrlIndex:[0x40,0x3E],managerOnly:true},
+			{title:"Amount of Key Click", "paramPath": "/keyClick",ctrlType:"rpn",ctrlIndex:[0x40,0x41],managerOnly:true, default: 2147483648},
+			{title:"Amount of Crosstalk/Leakage", "paramPath": "/crosstalk",ctrlType:"rpn",ctrlIndex:[0x40,0x42],managerOnly:true, default: 214748364},
+		]
+	},
+	{
+		bank:0x61
+		,number:0x00
+		,name:'Rotary Speaker Effect'
+		,type:'singleChannel'
+		,channels:[]
+		,profileLevels:{
+			0x01:'Meets Minimum Requirements'
+		}
+		,CtrlList:[
+			{title:"Rotary Speed (Slow/Fast)",ctrlType:"rpn",ctrlIndex:[0x60,0x00],default:0
+				, "paramPath": "/rotary/speed",contMapList: {0:'Slow',0xFFFFFFFF:'Fast'}},
+			{title:"Rotary Effect (Off/On)",ctrlType:"rpn",ctrlIndex:[0x60,0x01],numSigBits:1,typeHint: "button"
+				,default:0xFFFFFFFF, "paramPath": "/rotary/effect"},
+			{title:"Rotary Brake (Brake Off = Rotate, Brake On = Stop)",ctrlType:"rpn",ctrlIndex:[0x60,0x02]
+				,numSigBits:1,typeHint: "button"
+				,default:0, "paramPath": "/rotary/brake"},
+			{title:"Horn Slow Speed",ctrlType:"rpn",ctrlIndex:[0x60,0x03],default:0x80000000
+				, "paramPath": "/rotary/horn/slowSpeed"},
+			{title:"Horn Fast Speed",ctrlType:"rpn",ctrlIndex:[0x60,0x04],default:0x80000000
+				, "paramPath": "/rotary/horn/fastSpeed"},
+			{title:"Woofer Slow Speed",ctrlType:"rpn",ctrlIndex:[0x60,0x05],default:0x80000000
+				, "paramPath": "/rotary/woofer/slowSpeed"},
+			{title:"Woofer Fast Speed",ctrlType:"rpn",ctrlIndex:[0x60,0x06],default:0x80000000
+				, "paramPath": "/rotary/woofer/fastSpeed"},
+			{title:"Horn Accelerate Time",ctrlType:"rpn",ctrlIndex:[0x60,0x07],default:0x80000000
+				, "paramPath": "/rotary/horn/accelerateTime"},
+			{title:"Horn Decelerate Time",ctrlType:"rpn",ctrlIndex:[0x60,0x08],default:0x80000000
+				, "paramPath": "/rotary/horn/deccelerateTime"},
+			{title:"Woofer Accelerate Time",ctrlType:"rpn",ctrlIndex:[0x60,0x09],default:0x80000000
+				, "paramPath": "/rotary/woofer/accelerateTime"},
+			{title:"Woofer Decelerate Time",ctrlType:"rpn",ctrlIndex:[0x60,0x0A],default:0x80000000
+				, "paramPath": "/rotary/woofer/deccelerateTime"},
+			{title:"Horn Level",ctrlType:"rpn",ctrlIndex:[0x60,0x0B],default:0xC8000000
+				, "paramPath": "/rotary/horn/level"},
+			{title:"Woofer Level",ctrlType:"rpn",ctrlIndex:[0x60,0x0C],default:0xC8000000
+				, "paramPath": "/rotary/woofer/level"},
+			{title:"Rotary Overdrive Amount",ctrlType:"rpn",ctrlIndex:[0x60,0x0D],default:0
+				, "paramPath": "/rotary/overdrive"},
+		]
+		,interoperability:{
+			"title":"Profile: Rotary Speaker",
+			sections:[
+				{
+					"title": "PfRotaryEfx1: After Profile is Enabled",
+					questions: [
+						{
+							id: "PfRotaryEfx1.1", required:true,
+							text: "Device has the assignment of controller message destinations/functions set to the " +
+								"common, default definitions. Details of destinations/functions are the specification."
+						}
+					]
+				}
+			]
+		}
 	}
 ];
