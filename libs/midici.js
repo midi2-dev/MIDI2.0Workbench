@@ -455,7 +455,7 @@ class midici {
 			return;
 		}
 
-		if(destmuid!==this._muid && destmuid!==0xFFFFFFF ){
+		if(this._muid !==null && destmuid!==this._muid && destmuid!==0xFFFFFFF ){
 			//not for me
 			return;
 		}
@@ -467,14 +467,14 @@ class midici {
 				//Send Invalidate MUID
 
 				return;
-			}else{
+			}else if(this.discoveryList){
 				this.discoveryList.push(remotemuid);
 			}
 		}
 
-		if(destmuid===0xFFFFFFF){
-			msgObj.multicast = true;
-		}
+		// if(destmuid===0xFFFFFFF){
+		// 	msgObj.multicast = true;
+		// }
 
 		msgObj.muid = remotemuid;
 
@@ -613,7 +613,7 @@ class midici {
 			this._exclusiveEndCheck(msgObj,offset);
 		}
 
-		switch (ciType.recvEvent.name) {
+		switch (this._muid && ciType.recvEvent.name) {
 			case 'setProtocol':
 			case 'protocolNegotiation': {
 				if (!(this.ciSupport & 0b10)) {
@@ -661,7 +661,7 @@ class midici {
 		if(this.debug){
 			d.msg("sysex",msgObj.debug.getDebug(),'in',umpDev,group,msgObj.debug.getErrors(),msgObj.debug.getWarnings());
 		}
-		if(msgObj.debug.hasErrors()){
+		if(this._muid && msgObj.debug.hasErrors()){
 			let ackNakDetails = [0,0,0,0,0];
 			/*	Protocol - the 5 Bytes declares the 5 bytes used for the Protocol Type
 				Profile Configuration - the 5 bytes used here represent the Profile Id
@@ -775,9 +775,9 @@ class midici {
 									}
 								}
 
-								if(ciType.recvEvent.name==='peSubRequest' && streamObjVals.reqHead.command !== 'start'){
+								if(this._muid && ciType.recvEvent.name==='peSubRequest' && streamObjVals.reqHead.command !== 'start'){
 									let subDetails = ((this.remoteDevicesInternal[msgObj.muid] || {}).peSubscriptions || {})[streamObjVals.reqHead.subscribeId];
-									if (!subDetails) {
+									if (!subDetails && destmuid!==0xFFFFFFF) {
 										debugData.warnings.push("No Matching Subscription for subscription id: "+streamObjVals.reqHead.subscribeId);
 									}
 								}
@@ -801,6 +801,13 @@ class midici {
 						}
 					}
 					if(this.debug)d.msg('pe',debugData,'in',umpDev,group);
+
+					if(!this._muid){
+						this.remoteDevicesInternal[remotemuid].streamsOut.createDummyStream(streamObjVals.requestId,{
+						reqHeader:debugData.header,
+							subId:msgObj.sysex[4]
+						});
+					}
 				}
 			}
 
@@ -808,6 +815,11 @@ class midici {
 				//This is ok for HAS/GET/SET but not replies
 				if(!this.remoteDevicesInternal[msgObj.muid] || !this.remoteDevicesInternal[msgObj.muid].streamsOut)return;
 				stream=this.remoteDevicesInternal[msgObj.muid].streamsOut.getStream(streamObjVals.requestId);
+				if(!stream && !this._muid){
+					this.remoteDevicesInternal[msgObj.muid].streamsOut.createDummyStream(streamObjVals.requestId);
+					stream=this.remoteDevicesInternal[msgObj.muid].streamsOut.getStream(streamObjVals.requestId);
+
+				}
 				if(stream) {
 					 if(stream.currentChunkResp !== streamObjVals.currentChunk-1){
 						 stream.errors.push('Chunks are out of Sync '
@@ -1038,7 +1050,7 @@ class midici {
 					}
 					case 'ack':{
 						switch (oOptsForReply.statusCode){
-							case 0x10:{ //Terminate Inquiry (replaces PE Notify Message with a status of 144)
+							case 0x10:{ //TimeOut Wait (replaces PE Notify Message with a status of 144)
 								this.remoteDevicesInternal[msgObj.muid].streamsOut.timeoutWait(oOptsForReply.statusData[0], oOptsForReply.statusData * 100);
 								break;
 							}
@@ -1109,7 +1121,7 @@ class midici {
 	piCapabilityStart(remoteMuid, cbComplete = function(){} ) {
 
 		if(configSetting.ciVerLocal < 2 || !this.getData(remoteMuid,'/supported/procInq')
-			|| this.remoteDevicesInternal[remoteMuid].processInquiryComplete
+			//|| this.remoteDevicesInternal[remoteMuid].processInquiryComplete
 		) {
 			//this.remoteDevicesInternal[remoteMuid].processInquiryComplete = true;
 			cbComplete();
@@ -1265,13 +1277,13 @@ class midici {
 	}
 
 	findMatchingFile(remoteMuid,homedir,cbComplete = function(){}){
-		if(this.remoteDevicesInternal[remoteMuid].fileLoaded){
+		if(!this.remoteDevicesInternal[remoteMuid] || this.remoteDevicesInternal[remoteMuid]?.fileLoaded){
 			cbComplete();
 			return;
 		}
 		const filename = this.getData(remoteMuid,'/device/manufacturerId16')+ '_'
-		     + this.getData(remoteMuid,'/device/familyId').join('-')+ '_'
-		     + this.getData(remoteMuid,'/device/modelId').join('-')
+		     + this.getData(remoteMuid,'/device/familyId')?.join('-')+ '_'
+		     + this.getData(remoteMuid,'/device/modelId')?.join('-')
 		;
 
 		this.remoteDevicesInternal[remoteMuid].file = homedir+filename+'.json';
@@ -1286,6 +1298,7 @@ class midici {
 			...{
 				supported: this.remoteDevices[remoteMuid].supported,
 				processInquiryMIDIReport: this.remoteDevices[remoteMuid].processInquiryMIDIReport,
+				processInquiryComplete: false,
 				maxSysex: this.remoteDevices[remoteMuid].maxSysex,
 				ciSupport: this.remoteDevices[remoteMuid].ciSupport,
 				pe:{}
@@ -2000,9 +2013,9 @@ class midici {
 	}
 	buildOut(pf,mmaProf,manuProf){
 		if(pf.isMMA){
-			const mmaMatch = new RegExp('\('+pf.bank+':'+pf.number+'\)');
+			const mmaMatch = new RegExp('\('+pf.bank+':'+pf.index+'\)');
 			if(!mmaProf.match(mmaMatch)){
-				mmaProf += '('+pf.bank+':'+pf.number+') '+pf.name+ "\n";
+				mmaProf += '('+pf.bank+':'+pf.index+') '+pf.name+ "\n";
 			}
 		}else{
 			const mmaMatch2 = new RegExp('\('+pf.id1+':'+pf.id2+'\)');
@@ -2023,12 +2036,12 @@ class midici {
 		if(type === 0x7E){
 			newProfile.isMMA = true;
 			newProfile.bank = newProfile.sysex[1];
-			newProfile.number = newProfile.sysex[2];
+			newProfile.index = newProfile.sysex[2];
 			newProfile.version = newProfile.sysex[3];
 			newProfile.level = newProfile.sysex[4];
 			//look up on profile list :)
 			midi2Tables.profiles.map(function(profile){
-				if(profile.number !== newProfile.number || profile.bank!==newProfile.bank) return;
+				if(profile.index !== newProfile.index || profile.bank!==newProfile.bank) return;
 				//if(this.experimentalSpecs && !profile.isApproved) return;
 
 				newProfile.name = profile.name;

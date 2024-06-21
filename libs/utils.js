@@ -99,7 +99,13 @@ async function sendOutUMPBrokenUp(ump,sleep,cb){
 }
 
 function setRemoteEndpointValueFromMUID(muid, path, val, force=false){
-    let umpDev = global._midici.remoteDevicesInternal[muid]?.umpDev || global._midiciM1.remoteDevicesInternal[muid]?.umpDev;
+    let umpDev = global._midici.remoteDevicesInternal[muid]?.umpDev;//
+    if(!umpDev){
+        global._midiciM1.map(mciM1=>{
+            umpDev =  mciM1.remoteDevicesInternal[muid]?.umpDev;
+        });
+    }
+    // || global._midiciM1.remoteDevicesInternal[muid]?.umpDev;
     if(!umpDev || !global.umpDevices[umpDev]) return;
     if(force || ptr.get(global.umpDevices[umpDev],path)!==undefined)return;
     ptr.set(global.umpDevices[umpDev],path,val,true);

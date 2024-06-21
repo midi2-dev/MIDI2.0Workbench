@@ -10,8 +10,12 @@
     <script src="js/popper.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css" >
     <link rel="stylesheet" href="css/bootstrap-fileup.css" >
+    <link rel="stylesheet" href="css/jsonformat.css" >
     <script src="js/bootstrap.min.js"></script>
     <link href="fa/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href='js/jsonform/brutusin-json-forms.css'/>
+    <script src="js/jsonform/brutusin-json-forms.js"></script>
+    <script src="js/jsonform/brutusin-json-forms-bootstrap.js"></script>
     <script>
         if (window.module) module = window.module;
 
@@ -41,42 +45,57 @@
                 margin: 2em;
             }
 
-            input{
-                background: inherit;
-                border: none;
-                color: inherit;
-                margin: inherit;
-                padding: inherit;
+            .container {
+                width: 100%;
+                padding: 0;
+                margin: 0;
             }
 
-            .footerFront{
-                 position: absolute;
-                 bottom: 0;
+            #collapseOutputReport{
+                display: block !important;
             }
+
+            .card{
+                border: none;
+            }
+
+            /*input{*/
+            /*    background: inherit;*/
+            /*    border: none;*/
+            /*    color: inherit;*/
+            /*    margin: inherit;*/
+            /*    padding: inherit;*/
+            /*}*/
+
+            /*.footerFront{*/
+            /*     position: absolute;*/
+            /*     bottom: 0;*/
+            /*}*/
 
             .noprint {
                 display:none;
             }
 
-            ::-webkit-input-placeholder { /* WebKit browsers */
-                color: transparent;
-            }
-            :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-                color: transparent;
-            }
-            ::-moz-placeholder { /* Mozilla Firefox 19+ */
-                color: transparent;
-            }
-            :-ms-input-placeholder { /* Internet Explorer 10+ */
-                color: transparent;
-            }
+            /*::-webkit-input-placeholder { !* WebKit browsers *!*/
+            /*    color: transparent;*/
+            /*}*/
+            /*:-moz-placeholder { !* Mozilla Firefox 4 to 18 *!*/
+            /*    color: transparent;*/
+            /*}*/
+            /*::-moz-placeholder { !* Mozilla Firefox 19+ *!*/
+            /*    color: transparent;*/
+            /*}*/
+            /*:-ms-input-placeholder { !* Internet Explorer 10+ *!*/
+            /*    color: transparent;*/
+            /*}*/
         }
+
 
 
 
     </style>
 
-    <script src="app/project.js"></script>
+    <script src="app/cert.js"></script>
 </head>
 <body>
 <div class="container-fluid page" style="position: relative; page-break-after: always;">
@@ -99,604 +118,684 @@
     </ul>
 
     <h1><strong>MIDI Logo Implementation Checklist</strong></h1>
-    <div style="font-weight: bold">Checklist Version 1.7</div>
+    <div style="font-weight: bold">Checklist Version 1.8</div>
     <div class="noprint">
         Please see specific <a href="#" data-ipcmsg="showHelp" data-xdata="logoChecklist" >Logo Implementation Checklist Help</a>
     </div>
 
     <hr/>
+    <div class="accordion" id="accordion">
 
-    <h3><strong><input style="width: -webkit-fill-available" data-path="/remoteEndpoint/manufacturer"
-                       placeholder="[Manufacturer Name Here]"/></strong></h3>
-    <h3><strong><input style="width: -webkit-fill-available" data-path="/remoteEndpoint/model"
-                       placeholder="[DEVICE Model Name or Other Identifier Here]"/></strong><br></h3>
-    <h4>Version: <input style="width: 300px" data-path="/remoteEndpoint/version"
-                        placeholder="[Product Version Info Here If Applicable]"/><br></h4>
-    <p>
-        <table>
-        <tr><td>Submission: </td><td><span id="submissionDate"></span></td></tr>
-        <tr><td>Embargo: </td><td><input data-path="/remoteEndpoint/embargo" placeholder="[Embargo Date YYYY-MM-DD]"
-                                         pattern="\d{4}-\d{2}-\d{2}"/></td></tr>
-        </table>
+        <div class="card noprint">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <button class="btn btn-link btn-block text-left collapsed" id="formLink" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
+                        MIDI 2.0 Device Data Collection
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseForm" class="collapse show noprint" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="alert alert-secondary" role="alert">
+                        <div id="example-desc">
 
-        <br>
-        <input data-path="/remoteEndpoint/contactName" placeholder="[Representative Name]"/>
-        <input data-path="/remoteEndpoint/email" placeholder="[Representative Email]"/>
-    </p>
-    <div class="noscreen" style="height:1000px"></div>
-    <div class="row footerFront">
-        <div class="col" style="text-align: center;">
-            <img src="images/amei.png">
-            <br/>
-            <a href="http://www.amei.or.jp">http://www.amei.or.jp</a>
+                        </div>
+                    </div>
+                    <div id='container' style="padding-left:12px;padding-right:12px;padding-bottom: 12px;"></div>
+                    <div class="panel-footer">
+                        <button class="btn btn-primary" onclick="generateOutput()">Create Output</button>&nbsp;
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col" style="text-align: center;">
-            <img src="images/midiassociation.png">
-            <br/>
-            <a href="https://www.midi.org">https://www.midi.org</a>
+
+        <div class="card">
+            <div class="card-header noprint">
+                <h2 class="mb-0">
+                    <button id="ReportOut" class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOutputReport" aria-expanded="true" aria-controls="collapseInput">
+                        Output: MIDI 2.0 Logo Checklist v1.8
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseOutputReport" class="collapse" data-parent="#accordion">
+                <div class="card-body" id="outputReport" >
+
+                    <h3 data-jsonpath="$.manufacturer"></h3>
+                    <h3 data-jsonpath="$.model"></h3><br/>
+                    <h4>Version: <span data-jsonpath="$.version"></span><br></h4>
+                    <div>
+                        <table>
+                            <tr><td>Submission: </td><td><span data-jsonpath="$.submission"></span></td></tr>
+                            <tr><td>Embargo: </td><td><span data-jsonpath="$.embargoDate"></span></td></tr>
+                        </table>
+
+                        <br/>
+                        <span data-jsonpath="$.repName"></span>
+                        <span data-jsonpath="$.repEmail"></span>
+                    </div>
+                    <div class="noscreen" style="height:800px"></div>
+                    <div class="row footerFront" style="page-break-after: always;" >
+                        <div class="col" style="text-align: center;">
+                            <img src="images/amei.png" alt="AMEI Logo"/>
+                            <br/>
+                            <a href="https://www.amei.or.jp">https://www.amei.or.jp</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <img src="images/midiassociation.png" alt="MIDI Association Logo"/>
+                            <br/>
+                            <a href="https://www.midi.org">https://www.midi.org</a>
+                        </div>
+                        <p>
+                            &copy; 2021 Association of Musical Electronic Industry (AMEI) (Japan)<br/>
+                            &copy; 2021 MIDI Manufacturers Association Incorporated (MMA) (Worldwide except Japan)
+                        </p>
+                        <p class="noscreen">
+                            ALL RIGHTS RESERVED. NO PART OF THIS DOCUMENT MAY BE REPRODUCED OR TRANSMITTED IN ANY FORM OR BY ANY MEANS, ELECTRONIC OR MECHANICAL, INCLUDING INFORMATION STORAGE AND RETRIEVAL SYSTEMS, WITHOUT PERMISSION IN WRITING FROM THE MIDI MANUFACTURERS ASSOCIATION.
+                        </p>
+                    </div>
+
+                    <div style="page-break-after: always;" >
+                        <h3><strong>1.  Introduction</strong></h3>
+
+                        <div>
+                            <p>MIDI 2.0 Compliance is defined in the M2-100-U MIDI 2.0 Specification Overview document and other related MIDI 2.0 specifications published by The MIDI Association (TMA) and the Association of Musical Electronics (AMEI).</p>
+                            <p>THE MIDI MANUFACTURERS ASSOCIATION and ASSOCIATION OF MUSICAL ELECTRONICS INDUSTRY MIDI 2.0 TRADEMARK LICENSING MANAGEMENT AGREEMENT requires a developer to submit the following checklist as a claim for verification of MIDI 2.0 compliance by TMA or AMEI.</p>
+                        </div>
+
+                        <h3><strong>2.  MIDI 2.0 Logo License Implementation Requirements</strong></h3>
+
+                        <div>
+                            Any Device which claims MIDI 2.0 compatibility shall implement either A or B, or both A and B:
+                            <div style="text-indent: 1em;">
+                                A. MIDI-CI* to at least its minimum requirements, including discovery mechanisms, plus any one or more of the following features:
+                                <ul>
+                                    <li>One or more Profiles controllable by MIDI-CI Profile Configuration messages.</li>
+                                    <li>Any Property Data exchange by MIDI-CI Property Exchange messages.</li>
+                                    <li>Any Process Inquiry exchange by MIDI-CI Process Inquiry messages.</li>
+                                </ul>
+                                <br/>
+                                B. The UMP Data Format** to at least its minimum requirements, including discovery mechanisms, plus any one or more of the following features:
+                                <ul>
+                                    <li>MIDI 2.0 Channel Voice Messages as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
+                                    <li>Jitter Reduction Timestamps as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
+                                    <li>System Exclusive 8 as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
+                                    <li>Mixed Data Set as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
+                                </ul>
+                            </div>
+                            *Note: MIDI-CI v1.2 requires the support of its discovery mechanisms. For a list of the complete minimum
+                            requirements to implement MIDI-CI see the M2-101-UM MIDI Capability Inquiry (MIDI-CI) Version 1.2 specification.
+                            <br/>
+                            **Note: UMP and MIDI 2.0 Protocol v1.1 requires the support of its UMP Endpoint discovery mechanisms.
+                            For a list of the complete minimum requirements to implement UMP Format, see the M2-104-UM UMP and MIDI 2.0 Protocol
+                            Version 1.1 specification.
+                        </div>
+
+                        <p>
+                            Testing of MIDI 2.0 products is the sole responsibility of the individual manufacturer. The only requirement for
+                            self-certification is to complete this MIDI 2.0 Logo Implementation Checklist, which documents which features
+                            the specific product supports.
+                        </p>
+                        <p>
+                            We strongly encourage your company to access all the documents and tools available to MIDI Association members.
+                            A thorough understanding of all MIDI specifications is a vital prerequisite to correctly implementing MIDI 2.0.
+                        </p>
+                    </div>
+
+                    <h3><strong>3. Device Details</strong></h3>
+                    <p>The identity of the device is declared on the cover page of this form. Following are identifier values used in various MIDI messages.</p>
+                    Table 1: Identifiers used in MIDI Messages
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">Device Identifier</th>
+                            <th scope="col" style="width: 70px">Byte 1 (hex)</th>
+                            <th scope="col" style="width: 70px">Byte 2 (hex)</th>
+                            <th scope="col" style="width: 70px">Byte 3 (hex)</th>
+                            <th scope="col" style="width: 70px">Byte 4 (hex)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Device Manufacturer (System Exclusive ID Number)</td>
+                            <td><span class="hexinput7" data-jsonpath="$.manufacturerId.0"></span></td>
+                            <td><span class="hexinput7" data-jsonpath="$.manufacturerId.1"></span></td>
+                            <td><span class="hexinput7" data-jsonpath="$.manufacturerId.2"></span></td>
+                            <td style="background-color: lightgrey"></td>
+                        </tr>
+
+                        <tr>
+                            <td>Device Family (LSB first)</td>
+                            <td><span class="hexinput7" data-jsonpath="$.familyId.0"></span></td>
+                            <td><span class="hexinput7" data-jsonpath="$.familyId.1"></span></td>
+                            <td style="background-color: lightgrey"></td>
+                            <td style="background-color: lightgrey"></td>
+                        </tr>
+
+                        <tr>
+                            <td>Device Family Model Number (LSB first)</td>
+                            <td><span class="hexinput7" data-jsonpath="$.modelId.0"></span></td>
+                            <td><span class="hexinput7" data-jsonpath="$.modelId.1"></span></td>
+                            <td style="background-color: lightgrey"></td>
+                            <td style="background-color: lightgrey"></td>
+                        </tr>
+
+
+                        <tr>
+                            <td>Software Revision Level (Format is Device specific)</td>
+                            <td><span class="hexinput7" data-jsonpath="$.versionId.0"></span></td>
+                            <td><span class="hexinput7" data-jsonpath="$.versionId.1"></span></td>
+                            <td><span class="hexinput7" data-jsonpath="$.versionId.2"></span></td>
+                            <td><span class="hexinput7" data-jsonpath="$.versionId.3"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    <h3><strong>4. Discovery</strong></h3>
+                    Table 2: MIDI-CI Discovery
+                    <table class="table table-bordered table-sm">
+                        <tr style="background-color: #aaaaaa">
+                            <th colspan="3">MIDI-CI Support</th>
+                            <th>Version</th>
+                        </tr>
+                        <tr style="background-color: #eeeeee">
+                            <td rowspan="4">If MIDI-CI is Supported</td>
+                            <td colspan="2">MIDI Capability (MIDI-CI) Version</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.midiCiVersion"></span>
+                            </td>
+                        </tr>
+                        <tr style="background-color: #aaaaaa">
+                            <th colspan="2">MIDI-CI Discovery</th>
+                            <th>Add "Yes" to Confirm</th>
+                        </tr>
+                        <tr>
+                            <td>The Device performs MIDI-CI Discovery Transaction as an Initiator</td>
+                            <td>Recommended</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.midiCiInitiator"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>The Device replies to MIDI-CI Discovery message as a Responder by sending a Reply to Discovery message.</td>
+                            <td>Required</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.midiCiResponder"></span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br/>
+                    Table 3: UMP Discovery
+                    <table class="table table-bordered table-sm">
+                        <tr style="background-color: #aaaaaa">
+                            <th colspan="3">UMP Format Support</th>
+                            <th>Version</th>
+                        </tr>
+                        <tr style="background-color: #eeeeee">
+                            <td rowspan="7">If UMP is Supported</td>
+                            <td colspan="2">Universal MIDI Packet (UMP) Format Version</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.umpVersion"></span>
+                            </td>
+                        </tr>
+                        <tr style="background-color: #aaaaaa">
+                            <th colspan="2">UMP Discovery (If UMP Version 1.1 or Higher)</th>
+                            <th>Add "Yes" to Confirm</th>
+                        </tr>
+                        <tr>
+                            <td>The Device sends Endpoint Discovery message</td>
+                            <td>Recommended</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.endpointDiscovery"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>The Device replies to Discovery message by sending an Endpoint Info Notification message</td>
+                            <td>Required</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.endpointInfoNotification"></span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <h3><strong>5. MIDI-CI Support</strong></h3>
+                    Table 4:
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">Basic MIDI-CI Functions (All Required)</th>
+                            <th style="width: 250px"><span class="noprint">Add "Yes" to Confirm</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Upon each power up, device creates a new, randomly generated MUID</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.uniqueMUID"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>The Device conforms to all other minimum requirements of the M2-101-UM MIDI-CI Specification, Version 1.1</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.midiCIMinRequirements"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    Table 5:
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">Capability Inquiry Category Supported</th>
+                            <th scope="col" style="width: 250px">Requirement</th>
+                            <th scope="col" style="width: 250px"><span class="noprint">Add "Yes" to Confirm</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>Category 1: Protocol Negotiation</td>
+                            <td>Deprecated in MIDI-CI v1.2</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.midiCIProtocolNegotiation"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Category 2: Profile Configuration</td>
+                            <td rowspan="3" style="background-color: #eeeeee">At least one of Category 2, 3 or 4 is Required</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Category 3: Property Exchange</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Category 4: Process Inquiry</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.processInquiry"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    <h4>Profile Configuration</h4>
+                    Table 6: If Device declares support for Profile Configuration in Table 5, list supported Profiles.
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">Name of Profile Supported</th>
+                            <th scope="col">Profile Level</th>
+                            <th scope="col" style="width: 250px"><span class="noprint">Add "Yes" to Confirm</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>GM2 Function Block (0x00 0x00)</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.profiles[?(@.profileId==''0x0000'')].level"></span>
+                            </td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles[?(@.profileId==''0x0000'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Piano Profile (0x20 0x00)</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.profiles[?(@.profileId==''0x2000'')].level"></span>
+                            </td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles[?(@.profileId==''0x2000'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Drawbar Organ Profile (0x20 0x01)</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.profiles[?(@.profileId==''0x2001'')].level"></span>
+                            </td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles[?(@.profileId==''0x2001'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>GM2 Single Channel (0x20 0x02)</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.profiles[?(@.profileId==''0x2002'')].level"></span>
+                            </td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles[?(@.profileId==''0x2002'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Default Control Change Mapping (0x21 0x00)</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.profiles[?(@.profileId==''0x2100'')].level"></span>
+                            </td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles[?(@.profileId==''0x2100'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Rotary Speaker (0x22 0x00)</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.profiles[?(@.profileId==''0x2200'')].level"></span>
+                            </td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles[?(@.profileId==''0x2200'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MPE (0x31 0x00)</td>
+                            <td style="text-align: center" >
+                                <span data-jsonpath="$.profiles[?(@.profileId==''0x3100'')].level"></span>
+                            </td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.profiles[?(@.profileId==''0x3100'')]"></span>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    <h4>Property Exchange</h4>
+                    Table 7: If Device declares support for Property Exchange in Table 5, list supported Resources.
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">Name of Property Exchange Resource Supported</th>
+                            <th>Requirement Note</th>
+                            <th scope="col" style="width: 250px"><span class="noprint">Add "Yes" to Confirm</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>ResourceList</td>
+                            <td>Required*</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource == ''ResourceList'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DeviceInfo (Foundational)</td>
+                            <td>Recommended</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''DeviceInfo'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>JSONSchema (Foundational)</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''JSONSchema'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ChannelList</td>
+                            <td>Recommended</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''ChannelList'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ProgramList</td>
+                            <td>Recommended</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''ProgramList'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ModeList</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''ModeList'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CurrentMode</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''CurrentMode'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ExternalSync</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''ExternalSync'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>LocalOn</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''LocalOn'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ChannelMode</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''ChannelMode'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BasicChannelRx</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''BasicChannelRx'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BasicChannelTx</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''BasicChannelTx'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>State</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''State'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>StateList</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''StateList'')]"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>AllCtrlList</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''AllCtrlList'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ChCtrlList</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''ChCtrlList'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CtrlMapList</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''CtrlMapList'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MaxSysex8Streams </td>
+                            <td>Deprecated June 2023</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.propertyExchange[?(@.resource==''MaxSysex8Streams'')]"></span>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <i>*Required if Property Exchange is supported.</i><br/>
+                    <h4>Process Inquiry</h4>
+                    Table 8: If Device declares support for Process Inquiry in Table 5, confirm support here.
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">Name of Process Inquiry Function Supported</th>
+                            <th>Requirement Note</th>
+                            <th scope="col" style="width: 250px"><span class="noprint">Add "Yes" to Confirm</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>The Device replies to Inquiry: MIDI Message Report message as a Responder by sending a Reply to MIDI Message Report, any available requested data, and End of MIDI Message Report message.</td>
+                            <td>Required*</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.processInquiry[?(@.name==''MIDIMsgReport'')]"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <i>*Required if Process Inquiry is supported.</i><br/>
+
+                    <br/>
+                    <h3><strong>6. UMP Support</strong></h3>
+                    Table 9: If Device declares support for UMP.
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">UMP Messages Supported</th>
+                            <th scope="col" style="width: 250px">Requirement Note</th>
+                            <th scope="col" style="width: 250px"><span class="noprint">Add "Yes" to Confirm</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Device Reports Function Blocks</td>
+                            <td>Recommended For Most Devices<br/>Not Recommended for DAWs</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''functionBlocks'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Stream Configuration</td>
+                            <td>Recommended</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''streamConfiguration'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>System Messages</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''systemMessages'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MIDI 1.0 Channel Voice Messages</td>
+                            <td>Recommended</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''m1CVM'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MIDI 2.0 Channel Voice Messages</td>
+                            <td rowspan="4" style="background-color: #eeeeee">Supporting at least one of these MIDI 2.0 features is Required.</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''m2CVM'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jitter Reduction Timestamps</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''jrTimestamps'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>System Exclusive 8</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''sysex8'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mixed Data Set</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''mixedDataSet'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Flex Data Messages</td>
+                            <td>Optional</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.umpFeatures[?(@ == ''flexData'')]"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+
+                    <br/>
+                    <h4>Transports</h4>
+                    Table 10:
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                        <tr style="background-color: #aaaaaa">
+                            <th scope="col">Name of Transport Supported</th>
+                            <th style="width: 250px"><span class="noprint">Add "Yes" to Confirm</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>USB MIDI 2.0</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.transports[?(@ == ''USB-MIDI2'' || @ == ''USB-Host-MIDI2'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Other Transports, List Here: <span class="joinTransport" data-jsonpath="$.transports[?(@ != ''USB-MIDI2'' && @ != ''USB-Host-MIDI2'')]"></span></td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.transports[?(@ != ''USB-MIDI2'' && @ != ''USB-Host-MIDI2'')]"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Standard MIDI File v2.0 MIDI Clip File</td>
+                            <td style="text-align: center" >
+                                <span class="boolCheck" data-jsonpath="$.midiClip"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
         </div>
-        <p>
-            © 2021 Association of Musical Electronic Industry (AMEI) (Japan)<br/>
-            © 2021 MIDI Manufacturers Association Incorporated (MMA) (Worldwide except Japan)
-        </p>
-        <p class="noscreen">
-            ALL RIGHTS RESERVED. NO PART OF THIS DOCUMENT MAY BE REPRODUCED OR TRANSMITTED IN ANY FORM OR BY ANY MEANS, ELECTRONIC OR MECHANICAL, INCLUDING INFORMATION STORAGE AND RETRIEVAL SYSTEMS, WITHOUT PERMISSION IN WRITING FROM THE MIDI MANUFACTURERS ASSOCIATION.
-        </p>
-    </div>
-</div>
 
-<div class="container-fluid" style="page-break-after: always;" >
-
-    <h3><strong>1.  Introduction</strong></h3>
-
-    <div>
-        <p>MIDI 2.0 Compliance is defined in the M2-100-U MIDI 2.0 Specification Overview document and other related MIDI 2.0 specifications published by The MIDI Association (TMA) and the Association of Musical Electronics (AMEI).</p>
-        <p>THE MIDI MANUFACTURERS ASSOCIATION and ASSOCIATION OF MUSICAL ELECTRONICS INDUSTRY MIDI 2.0 TRADEMARK LICENSING MANAGEMENT AGREEMENT requires a developer to submit the following checklist as a claim for verification of MIDI 2.0 compliance by TMA or AMEI.</p>
-    </div>
-
-    <h3><strong>2.  MIDI 2.0 Logo License Implementation Requirements</strong></h3>
-
-    <div>
-        Any Device which claims MIDI 2.0 compatibility shall implement either A or B, or both A and B:
-        <div style="text-indent: 1em;">
-            A. MIDI-CI* to at least its minimum requirements, including discovery mechanisms, plus any one or more of the following features:
-            <ul>
-                <li>One or more Profiles controllable by MIDI-CI Profile Configuration messages.</li>
-                <li>Any Property Data exchange by MIDI-CI Property Exchange messages.</li>
-                <li>Any Process Inquiry exchange by MIDI-CI Process Inquiry messages.</li>
-            </ul>
-            <br/>
-            B. The UMP Data Format** to at least its minimum requirements, including discovery mechanisms, plus any one or more of the following features:
-            <ul>
-                <li>MIDI 2.0 Channel Voice Messages as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
-                <li>Jitter Reduction Timestamps as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
-                <li>System Exclusive 8 as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
-                <li>Mixed Data Set as defined by the Universal MIDI Packet (UMP) Format and MIDI 2.0 Protocol.</li>
-            </ul>
+        <div class="card noprint">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseInput" aria-expanded="true" aria-controls="collapseInput">
+                        MIDI 2.0 Device Data JSON
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseInput" class="collapse" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="" id="data" role="tabpanel" aria-labelledby="data-tab" style="white-space: pre;"></div>
+                </div>
+            </div>
         </div>
-        *Note: MIDI-CI v1.2 requires the support of its discovery mechanisms. For a list of the complete minimum
-        requirements to implement MIDI-CI see the M2-101-UM MIDI Capability Inquiry (MIDI-CI) Version 1.2 specification.
-        <br/>
-        **Note: UMP and MIDI 2.0 Protocol v1.1 requires the support of its UMP Endpoint discovery mechanisms.
-        For a list of the complete minimum requirements to implement UMP Format, see the M2-104-UM UMP and MIDI 2.0 Protocol
-        Version 1.1 specification.
     </div>
-
-    <p>
-       Testing of MIDI 2.0 products is the sole responsibility of the individual manufacturer. The only requirement for
-       self-certification is to complete this MIDI 2.0 Logo Implementation Checklist, which documents which features
-       the specific product supports.
-    </p>
-    <p>
-        We strongly encourage your company to access all the documents and tools available to MIDI Association members.
-        A thorough understanding of all MIDI specifications is a vital prerequisite to correctly implementing MIDI 2.0.
-    </p>
-
-    <h3><strong>2. Device Details</strong></h3>
-    <p>The identity of the device is declared on the cover page of this form. Following are identifier values used in various MIDI messages.</p>
-    Table 1: Identifiers used in MIDI Messages
-    <table class="table table-bordered table-sm">
-        <thead>
-        <tr style="background-color: #aaaaaa">
-            <th scope="col">Device Identifier</th>
-            <th scope="col" style="width: 250px">Byte #</th>
-            <th scope="col" style="width: 250px">Byte Value (Hex)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td rowspan="3">Device Manufacturer (System Exclusive ID Number)</td>
-            <td>Byte 1</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/manufacturerId/0"/></td>
-        </tr>
-        <tr>
-            <td>Byte 2</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/manufacturerId/1"/></td>
-        </tr>
-        <tr>
-            <td>Byte 3</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/manufacturerId/2"/></td>
-        </tr>
-
-        <tr>
-            <td rowspan="2">Device Family (LSB first)</td>
-            <td>Byte 1</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/familyId/0"/></td>
-        </tr>
-        <tr>
-            <td>Byte 2</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/familyId/1"/></td>
-        </tr>
-
-        <tr>
-            <td rowspan="2">Device Family Model Number (LSB first)</td>
-            <td>Byte 1</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/modelId/0"/></td>
-        </tr>
-        <tr>
-            <td>Byte 2</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/modelId/1"/></td>
-        </tr>
-
-
-        <tr>
-            <td rowspan="4">Software Revision Level (Format is Device specific)</td>
-            <td>Byte 1</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/versionId/0"/></td>
-        </tr>
-        <tr>
-            <td>Byte 2</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/versionId/1"/></td>
-        </tr>
-        <tr>
-            <td>Byte 3</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/versionId/2"/></td>
-        </tr>
-        <tr>
-            <td>Byte 4</td><td><input type="text" min="0" max="127" step="1" class="hexinput7" data-path="/remoteEndpoint/versionId/3"/></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <br/>
-    <h3><strong>4. Discovery</strong></h3>
-    Table 2: MIDI-CI Discovery
-    <table class="table table-bordered table-sm">
-        <tr style="background-color: #aaaaaa">
-            <th colspan="3">MIDI-CI Support</th>
-            <th>Version</th>
-        </tr>
-        <tr style="background-color: #eeeeee">
-            <td rowspan="4">If MIDI-CI is Supported</td>
-            <td colspan="2">MIDI Capability (MIDI-CI) Version</td>
-            <td>
-                <input class="form-control" data-path="/remoteEndpoint/midi2Supp/midiciver"/>
-            </td>
-        </tr>
-        <tr style="background-color: #aaaaaa">
-            <th colspan="2">MIDI-CI Discovery</th>
-            <th>Add “Yes” to Confirm</th>
-        </tr>
-        <tr>
-            <td>The Device performs MIDI-CI Discovery Transaction as an Initiator</td>
-            <td>Recommended</td>
-            <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/initiator"/>
-            </td>
-        </tr>
-        <tr>
-            <td>The Device replies to MIDI-CI Discovery message as a Responder by sending a Reply to Discovery message.</td>
-            <td>Required</td>
-            <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/responder"/>
-            </td>
-        </tr>
-    </table>
-
-    <br/>
-    Table 2: MIDI-CI Discovery
-    <table class="table table-bordered table-sm">
-        <tr style="background-color: #aaaaaa">
-            <th colspan="3">UMP Format Support</th>
-            <th>Version</th>
-        </tr>
-        <tr style="background-color: #eeeeee">
-            <td rowspan="7">If UMP is Supported</td>
-            <td colspan="2">Universal MIDI Packet (UMP) Format Version</td>
-            <td>
-                <input class="form-control" data-path="/remoteEndpoint/midi2Supp/umpver"/>
-            </td>
-        </tr>
-        <tr style="background-color: #aaaaaa">
-            <th colspan="2">UMP Discovery (If UMP Version 1.1 or Higher)</th>
-            <th>Add “Yes” to Confirm</th>
-        </tr>
-        <tr>
-            <td>The Device sends Endpoint Discovery message</td>
-            <td>Recommended</td>
-            <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpSendEPDisc"/>
-            </td>
-        </tr>
-        <tr>
-            <td>The Device replies to Discovery message by sending an Endpoint Info Notification message</td>
-            <td>Required</td>
-            <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpEPInfoReply"/>
-            </td>
-        </tr>
-        <tr>
-            <td>The Device replies to Discovery message by sending a Device Identity Notification message</td>
-            <td>Recommended</td>
-            <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpEPIdentityReply"/>
-            </td>
-        </tr>
-        <tr>
-            <td>The Device replies to Discovery message by sending an Endpoint Name Notification message</td>
-            <td>Recommended</td>
-            <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpEPNameReply"/>
-            </td>
-        </tr>
-        <tr>
-            <td>The Device replies to Discovery message by sending a Product Instance Id Notification message</td>
-            <td>Recommended</td>
-            <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpEPPIdReply"/>
-            </td>
-        </tr>
-    </table>
-
-    <h3><strong>5. MIDI-CI Support</strong></h3>
-    Table 4:
-    <table class="table table-bordered table-sm">
-        <thead>
-        <tr style="background-color: #aaaaaa">
-            <th scope="col">Basic MIDI-CI Functions (All Required)</th>
-            <th style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Upon each power up, device creates a new, randomly generated MUID</td>
-            <td><input type="checkbox" class="form-control" data-path="/interoperability/ci1.1"/></td>
-        </tr>
-        <tr>
-            <td>The Device conforms to all other minimum requirements of the M2-101-UM MIDI-CI Specification, Version 1.1</td>
-            <td><input type="checkbox" class="form-control" data-path="/interoperability/ciSpec"/></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <br/>
-    Table 5:
-    <table class="table table-bordered table-sm">
-        <thead>
-        <tr style="background-color: #aaaaaa">
-            <th scope="col">Capability Inquiry Category Supported</th>
-            <th scope="col" style="width: 250px">Requirement</th>
-            <th scope="col" style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <tr>
-            <td>Category 1: Protocol Negotiation</td>
-            <td>Deprecated in MIDI-CI v1.2</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/protocol"/></td>
-        </tr>
-        <tr>
-            <td>Category 2: Profile Configuration</td>
-            <td rowspan="3" style="background-color: #eeeeee">At least one of Category 2, 3 or 4 is Required</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/profile"/></td>
-        </tr>
-        <tr>
-            <td>Category 3: Property Exchange</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe"/></td>
-        </tr>
-        <tr>
-            <td>Category 4: Process Inquiry</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pi"/></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <br/>
-    <h4>Profile Configuration</h4>
-    Table 6: If Device declares support for Profile Configuration in Table 5, list supported Profiles.
-    <table class="table table-bordered table-sm">
-        <thead>
-        <tr style="background-color: #aaaaaa">
-            <th scope="col">Name of Profile Supported</th>
-            <th scope="col">Profile Level</th>
-            <th scope="col" style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Default Control Change Mapping (0x21 0x00)</td>
-            <td><input class="form-control" data-path="/remoteEndpoint/midi2Supp/pr_21_00_lvl"/></td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pr_21_00"/></td>
-        </tr>
-
-        </tbody>
-    </table>
-
-    <br/>
-    <h4>Property Exchange</h4>
-    Table 7: If Device declares support for Property Exchange in Table 5, list supported Resources.
-    <table class="table table-bordered table-sm">
-        <thead>
-        <tr style="background-color: #aaaaaa">
-            <th scope="col">Name of Property Exchange Resource Supported</th>
-            <th>Requirement Note</th>
-            <th scope="col" style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>ResourceList</td>
-            <td>Required</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_ResourceList"/></td>
-        </tr>
-        <tr>
-            <td>DeviceInfo (Foundational)</td>
-            <td>Recommended</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_DeviceInfo"/></td>
-        </tr>
-        <tr>
-            <td>JSONSchema (Foundational)</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_JSONSchema"/></td>
-        </tr>
-        <tr>
-            <td>ChannelList</td>
-            <td>Recommended</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_ChannelList"/></td>
-        </tr>
-        <tr>
-            <td>ProgramList</td>
-            <td>Recommended</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_ProgramList"/></td>
-        </tr>
-        <tr>
-            <td>ModeList</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_ModeList"/></td>
-        </tr>
-        <tr>
-            <td>CurrentMode</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_CurrentMode"/></td>
-        </tr>
-        <tr>
-            <td>ExternalSync</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_ExternalSync"/></td>
-        </tr>
-        <tr>
-            <td>LocalOn</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_LocalOn"/></td>
-        </tr>
-        <tr>
-            <td>ChannelMode</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_ChannelMode"/></td>
-        </tr>
-        <tr>
-            <td>BasicChannelRx</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_BasicChannelRx"/></td>
-        </tr>
-        <tr>
-            <td>BasicChannelTx</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_BasicChannelTx"/></td>
-        </tr>
-        <tr>
-            <td>State</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_State"/></td>
-        </tr>
-        <tr>
-            <td>StateList</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_StateList"/></td>
-        </tr>
-
-        <tr>
-            <td>AllCtrlList</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_AllCtrlList"/></td>
-        </tr>
-        <tr>
-            <td>ChCtrlList</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_ChCtrilList"/></td>
-        </tr>
-        <tr>
-            <td>CtrlMapList</td>
-            <td>Optional</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_CtrlMapList"/></td>
-        </tr>
-        <tr>
-            <td>MaxSysex8Streams </td>
-            <td>Deprecated June 2023</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pe_MaxSysex8Streams"/></td>
-        </tr>
-
-        </tbody>
-    </table>
-    <h4>Process Inquiry</h4>
-    Table 8: If Device declares support for Process Inquiry in Table 5, confirm support here.
-    <table class="table table-bordered table-sm">
-        <thead>
-        <tr style="background-color: #aaaaaa">
-            <th scope="col">Name of Process Inquiry Function Supported</th>
-            <th>Requirement Note</th>
-            <th scope="col" style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>The Device replies to Inquiry: MIDI Message Report message as a Responder by sending a Reply to MIDI Message Report, any available requested data, and End of MIDI Message Report message.</td>
-            <td>Required</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pi_ReplyToMIDIMessageReport"/></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <br/>
-    <h3><strong>6. UMP Support</strong></h3>
-    Table 9: If Device declares support for UMP.
-    <table class="table table-bordered table-sm">
-        <thead>
-            <tr style="background-color: #aaaaaa">
-                <th scope="col">UMP Messages Supported</th>
-                <th scope="col" style="width: 250px">Requirement Note</th>
-                <th scope="col" style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Device Reports Function Blocks</td>
-                <td>Recommended For Most Devices<br/>Not Recommended for DAWs</td>
-                <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpFBReport"/>
-                </td>
-            </tr>
-            <tr>
-                <td>Stream Configuration</td>
-                <td>Recommended</td>
-                <td>
-                <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpStreamConfig"/>
-                </td>
-            </tr>
-            <tr>
-                <td>System Messages</td>
-                <td>Optional</td>
-                <td>
-                    <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpSystemMsg"/>
-                </td>
-            </tr>
-            <tr>
-                <td>MIDI 1.0 Channel Voice Messages</td>
-                <td>Recommended</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpM1CVM"/></td>
-            </tr>
-            <tr>
-                <td>MIDI 2.0 Channel Voice Messages</td>
-                <td rowspan="4" style="background-color: #eeeeee">Supporting at least one of these MIDI 2.0 features is Required.</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpM2CVM"/></td>
-            </tr>
-            <tr>
-                <td>Jitter Reduction Timestamps</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpJR"/></td>
-            </tr>
-            <tr>
-                <td>System Exclusive 8</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpS8"/></td>
-            </tr>
-            <tr>
-                <td>Mixed Data Set</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpMDS"/></td>
-            </tr>
-            <tr>
-                <td>Flex Data Messages</td>
-                <td>Optional</td>
-                <td>
-                    <input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/umpFlexData"/>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <br/>
-    Table 10: If Device declares support for MIDI 2.0 Protocol, then supporting at least one of the following MIDI 2.0 Protocol format messages is Required.
-    <table class="table table-bordered table-sm">
-        <thead>
-            <tr style="background-color: #aaaaaa">
-                <th scope="col">MIDI 2.0 Protocol Messages Supported</th>
-                <th style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Note On and Note Off</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/noteOnOff"/></td>
-            </tr>
-            <tr>
-                <td>Poly Pressure</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/polyPress"/></td>
-            </tr>
-            <tr>
-                <td>Registered Per-Note Controller</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/regPerNote"/></td>
-            </tr>
-            <tr>
-                <td>Assignable Per-Note Controller</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/assPerNote"/></td>
-            </tr>
-            <tr>
-                <td>Per-Note Management</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/perNoteManage"/></td>
-            </tr>
-            <tr>
-                <td>Control Change</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/controlChange"/></td>
-            </tr>
-            <tr>
-                <td>Registered Controller (RPN)</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/rpn"/></td>
-            </tr>
-            <tr>
-                <td>Assignable Controller (NRPN)</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/nrpn"/></td>
-            </tr>
-            <tr>
-                <td>Relative Registered Controller (RPN)</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/rrpn"/></td>
-            </tr>
-            <tr>
-                <td>Relative Assignable Controller (NRPN)</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/rnpn"/></td>
-            </tr>
-            <tr>
-                <td>Program Change</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/programChange"/></td>
-            </tr>
-            <tr>
-                <td>Channel Pressure</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/chPress"/></td>
-            </tr>
-            <tr>
-                <td>Pitch Bend</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/pitchBend"/></td>
-            </tr>
-            <tr>
-                <td>Per-Note Pitch Bend</td>
-                <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/perNotePitchBend"/></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <br/>
-    <h4>Transports</h4>
-    Table 11:
-    <table class="table table-bordered table-sm">
-        <thead>
-        <tr style="background-color: #aaaaaa">
-            <th scope="col">Name of Transport Supported</th>
-            <th style="width: 250px"><span class="noprint">Tick to Confirm</span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>USB MIDI 2.0</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/transUSBMIDI2"/></td>
-        </tr>
-        <tr>
-            <td>Other Transports, List Here: <input class="form-control" data-path="/remoteEndpoint/midi2Supp/transOtherList"/></td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/transOther"/></td>
-        </tr>
-        <tr>
-            <td>Standard MIDI File v2.0 MIDI Clip File</td>
-            <td><input type="checkbox" class="form-control" data-path="/remoteEndpoint/midi2Supp/transSMF2Clip"/></td>
-        </tr>
-        </tbody>
-    </table>
 
 
 </div>

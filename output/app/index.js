@@ -156,16 +156,21 @@ function buildMIDICIDevice(jqCard, xData){
         .append('MUID : ' + xData.muidRemote)
         .appendTo(jqCard)
         .on('click', e => {
-            const xData = $(e.currentTarget).data('xData');
-            ipcRenderer.send('asynchronous-message', 'openMIDICI',
-                {
-                    umpDev:jqCard.parent().parent().data()['umpdev'],
-                    fbIdx: jqCard.data()['fbIdx'],
-                    muid: xData.muidRemote,
-                    group: jqCard.data()['groupstart'],
-                    //funcBlock: xData.funcBlock
-                }
-            );
+            let umpDev = jqCard.parent().parent().data()['umpdev'];
+            if(configSetting.bridging.indexOf(umpDev)!==-1){
+                common.buildModalAlert("Cannot open MIDI-CI view when bridging is active");
+            }else {
+                const xData = $(e.currentTarget).data('xData');
+                ipcRenderer.send('asynchronous-message', 'openMIDICI',
+                    {
+                        umpDev,
+                        fbIdx: jqCard.data()['fbIdx'],
+                        muid: xData.muidRemote,
+                        group: jqCard.data()['groupstart'],
+                        //funcBlock: xData.funcBlock
+                    }
+                );
+            }
         });
 
 
@@ -191,88 +196,9 @@ function buildMIDICIDevice(jqCard, xData){
 
 
 function buildUMPDevice(){
-    $('#midi1DevicesList').empty();
-
-    window.configSetting.umpVirtualMIDI1.map((vm1,idx)=>{
-        const jqSelIn = $("<select/>",{class:'deviceIn form-control','data-path':'/config/umpVirtualMIDI1/'+idx+'/in'})
-            .append(
-                '<option value="">-- Select a MIDI IN connection --</option>'
-            );
-        const jqSelOut = $("<select/>",{class:'deviceOut form-control','data-path':'/config/umpVirtualMIDI1/'+idx+'/out'})
-            .append(
-                '<option value="">-- Select a MIDI Out connection --</option>'
-            );
-
-        const jqRow = $('<tr/>').appendTo('#midi1DevicesList');
-        const jqGRIn = $('<input/>',{type:"number", min:1, max:16,'data-path':'/config/umpVirtualMIDI1/'+idx+'/group',value:vm1.group,'data-zerobased':true})
-            .data('idx',idx)
-            .data('vm1',vm1)
-            .on('change.checkGroup',function(e){
-                const idx = $(this).data('idx');
-                const newValue = parseInt($(this).val()) - 1;
-                const groupsInUse = window.configSetting.umpVirtualMIDI1
-                    .filter((v,i)=>i!==idx).map(v=>v.group);
-                if(~groupsInUse.indexOf(newValue)){
-                   e.preventDefault();
-                   e.stopPropagation();
-                   $(this).val(newValue+1).trigger('change');
-                }else{
-                    $(this).trigger('change.datapath');
-
-                    ipcRenderer.send('asynchronous-message', 'getAllUMPDevicesFunctionBlocks',{resetMUID:true});
-                }
-            });
-
-        const jqGRName = $('<input/>',
-            {'data-path':'/config/umpVirtualMIDI1/'+idx+'/name',value:vm1.name});
 
 
-        const jqButtonRem = $("<button/>",{type:"button", class:"btn btn-primary"})
-            .append('<i class="fas fa-trash"></i>')
-            .data('idx',idx)
-            .on('click',function(){
-                window.configSetting.umpVirtualMIDI1.splice($(this).data('idx'),1);
-                common.setConfig('/umpVirtualMIDI1', window.configSetting.umpVirtualMIDI1);
-                buildUMPDevice();
-            });
 
-        $('<td/>')
-            .append(jqGRIn)
-            .appendTo(jqRow);
-        $('<td/>')
-            .append(jqGRName)
-            .appendTo(jqRow);
-        $('<td/>')
-            .append(jqSelIn)
-            .appendTo(jqRow);
-        $('<td/>')
-            .append(jqSelOut)
-            .appendTo(jqRow);
-        $('<td/>')
-            .append(jqButtonRem)
-            .appendTo(jqRow);
-    });
-
-    const jqRowAdd = $('<tr/>').appendTo('#midi1DevicesList');
-    const jqButtonAdd = $("<button/>",{type:"button", class:"btn btn-primary"})
-        .append('<i class="fas fa-plus"></i> Add MIDI 1.0 Device')
-        .on('click',function(){
-            window.configSetting.umpVirtualMIDI1.push({group:0});
-            common.setConfig('/umpVirtualMIDI1', window.configSetting.umpVirtualMIDI1);
-            buildUMPDevice();
-        });
-    $('<td/>',{colspan:3})
-        .append(jqButtonAdd)
-        .appendTo(jqRowAdd);
-
-    const jqButtonRefresh = $("<button/>",{type:"button", class:"btn btn-secondary"})
-        .append('Refresh list of available MIDI 1.0 In/Out')
-        .on('click',function(){
-            ipcRenderer.send('asynchronous-message', 'refreshMIDIDevices');
-        });
-    $('<td/>',{colspan:2, align:'right'})
-        .append(jqButtonRefresh)
-        .appendTo(jqRowAdd);
 
     ipcRenderer.send('asynchronous-message', 'refreshMIDIDevices');
 }
@@ -303,10 +229,10 @@ function createUMPCard(umpDev){
             .css({
                 'grid-area': '1/1/1/1',
                 margin: 'auto'
-            }).text(umpDev==='umpVirtualMIDI1'?'Port':"Grp.")
+            }).text(umpDev.match(/umpVirtualMIDI/)?'Port':"Grp.")
             .appendTo(jqBody);
 
-        if(umpDev!=='umpVirtualMIDI1'){
+        if(!umpDev.match(/umpVirtualMIDI/)){
             $('<div/>', {})
                 .css({
                     'grid-area': '1/2/1/26',
@@ -338,30 +264,133 @@ function createUMPCard(umpDev){
 function addUMPDevHead(umpDev,info){
     let jqCardHead = $('[data-umpDev="' + umpDev + '"] > .card-header').empty();
 
-    if(umpDev!=='umpVirtualMIDI1'){
+    if(!umpDev.match(/umpVirtualMIDI/)){
         const jqntitle = $('<b/>').appendTo(jqCardHead);
         $('<button/>',{type:"button"})
             .addClass("btn btn-success btn-sm w-100 pt-0 pb-0")
             .append(info.name)
             .appendTo(jqntitle)
             .on('click', e => {
-                ipcRenderer.send('asynchronous-message', 'openMIDIEndpoint',
-                    {
-                        umpDev,
-                        remoteEndpoint: true,
-                        umpStream: true
-                    }
-                );
+                if(configSetting.bridging.indexOf(umpDev)!==-1){
+                    common.buildModalAlert("Cannot open device view when bridging is active");
+                }else {
+                    ipcRenderer.send('asynchronous-message', 'openMIDIEndpoint',
+                        {
+                            umpDev,
+                            remoteEndpoint: true,
+                            umpStream: true
+                        }
+                    );
+                }
             });
     }
 
-    if(umpDev==='umpVirtualMIDI1'){
+    if(umpDev.match(/umpVirtualMIDI/)){
         jqCardHead.append('<b>' + info.name + '</b>');
         jqCardHead.append('<br/>');
         const jqsub = $('<sub/>').appendTo(jqCardHead);
-        $('<a/>',{href:'#'})
+        const jqConfigur = $('<a/>',{href:'#'})
             .text('Configure')
-            .on('click',function(){
+            .on('click',()=>{
+
+                $('#midi1DevicesList').empty();
+
+                window.configSetting[umpDev].map((vm1,idx)=>{
+                    const jqSelIn = $("<select/>",{class:'deviceIn form-control','data-path':`/config/${umpDev}/${idx}/in`})
+                        .append(
+                            '<option value="">-- Select a MIDI IN connection --</option>'
+                        );
+                    const jqSelOut = $("<select/>",{class:'deviceOut form-control','data-path':`/config/${umpDev}/${idx}/out`})
+                        .append(
+                            '<option value="">-- Select a MIDI Out connection --</option>'
+                        );
+
+                    window.m1Devices.in.map(o=>{
+                        $('<option/>',{value:o.inName})
+                            .text(o.inName).appendTo(jqSelIn);
+                    });
+                    window.m1Devices.out.map(name=>{
+                        $('<option/>',{value:name} )
+                            .text(name).appendTo(jqSelOut);
+                    });
+
+                    const jqRow = $('<tr/>').appendTo('#midi1DevicesList');
+                    const jqGRIn = $('<input/>',{type:"number", min:1, max:16,'data-path':`/config/${umpDev}/${idx}/group`,value:vm1.group,'data-zerobased':true})
+                        .data('idx',idx)
+                        .data('vm1',vm1)
+                        .data('umpDev',umpDev)
+                        .on('change.checkGroup',function(e){
+                            const idx = $(this).data('idx');
+                            const umpDev = $(this).data('umpDev');
+                            const newValue = parseInt($(this).val()) - 1;
+                            const groupsInUse = window.configSetting[umpDev]
+                                .filter((v,i)=>i!==idx).map(v=>v.group);
+                            if(~groupsInUse.indexOf(newValue)){
+                                e.preventDefault();
+                                e.stopPropagation();
+                                $(this).val(newValue+1).trigger('change');
+                            }else{
+                                $(this).trigger('change.datapath');
+
+                                ipcRenderer.send('asynchronous-message', 'getAllUMPDevicesFunctionBlocks',{resetMUID:true});
+                            }
+                        });
+
+                    const jqGRName = $('<input/>',
+                        {'data-path':`/config/${umpDev}/${idx}/name`,value:vm1.name});
+
+
+                    const jqButtonRem = $("<button/>",{type:"button", class:"btn btn-primary"})
+                        .append('<i class="fas fa-trash"></i>')
+                        .data('idx',idx)
+                        .on('click',function(){
+                            window.configSetting[umpDev].splice($(this).data('idx'),1);
+                            common.setConfig(`/${umpDev}`, window.configSetting[umpDev]);
+                            jqConfigur.trigger('click');
+                        });
+
+                    $('<td/>')
+                        .append(jqGRIn)
+                        .appendTo(jqRow);
+                    $('<td/>')
+                        .append(jqGRName)
+                        .appendTo(jqRow);
+                    $('<td/>')
+                        .append(jqSelIn)
+                        .appendTo(jqRow);
+                    $('<td/>')
+                        .append(jqSelOut)
+                        .appendTo(jqRow);
+                    $('<td/>')
+                        .append(jqButtonRem)
+                        .appendTo(jqRow);
+                });
+
+                const jqRowAdd = $('<tr/>').appendTo('#midi1DevicesList');
+                const jqButtonAdd = $("<button/>",{type:"button", class:"btn btn-primary"})
+                    .append('<i class="fas fa-plus"></i> Add MIDI 1.0 Device')
+                    .on('click',function(){
+                        window.configSetting[umpDev].push({group:0});
+                        common.setConfig('/'+umpDev, window.configSetting[umpDev]);
+                        jqConfigur.trigger('click');
+                    });
+                $('<td/>',{colspan:3})
+                    .append(jqButtonAdd)
+                    .appendTo(jqRowAdd);
+
+                const jqButtonRefresh = $("<button/>",{type:"button", class:"btn btn-secondary"})
+                    .append('Refresh list of available MIDI 1.0 In/Out')
+                    .on('click',function(){
+                        ipcRenderer.send('asynchronous-message', 'getMIDIDevices');
+                    });
+                $('<td/>',{colspan:2, align:'right'})
+                    .append(jqButtonRefresh)
+                    .appendTo(jqRowAdd);
+
+                common.setValues();
+                common.setValueOnChange();
+                common.updateView();
+
                 $('#m1Modal')
                     .modal({show:true})
                     .on('hidden.bs.modal', function (e) {
@@ -427,19 +456,23 @@ function addUMPDevFBs(umpDev,FBList){
         $('<span/>',{class:'fa fa-sync fa-xs',style:'float:right; opacity:0.6'})
             .appendTo(jqName)
             .on('click',(e)=>{
-                $(e.currentTarget).closest('.funcBlock').find("[data-muid]").remove();
-                $(e.currentTarget).addClass('fa-spin');
+                if(configSetting.bridging.indexOf(umpDev)!==-1){
+                    common.buildModalAlert("Cannot refresh details when bridging is active");
+                }else {
+                    $(e.currentTarget).closest('.funcBlock').find("[data-muid]").remove();
+                    $(e.currentTarget).addClass('fa-spin');
 
-                ipcRenderer.send('asynchronous-message', 'refreshMIDICI',
-                    {
-                        umpDev:umpDev,
-                        group: jqFB.data()['groupstart'],
-                        //funcBlock: xData.funcBlock
-                    }
-                );
-                setTimeout(()=>{
-                    $(e.currentTarget).removeClass('fa-spin');
-                },1000)
+                    ipcRenderer.send('asynchronous-message', 'refreshMIDICI',
+                        {
+                            umpDev: umpDev,
+                            group: jqFB.data()['groupstart'],
+                            //funcBlock: xData.funcBlock
+                        }
+                    );
+                    setTimeout(() => {
+                        $(e.currentTarget).removeClass('fa-spin');
+                    }, 1000)
+                }
             });
 
         Object.keys(fb.muids||{}).map(muid=>{

@@ -9,6 +9,7 @@ const {setRemoteEndpointValueFromMUID} = require("./utils");
 const t = require("./translations");
 const s = require("./streams");
 const {arrayToHex} = require("./debugger");
+const {profiles} = require("./profiles");
 
 const authorityLevels={
     0x10:{
@@ -211,30 +212,7 @@ exports.ciParts = {
 
         }
     },
-    productInstanceIdLength:{
-        title: 'Number of bytes in Product Instance Id (pl)',
-        length: 1,
-        type: 'number',
-        path:'/productInstanceIdLength',
-        assignoOptsForReply:true,
-        outValue : (oOpts,midiCi) => {
-            return [].slice.call(t.strToUnicode(global.configSetting.productInstanceId)).length;
-        },
-    },
-    productInstanceId:{
-        title: 'Product Instance Id (pl)',
-        type:'string',
-        length: (dir,msgObj, midiCI,oOpts,streamObjVals) => {
-            if(dir==='in'){
-                return oOpts.productInstanceIdLength;
-            }else{
-                return 1;
-            }
-        },
-        outValue : (oOpts, midiCi) => {
-            return global.configSetting.productInstanceId;
-        }
-    },
+
     epStatus:{
         title: 'Endpoint Status',
         length: 1,
@@ -335,28 +313,6 @@ exports.ciParts = {
         },
         inValue : (msgObj, midiCi, valSysex,oOptsForReply,streamObjVals,offset) => {
             return processProtocols(msgObj, valSysex/5, offset);
-        }
-    },
-    currentProtocol:{
-        title: 'Current Protocol',
-        length: 5,
-        type: 'array',
-        path:'/currentProtocol',
-        outValue : (oOpts) => {
-            return oOpts.currentProtocol.sysex;
-        },
-        debugValue : (dir, val,oOpts) => {
-            if(dir==='out'){
-                return oOpts.currentProtocol.name;
-            }
-            return "MIDI "+val.type
-                + ' v.'+val.ver
-                + ((val.sExt)?' large packets supported':'')
-                + ((val.jr)?' with jitter reduction':'')
-            //debugger;
-        },
-        inValue : (msgObj, midiCi, valSysex,oOptsForReply,streamObjVals,offset) => {
-            return processProtocols(msgObj, 1, offset)[0];
         }
     },
     protocolNumbers:{
@@ -519,7 +475,7 @@ exports.ciParts = {
         outValue : (oOpts) => {
             let profileDataLength = 0;
             exports.profiles.map(rawPF=>{
-                if(rawPF.bank===oOpts.profile.bank && rawPF.number===oOpts.profile.number){
+                if(rawPF.bank===oOpts.profile.bank && rawPF.index===oOpts.profile.index){
                     //Great Found match
                     rawPF.profileSpecificData[oOpts.profileSpecificData].sysex.map(s=>{
                         profileDataLength += s.length;
@@ -537,7 +493,7 @@ exports.ciParts = {
             if(oOpts.profile.sysex){
                 return oOpts.profile.sysex;
             }else{
-                return [0x7E, oOpts.profile.bank, oOpts.profile.number,
+                return [0x7E, oOpts.profile.bank, oOpts.profile.index,
                     oOpts.profile.version || 0x01,
                     oOpts.profile.level
                 ];
@@ -554,7 +510,7 @@ exports.ciParts = {
                     profile = {sysex: valSysex};
                     midiCi.buildProfile(profile);
                     midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
-                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
+                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'), true);
                 }
 
                 midiCi.setData(msgObj.muid, `/profiles/${profileId}/sourceDestinations/${msgObj.group + '_' +msgObj.sourceDestination}/active`
@@ -567,7 +523,7 @@ exports.ciParts = {
                     profile = {sysex: valSysex};
                     midiCi.buildProfile(profile);
                     midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
-                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
+                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'), true);
                 }
             }
 
@@ -609,9 +565,13 @@ exports.ciParts = {
             if (msgObj.sysex[4] === 0x22 || msgObj.sysex[4] === 0x24){
                 if(val !== 1 && oOptsForReply.profile.type==='singleChannel' ) {
                     msgObj.debug.addWarning("Number of Channels should be set to 1 ",0x00);
-                }
+                }else
                 if(val === 0 && oOptsForReply.profile.type==='multiChannel' ) {
                     msgObj.debug.addError("Number of Channels must be set on Multi Channel Profiles",0x00);
+                }else{
+                    const profileId = oOptsForReply.profile.sysex.join('_');
+                    midiCi.setData(msgObj.muid, `/profiles/${profileId}/sourceDestinations/${msgObj.group + '_' +msgObj.sourceDestination}/numChannelEnabled`
+                        , val);
                 }
             }
 
@@ -649,12 +609,19 @@ exports.ciParts = {
         type: 'array',
         inValue : (msgObj, midiCi, valSysex,oOptsForReply) => {
             let data = valSysex;
-            exports.profiles.map(function(profile) {
-                if (profile.number !== oOptsForReply.profile.number || profile.bank !== oOptsForReply.profile.bank) return;
+            profiles.map(function(profile) {
+                if (profile.index !== oOptsForReply.profile.index || profile.bank !== oOptsForReply.profile.bank) return;
 
-                if(profile.profileDetailsReplyProcess){
+                if(oOptsForReply.inquiryTarget===0x00) {
+                    data =  {
+                        channelsInUse: valSysex[0]  + (valSysex[1]<<7),
+                        channelsAvailable: valSysex[2]  + (valSysex[3]<<7),
+                    };
+                    oOptsForReply.dataDebug = `Channels In Use: ${data.channelsInUse} Available:${data.channelsAvailable}`;
+                    midiCi.setData(msgObj.muid, `/profiles/${oOptsForReply.profile.sysex.join('_')}/sourceDestinations/${msgObj.group + '_' +msgObj.sourceDestination}/detailsInquiry/${oOptsForReply.inquiryTarget}`, data);
+
+                }else if(profile.profileDetailsReplyProcess){
                     data = profile.profileDetailsReplyProcess(msgObj, midiCi, valSysex,oOptsForReply);
-
                     midiCi.setData(msgObj.muid, `/profiles/${oOptsForReply.profile.sysex.join('_')}/sourceDestinations/${msgObj.group + '_' +msgObj.sourceDestination}/detailsInquiry/${oOptsForReply.inquiryTarget}`, data);
                 }
             });
@@ -705,13 +672,13 @@ exports.ciParts = {
                     midiCi.buildProfile(profile);
                     midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
 
-                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
+                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'), true);
                     setRemoteEndpointValueFromMUID(msgObj.muid,
-                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'),
+                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'),
                         true);
 
                     setRemoteEndpointValueFromMUID(msgObj.muid,
-                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_')+'_lvl',
+                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_')+'_lvl',
                         profile.level);
 
                 }
@@ -789,12 +756,12 @@ exports.ciParts = {
                     profile = {sysex: profSysex};
                     midiCi.buildProfile(profile);
                     midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
-                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'), true);
+                    midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'), true);
                     setRemoteEndpointValueFromMUID(msgObj.muid,
-                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_'),
+                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'),
                         true);
                     setRemoteEndpointValueFromMUID(msgObj.muid,
-                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.number], '_')+'_lvl',
+                        '/remoteEndpoint/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_')+'_lvl',
                         profile.level);
                 }
 

@@ -110,3 +110,12 @@ form.brutusin-form .error {
 form.brutusin-form .error-message {
     color: red;
 }
+
+form.brutusin-form h3 {
+    color: white;
+}
+
+form.brutusin-form td label {
+    display: inline;
+}
+

@@ -121,102 +121,104 @@ function getRawUSBMIDI2(dev) {
                     }
                     
 function descriptorLookupTrigger(id, dev,ii,uinterface=false){
-                    async.series(
-                        descriptorLookup(dev, ii.bInterfaceNumber),
-                        (err, results) => {
-                            if (err) {
-                                console.log('USB_MIDI_2 DescriptorLookup Error',err);
-                                return;
-                            }
-                            //const id = [dev.deviceDescriptor.idVendor, dev.deviceDescriptor.idProduct, dev.deviceDescriptor.bcdDevice].join('_');
-                            const usbEndpoint = {
-                                iManufacturer: results[0],
-                                iProduct: results[1],
-                                iSerialNumber: results[2],
-                                groupBlocks: results[3].gbs,
-                                gbOdd: {},
-                                devId: id
-                            };
+    async.series(
+        descriptorLookup(dev, ii.bInterfaceNumber),
+        (err, results) => {
+            if (err) {
+                console.log('USB_MIDI_2 DescriptorLookup Error',err);
+                return;
+            }
+            //const id = [dev.deviceDescriptor.idVendor, dev.deviceDescriptor.idProduct, dev.deviceDescriptor.bcdDevice].join('_');
+            const usbEndpoint = {
+                iManufacturer: results[0],
+                iProduct: results[1],
+                iSerialNumber: results[2],
+                groupBlocks: results[3].gbs,
+                gbOdd: {},
+                devId: id
+            };
 
-                            dev.allConfigDescriptors[0].interfaces.map(inl1 => {
-                                inl1.map(uinterface2 => {
-                                    if (uinterface2.bInterfaceClass === 1 && uinterface2.bInterfaceSubClass === 3
-                                        && uinterface2.extra[4] === 2) {
-                                        const extraDetail = {};
-                                        extraDetail.bLength = uinterface2.extra[0];
-                                        extraDetail.bDescriptorType = uinterface2.extra[1];//'CS_INTERFACE';
-                                        extraDetail.bDescriptorSubtype = uinterface2.extra[2];//'MS_HEADER';
-                                        extraDetail.bcdMSC = uinterface2.extra[3] + (uinterface2.extra[4] << 8);
-                                        extraDetail.wTotalLength = uinterface2.extra[5] + (uinterface2.extra[6] << 8);
-                                        usbEndpoint.descriptor = {
-                                            ...uinterface2,
-                                            extraDetail,
-                                            groupTerminalBlocks: results[3].gbDev,
-                                            endpoints: uinterface2.endpoints.map(ep => {
-                                                const extraDetail = {};
-                                                extraDetail.bLength = ep.extra[0];
-                                                extraDetail.bDescriptorType = ep.extra[1];//'CS_ENDPOINT';
+            dev.allConfigDescriptors[0].interfaces.map(inl1 => {
+                inl1.map(uinterface2 => {
+                    if (uinterface2.bInterfaceClass === 1 && uinterface2.bInterfaceSubClass === 3
+                        && uinterface2.extra[4] === 2) {
+                        const extraDetail = {};
+                        extraDetail.bLength = uinterface2.extra[0];
+                        extraDetail.bDescriptorType = uinterface2.extra[1];//'CS_INTERFACE';
+                        extraDetail.bDescriptorSubtype = uinterface2.extra[2];//'MS_HEADER';
+                        extraDetail.bcdMSC = uinterface2.extra[3] + (uinterface2.extra[4] << 8);
+                        extraDetail.wTotalLength = uinterface2.extra[5] + (uinterface2.extra[6] << 8);
+                        usbEndpoint.descriptor = {
+                            ...uinterface2,
+                            extraDetail,
+                            groupTerminalBlocks: results[3].gbDev,
+                            endpoints: uinterface2.endpoints.map(ep => {
+                                const extraDetail = {};
+                                extraDetail.bLength = ep.extra[0];
+                                extraDetail.bDescriptorType = ep.extra[1];//'CS_ENDPOINT';
 
-                                                extraDetail.bDescriptorSubType = ep.extra[2];//'MS_GENERAL_2_0';
-                                                extraDetail.bNumGrpTrmBlock = ep.extra[3];
-                                                extraDetail.baAssoGrpTrmBlkID = ep.extra.slice(4, extraDetail.bLength);
-                                                extraDetail.extrabytes = ep.extra.slice(extraDetail.bLength);
+                                extraDetail.bDescriptorSubType = ep.extra[2];//'MS_GENERAL_2_0';
+                                extraDetail.bNumGrpTrmBlock = ep.extra[3];
+                                extraDetail.baAssoGrpTrmBlkID = ep.extra.slice(4, extraDetail.bLength);
+                                extraDetail.extrabytes = ep.extra.slice(extraDetail.bLength);
 
-                                                if (ep.bEndpointAddress >> 7) { //IN
-                                                    usbEndpoint.gbIn = [...ep.extra.slice(4)].map(gr => gr - 1);
-                                                } else {
-                                                    usbEndpoint.gbOut = [...ep.extra.slice(4)].map(gr => gr - 1);
-                                                }
+                                if (ep.bEndpointAddress >> 7) { //IN
+                                    usbEndpoint.gbIn = [...ep.extra.slice(4)].map(gr => gr - 1);
+                                } else {
+                                    usbEndpoint.gbOut = [...ep.extra.slice(4)].map(gr => gr - 1);
+                                }
 
-                                                return {
-                                                    ...ep,
-                                                    extraDetail
-                                                };
-                                            })
-                                        };
-                                    }
-                                });
-                            });
-                            USBDevices[id] = usbEndpoint;
-                            console.log('New USB:'+ id);
-            if(lookupOptions.attach){
-                            //console.dir(usbEndpoint,{depth:null})
-                    try {
-                        let outEPNum, inEPNum;
-                        uinterface.endpoints.map(enP => {
-
-                            if (enP.direction === 'out') {
-                                outEPNum = enP.address;
-                            } else if (enP.direction === 'in') {
-                                inEPNum = enP.address;
-                            }
-                        });
-                        const inEndpoint = uinterface.endpoint(inEPNum);
-                        MIDI2DevicesSendInterfaces[id] = uinterface.endpoint(outEPNum);
-
-                        inEndpoint.on('data', data => {
-                            console.log(data);
-                            if (!data.length) return;
-                            const umpArr = [];
-                            for (let j = 0; j < data.length; j += 4) {
-                                umpArr.push(data.readUInt32LE(j));
-                }
-                            alertNewUMPData(id, umpArr);
+                                return {
+                                    ...ep,
+                                    extraDetail
+                                };
+                            })
+                        };
+                    }
+                });
             });
-                        inEndpoint.on('error', data => {
-                            console.log('USB In Error:');
-                            console.log(data);
-        });
-                        inEndpoint.startPoll();
-                        module.exports.sendUMPUSB(id,[0,0,0,0]); //Required for New USB Devices apparently
-                        module.exports.sendUMPUSB(id,[0,0,0,0]); //Required for New USB Devices apparently
-                        setTimeout(()=>{
-                            alertNewDev(id,usbEndpoint);
-                        },1000);
-    }catch (e) {
-        console.log(e);
-                        return;
-    }
+            USBDevices[id] = usbEndpoint;
+            console.log('New USB:'+ id);
+            if(lookupOptions.attach){
+                //console.dir(usbEndpoint,{depth:null})
+                try {
+                    let outEPNum, inEPNum;
+                    uinterface.endpoints.map(enP => {
+
+                        if (enP.direction === 'out') {
+                            outEPNum = enP.address;
+                        } else if (enP.direction === 'in') {
+                            inEPNum = enP.address;
+                        }
+                    });
+                    const inEndpoint = uinterface.endpoint(inEPNum);
+                    MIDI2DevicesSendInterfaces[id] = uinterface.endpoint(outEPNum);
+
+                    inEndpoint.on('data', data => {
+                        console.log(data);
+                        if (!data.length) return;
+                        const umpArr = [];
+                        for (let j = 0; j < data.length; j += 4) {
+                            umpArr.push(data.readUInt32LE(j));
+                        }
+                        alertNewUMPData(id, umpArr);
+                    });
+                    inEndpoint.on('error', data => {
+                       console.log('USB In Error:');
+                       console.log(data);
+                    });
+                    inEndpoint.startPoll();
+                    module.exports.sendUMPUSB(id,[0,0,0,0]); //Required for New USB Devices apparently
+                    module.exports.sendUMPUSB(id,[0,0,0,0]); //Required for New USB Devices apparently
+                    setTimeout(()=>{
+                        alertNewDev(id,usbEndpoint);
+                    },1000);
+                }catch (e) {
+                    console.log(e);
+                    return;
+                }
+                alertNewUMPData(id, umpArr);
+
             }else{
                 USBDevices[id] = usbEndpoint;
                 alertNewDev(id,usbEndpoint);

@@ -18,14 +18,110 @@
         jQuery.cssNumber.gridRowEnd = true;
     </script>
     <style type="text/css">
+        .slider {
+            width: 30px;
+            height: 300px;
+            /*margin: 20px auto;*/
+            position: relative;
+        }
         input[type=range][orient=vertical]
         {
             writing-mode: bt-lr; /* IE */
             -webkit-appearance: slider-vertical; /* WebKit */
             width: 8px;
-            height: 175px;
+            height: 100%;
             padding: 0 5px;
         }
+        datalist {
+            width: 100%;
+            height: calc(100% - 57px);
+            position: absolute;
+            left: 40px;
+            top: 33px;
+            display: block;
+        }
+
+        datalist option {
+            top: calc(100% - (2.3283064370807974e-8% * var(--val)) - 12.5px);
+            /*top: calc(100% - (0.787401574% * var(--val)) - 12.5px);*/
+            display: inline-block;
+            position: absolute;
+            vertical-align: middle;
+            padding:0;
+            font-size: x-small;
+        }
+
+
+        ul.pianokeys {
+            height:17.875em;
+            width:204em;
+            /*width: auto;*/
+            padding:0;
+            position:relative;
+            /*border:1px solid #160801;*/
+            /*border-radius:1em;*/
+            background:linear-gradient(to bottom right,rgba(0,0,0,0.3),rgba(0,0,0,0));
+            box-shadow:0 0 50px rgba(0,0,0,0.5) inset,0 1px rgba(212,152,125,0.2) inset,0 5px 15px rgba(0,0,0,0.5)
+        }
+
+        ul.pianokeys li {
+            /*margin:0;*/
+            padding:0;
+            list-style:none;
+            position:relative;
+            float:left;
+            text-align: center;
+
+        }
+        ul.pianokeys li span {
+            position: absolute;
+            bottom:0;
+            display: block;
+            width:100%;
+        }
+
+        ul.pianokeys li.black span {
+            color: white;
+        }
+
+
+        ul.pianokeys .white {
+            height:16em;
+            width:4em;
+            z-index:1;
+            border-left:1px solid #bbb;
+            border-bottom:1px solid #bbb;
+            border-radius:0 0 5px 5px;
+            box-shadow:-1px 0 0 rgba(255,255,255,0.8) inset,0 0 5px #ccc inset,0 0 3px rgba(0,0,0,0.2);
+            background:linear-gradient(to bottom,#eee 0%,#fff 100%)
+        }
+
+
+
+        ul.pianokeys .black {
+            height:8.5em;
+            width:3em;
+            margin:0 0 0 -1.5em;
+            z-index:2;
+            border:1px solid #000;
+            border-radius:0 0 3px 3px;
+            box-shadow:-1px -1px 2px rgba(255,255,255,0.2) inset,0 -5px 2px 3px rgba(0,0,0,0.6) inset,0 2px 4px rgba(0,0,0,0.5);
+            background:linear-gradient(45deg,#222 0%,#555 100%)
+        }
+
+        .a,.g,.d, .b, .e {
+            margin:0 0 0 -1.5em
+        }
+
+        ul.pianokeys li:first-child {
+            border-radius:5px 0 5px 5px
+        }
+
+        ul.pianokeys li:last-child {
+            border-radius:0 5px 5px 5px
+        }
+
+
     </style>
 
     <script src="app/cm.js"></script>

@@ -69,7 +69,7 @@ exports.interoperability=[
                                 opts.indexWindow.webContents.send('asynchronous-reply', 'removeMUID', {
                                     muid:opts.currentMuid,umpDev:opts.umpDev
                                 });
-                                whichGlobalMIDICI(opts.umpDev).sendInvalidate(opts.currentMuid);
+                                whichGlobalMIDICI(opts.umpDev).sendInvalidate(opts.currentMuid, opts.group);
 
                             });
 

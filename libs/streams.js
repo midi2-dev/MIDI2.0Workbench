@@ -212,6 +212,25 @@ exports.streamOut = function(numberOfStreams,timeOut=5,sysexTimer = 20){
 			return  currentStreams[streamId] || false;
 		}
 		,closeStream:closeStream
+		,createDummyStream:(streamId,data={reqHeader:{}}) => {
+
+			currentStreams[streamId] = {
+				data,
+				cb:()=>{},
+				lastUpdate:now()
+				,responseHeader:[]
+				,responsePayload:[]
+				,errors:[]
+				,warnings:[]
+				,id:streamId
+				,headerSent:false
+				,start:0
+				,chunkNumber:1
+				,currentChunk:0
+				,currentChunkResp:0
+				,totalChunkResp:0
+			};
+		}
 	};
 
 };

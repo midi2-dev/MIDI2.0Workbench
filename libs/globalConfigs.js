@@ -26,7 +26,6 @@ global.configSetting = {
     osAPIinUse: os.platform(),
     osPlatform: os.platform(),
     ...configFromFile,
-    expExtensions: false,
     workbenchMIDI1VirtPortName: app.commandLine.getSwitchValue('virtualMidiName') || "MIDI 2.0 Workbench",
     mdnsRemoteAnswers:{},
     bridging:[],

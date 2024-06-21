@@ -411,7 +411,7 @@ t.umpToMidi10 = function(ump,mode){
 };
 
 t.processUMP = function(ump10,id,cbResponse){
-    if (!deviceHistory[id])deviceHistory[id]={sysex:{},endpoint:{},fb:{},umpPos:0, ump:[], flexObj:{}};
+    if (!deviceHistory[id])deviceHistory[id]={sysex:{},endpoint:{},fb:{},umpPos:0, ump:[], flexObj:{}, sysex8:{}};
 
     for(let i=0; i<ump10.length;i++) {
         const mess = ump10[i];
@@ -435,34 +435,7 @@ t.processUMP = function(ump10,id,cbResponse){
                 }
 
                 switch (deviceHistory[id].mt) {
-                    case 0: { //32 bits Utility Messages
-                        const status = (mess >> 20) & 0xF;
-                        switch (status){
-                            case 0: //noop
-                            case 1: //jr clock
-                            case 2: //jr timestamp
-                            case 3: //Delta Clockstamp Ticks Per Quarter Note (DCTPQ)
-                            case 4: //Delta Clockstamp (DC): Ticks Since Last Event
-                            case 5: //Start of Sequence Message
-                            case 6: //End of File Message
-                                cbResponse('ump', deviceHistory[id].group, deviceHistory[id].ump,
-                                    deviceHistory[id].errors,deviceHistory[id].warnings);
-                                break;
-                            case 9: //JR Protocol Req
-                            case 10: //JR Protocol Notify
-                                cbResponse('umpEndpointProcess', 0xFF, {
-                                    ump:deviceHistory[id].ump,
-                                    mt: deviceHistory[id].mt,
-                                    status,
-                                    midi2On: (mess >>> 2) & 1,
-                                    midi1On: (mess >>> 1) & 1,
-                                    jrOn: mess & 1
-                                },
-                                    deviceHistory[id].errors,deviceHistory[id].warnings);
-
-                        }
-                        break;
-                    }
+                    case 0: //32 bits Utility Messages
                     case 1: //32 bits System Real Time and System Common Messages (except System Exclusive)
                     case 2://32 Bits MIDI 1.0 Channel Voice Messages
                     case 6://Reserved
@@ -733,10 +706,46 @@ t.processUMP = function(ump10,id,cbResponse){
                             deviceHistory[id].errors,deviceHistory[id].warnings);
                         break;
                     case 0xE: //Reserved
-                    case 0x5: //128 bits Data Messages
+                    case 0x5: { //128 bits Data Messages
+                        const status = (deviceHistory[id].ump[0] >> 20) & 0xF;
+                        const numBytes = (deviceHistory[id].ump[0] >> 16) & 0xF;
+                        const streamId = (deviceHistory[id].ump[0] >> 8) & 0xFF;
+                        const idGRStr = deviceHistory[id].group+'_'+streamId;
+
+                        const ump = deviceHistory[id].ump;
+                        let numBytesStart = 0;
+                        if(status <= 1){ //Complete or First Message
+                            deviceHistory[id].sysex8[idGRStr] = {
+                                data:[],
+                                mnrfId: ((ump[0] & 0xFF) << 8) + ((ump[1] >> 24) & 0xFF),
+                                deviceId: (ump[1] >> 16) & 0xFF,
+                                subId1: (ump[1] >> 8) & 0xFF,
+                                subId2: ump[1]  & 0xFF
+                            };
+                            numBytesStart = 5;
+                        }
+
+                        let numBytesSoFar = 0;
+                        if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push(ump[0] & 0xFF);
+                        for (let j = status > 1?1:2; j < 4; j++) {
+                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push((ump[j] >> 24) & 0xFF);
+                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push((ump[j] >> 16) & 0xFF);
+                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push((ump[j] >> 8) & 0xFF);
+                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push(ump[j] & 0xFF);
+                        }
+
+                        if(status === 0 || status ===3){
+                            cbResponse('sysex8', deviceHistory[id].group, {
+                                    ump: deviceHistory[id].ump,
+                                    streamId
+                                },
+                                deviceHistory[id].errors, deviceHistory[id].warnings);
+                        }
+
                         cbResponse('ump', deviceHistory[id].group, deviceHistory[id].ump,
-                            deviceHistory[id].errors,deviceHistory[id].warnings);
+                            deviceHistory[id].errors, deviceHistory[id].warnings);
                         break;
+                    }
                     case 0xF: {// Groupless Message Type F
                         const status = (deviceHistory[id].ump[0] >> 16) & 0x3FF; //10 bit Status
                         const form = deviceHistory[id].ump[0] >> 26 & 0x3;

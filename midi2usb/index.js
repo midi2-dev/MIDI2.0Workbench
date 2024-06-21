@@ -189,6 +189,7 @@ if(os.platform()==='win32'){
                                 const gtb = endpoint.groupTerminalBlocks.getAt(j);
                                 let block = {
                                     gbIdx:gtb.number,
+                                    fbIdx:gtb.number,
                                     name: gtb.name,
                                     numberGroups: gtb.groupCount,
                                     firstGroup: gtb.firstGroupIndex,

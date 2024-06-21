@@ -19,10 +19,10 @@ For the MIDI 2.0 Workbench to access USB Devices UDEV rules will need added:
 
 ```
 # Please note this opens up access for any user application to have direct USB access
-groupadd usbusers
-usermod -a -G usbusers $USER
-echo 'SUBSYSTEM=="usb", MODE="0666", GROUP="usbusers"' | tee /etc/udev/rules.d/99-usbusers.rules
-udevadm control --reload
-udevadm trigger
+sudo groupadd usbusers
+sudo usermod -a -G usbusers $USER
+echo 'SUBSYSTEM=="usb", MODE="0666", GROUP="usbusers"' | sudo tee /etc/udev/rules.d/99-usbusers.rules
+sudo udevadm control --reload
+sudo udevadm trigger
 ```
 

@@ -167,11 +167,15 @@ if (typeof brutusin === "undefined") {
             var s = getSchema(schemaId);
             var parentSchema = getSchema(parentId);
             var input;
+            if(s.format==='title'){
+                container.parentNode.innerHTML = `<td colspan="2"><h3 class="pl-3 bg-primary">${s.title}</h3></td>`
+                return parentObject;
+            }else
             if (s.type === "any") {
                 input = document.createElement("textarea");
                 if (value) {
                     input.value = JSON.stringify(value, null, 4);
-                    if (s.readOnly)readOnly
+                    if (s.readOnly)
                         input.disabled = true;
                 }
             } else if (s.media) {
@@ -211,10 +215,15 @@ if (typeof brutusin === "undefined") {
             } else {
                 input = document.createElement("input");
                 if (s.type === "integer" || s.type === "number") {
-                    input.type = "number";
-                    input.step = s.step?""+s.step:"any";
-                    if (typeof value !== "number") {
-                        value = null;
+                    if (s.format==="hex"){
+                        input.type = "text";
+                        if(Number.isInteger(value)) value = "0x"+("00" + value.toString(16)).slice (-2).toUpperCase();
+                    }else{
+                        input.type = "number";
+                        input.step = s.step?""+s.step:"any";
+                        if (typeof value !== "number") {
+                            value = null;
+                        }
                     }
                 } else if (s.format === "date-time") {
                     try {
@@ -342,7 +351,7 @@ if (typeof brutusin === "undefined") {
             var schemaId = getSchemaId(id);
             var s = getSchema(schemaId);
             var input;
-            if (s.required) {
+            if (1 || s.required) {
                 input = document.createElement("input");
                 input.type = "checkbox";
                 if (value === true) {
@@ -403,6 +412,9 @@ if (typeof brutusin === "undefined") {
             var noption = document.createElement("option");
             noption.value = null;
             appendChild(input, noption, s);
+            if(s.originalType==="string"){
+                parentObject[propertyProvider.getValue()] = value;
+            }
             for (var i = 0; i < s.oneOf.length; i++) {
                 var option = document.createElement("option");
                 var propId = schemaId + "." + i;
@@ -415,6 +427,14 @@ if (typeof brutusin === "undefined") {
                     continue;
                 if (s.readOnly)
                     input.disabled = true;
+                if(s.originalType==="string"){
+                    if (ss.hasOwnProperty("const")) {
+                        if(ss.const===value){
+                            input.selectedIndex = i + 1;
+                            //render(null, display, id , parentObject, propertyProvider, value);
+                        }
+                    }
+                }
                 if (value.hasOwnProperty("type")) {
                     if (ss.hasOwnProperty("properties")) {
                         if (ss.properties.hasOwnProperty("type")) {
@@ -428,7 +448,12 @@ if (typeof brutusin === "undefined") {
                 }
             }
             input.onchange = function () {
+                if(s.originalType==="string"){
+                    value = getSchema(s.oneOf[this.selectedIndex - 1]).const;
+                    parentObject[propertyProvider.getValue()] = value;
+                }else{
                 render(null, display, id + "." + (input.selectedIndex - 1), parentObject, propertyProvider, value);
+                }
             };
             appendChild(container, input, s);
             appendChild(container, display, s);
@@ -680,7 +705,7 @@ if (typeof brutusin === "undefined") {
         renderers["array"] = function (container, id, parentObject, propertyProvider, value) {
             function addItem(current, table, id, value, readOnly) {
                 var schemaId = getSchemaId(id);
-                var s = getSchema(schemaId);
+                let s = getSchema(schemaId);
                 var tbody = document.createElement("tbody");
                 var tr = document.createElement("tr");
                 tr.className = "item";
@@ -702,12 +727,23 @@ if (typeof brutusin === "undefined") {
                         row.cells[0].innerHTML = i + 1;
                     }
                 };
-                removeButton.onclick = function () {
+                removeButton.onclick =  ()=> {
+                    let sp = getSchema(s['$id'].replace(/\[#\]$/,''));
+                    if(sp.minItems === undefined ||
+                        sp.minItems > current.length
+                    ){
                     current.splice(tr.rowIndex, 1);
                     table.deleteRow(tr.rowIndex);
                     computRowCount();
+                    }
                 };
-                appendChild(td2, removeButton, s);
+                let sp = getSchema(s['$id'].replace(/\[#\]$/,''));
+                let spValue = getInitialValue(id.replace(/\[[0-9]+\]$/,''))
+                if(sp.minItems === undefined ||
+                    sp.minItems < (spValue?.length ||0)
+                ) {
+                	appendChild(td2, removeButton, s);
+                }
                 var number = document.createTextNode(table.rows.length + 1);
                 appendChild(td1, number, s);
                 appendChild(tr, td1, s);
@@ -770,12 +806,21 @@ if (typeof brutusin === "undefined") {
             if (itemS.description) {
                 addButton.title = itemS.description;
             }
-            appendChild(addButton, document.createTextNode(BrutusinForms.messages["addItem"]), s);
+            appendChild(addButton, document.createTextNode(s.title? `Add ${s.title}`:BrutusinForms.messages["addItem"]), s);
             appendChild(div, table, s);
+            if(s.maxItems === undefined ||
+                s.maxItems < (value?.length ||0)
+            ) {
             appendChild(div, addButton, s);
+            }
             if (value && value instanceof Array) {
                 for (var i = 0; i < value.length; i++) {
                     addItem(current, table, id + "[" + i + "]", value[i], s.readOnly);
+                }
+            }
+            if(s.minItems){
+                for (var i = (value||[]).length; i < s.minItems; i++) {
+                    addItem(current, table, id + "[" + i + "]", null, s.readOnly);
                 }
             }
             appendChild(container, div, s);
@@ -1016,10 +1061,12 @@ if (typeof brutusin === "undefined") {
             if (!schema) {
                 return;
             } else if (schema.hasOwnProperty("oneOf")) {
-                pseudoSchema.oneOf = new Array();
+                pseudoSchema.oneOf = [];
+                pseudoSchema.originalType = schema.type;
                 pseudoSchema.type = "oneOf";
-                for (var i in schema.oneOf) {
-                    var childProp = name + "." + i;
+
+                for (let i in schema.oneOf) {
+                    let childProp = name + "." + i;
                     pseudoSchema.oneOf[i] = childProp;
                     populateSchemaMap(childProp, schema.oneOf[i]);
                 }
@@ -1027,8 +1074,8 @@ if (typeof brutusin === "undefined") {
                 var refSchema = getDefinition(schema["$ref"]);
                 if (refSchema) {
                     if (schema.hasOwnProperty("title") || schema.hasOwnProperty("description")) {
-                        var clonedRefSchema = {};
-                        for (var prop in refSchema) {
+                        let clonedRefSchema = {};
+                        for (let prop in refSchema) {
                             clonedRefSchema[prop] = refSchema[prop];
                         }
                         if (schema.hasOwnProperty("title")) {
@@ -1043,9 +1090,9 @@ if (typeof brutusin === "undefined") {
                 }
             } else if (schema.type === "object") {
                 if (schema.properties) {
-                    pseudoSchema.properties = new Object();
-                    for (var prop in schema.properties) {
-                        var childProp = name + "." + prop;
+                    pseudoSchema.properties = {};
+                    for (let prop in schema.properties) {
+                        let childProp = name + "." + prop;
                         pseudoSchema.properties[prop] = childProp;
                         var subSchema = schema.properties[prop];
                         if (schema.requiredProperties) {
@@ -1059,7 +1106,7 @@ if (typeof brutusin === "undefined") {
                     }
                 }
                 if (schema.patternProperties) {
-                    pseudoSchema.patternProperties = new Object();
+                    pseudoSchema.patternProperties = {};
                     for (var pat in schema.patternProperties) {
                         var patChildProp = name + "[" + pat + "]";
                         pseudoSchema.patternProperties[pat] = patChildProp;
@@ -1261,7 +1308,11 @@ if (typeof brutusin === "undefined") {
                 return null;
             }
             if (schema.type === "integer") {
+                if (schema.format==="hex"){
+                    value = parseInt(value,16);
+                }else{
                 value = parseInt(value);
+                }
                 if (!isFinite(value)) {
                     value = null;
                 }

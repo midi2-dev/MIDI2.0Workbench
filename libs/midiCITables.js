@@ -3,7 +3,6 @@
  * Contributors:
  *     Andrew Mee
  */
-
 const {profiles} = require('./profiles.js');
 
 exports.ciProtocols = {
@@ -126,13 +125,12 @@ exports.ciTypes = {
 	,0x10:{
 		title:'Initiate Protocol Negotiation Message'
 		,header:[
-			['authorityLevel','protocolCount','protocolList'],
-			['currentProtocol']
+			['authorityLevel','protocolCount','protocolList']
 		]
 		,reply:0x11
 		,recvEvent:{
 			name:'protocolNegotiation'
-			,args:['muid','authorityLevel','protocolList','currentProtocol']
+			,args:['muid','authorityLevel','protocolList']
 		},
 		addedFrom: 0x01
 	}
@@ -140,11 +138,10 @@ exports.ciTypes = {
 		title:'Reply to Initiate Protocol Negotiation Message'
 		,header:[
 			['authorityLevel','protocolCount','protocolList'],
-			['currentProtocol']
 		]
 		,recvEvent:{
 			name:'recvProtocols'
-			,args:['muid','authorityLevel','protocolList','currentProtocol']
+			,args:['muid','authorityLevel','protocolList']
 		},
 		addedFrom: 0x01
 	}
@@ -820,7 +817,7 @@ exports.resourceSchema = {
 		]
 	},
 	"ChCtrlList": {
-		resource: "CtrlList",
+		resource: "ChCtrlList",
 		requireResId:true,
 		canGet: true,
 		canSet: "none",

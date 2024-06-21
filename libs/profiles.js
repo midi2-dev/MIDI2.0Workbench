@@ -19,7 +19,7 @@ const defMapLists = {
 exports.profiles=[
 	{
 		bank:0x21
-		,number:0x00
+		,index:0x00
 		,name:'Default Control Change Mapping'
 		,type:'singleChannel'
 		,channels:[]
@@ -378,7 +378,7 @@ exports.profiles=[
 	},
 	{
 		bank:0x00
-		,number:0x00
+		,index:0x00
 		,name:'General MIDI 2'
 		,type:'functionBlock'
 		,channels:[]
@@ -405,10 +405,9 @@ exports.profiles=[
 			]
 		}
 	},
-
 	{
 		bank:0x21
-		,number:0x02
+		,index:0x02
 		,name:'General MIDI 2 Single Channel'
 		,type:'singleChannel'
 		,channels:[]
@@ -435,67 +434,10 @@ exports.profiles=[
 			]
 		}
 	},
-	{
-		bank:0x31
-		,number:0x04
-		,name:'MPE'
-		,type:'multiChannel'
-		,channels:[]
-		,profileLevels:{
-			0x00:'Some Implementation but Not to Minimum Requirements'
-			,0x01:'Meets Minimum Requirements'
-		},
-		profileDetailsInquiry: {
-			0x00: "Number of MIDI Channels",
-			0x01: "Get MPE Profile Optional Features"
-		},
-		profileDetailsReplyProcess: (msgObj, midiCi, valSysex,oOptsForReply) => {
 
-			if(oOptsForReply.inquiryTarget===0x00) {
-				let data =  {
-					channelsInUse: valSysex[0]  + (valSysex[1]<<7),
-					channelsAvailable: valSysex[2]  + (valSysex[3]<<7),
-				};
-				oOptsForReply.dataDebug = `Channels In Use: ${data.channelsInUse} Available:${data.channelsAvailable}`;
-				return data;
-
-			}else if(oOptsForReply.inquiryTarget===0x01){
-				const typeSupport = ['none', 'CC', 'bipolarRPN'];
-				let data =  {
-					channelResponceNotification: !!(valSysex[0] & 0b1),
-					pitchBend: !!(valSysex[1]),
-					pressure: typeSupport[valSysex[2]],
-					thirdDimension: typeSupport[valSysex[3]]
-				};
-				oOptsForReply.dataDebug = `Supported params: Channel-Response-Notification: ${data.channelResponceNotification?' yes':'no'},
-				Pitchbend:${data.pitchBend?'yes':'no'}, Pressure:${data.pressure}, 3rd Dimension of Control: ${data.thirdDimension}`;
-				return data;
-			}else {
-				return valSysex;
-			}
-		},
-		CtrlList:[
-
-		]
-		,interoperability:{
-			"title":"Profile: " + "MPE",
-			sections:[
-				{
-					"title": "PfMPE1: After Profile is Enabled",
-					questions: [
-						/*{
-							id: "PfMPE1.1", required:true,
-							text: "Device has the assignment of controller message destinations/functions set to the " +
-								"common, default definitions. Details of destinations/functions are in Appendix A."
-						}*/
-					]
-				}
-			]
-		}
-	},
 	{
 		bank:0x20
-		,number:0x01
+		,index:0x01
 		,name:'Drawbar Organ'
 		,type:'singleChannel'
 		,profileLevels:{
@@ -588,7 +530,7 @@ exports.profiles=[
 	},
 	{
 		bank:0x61
-		,number:0x00
+		,index:0x00
 		,name:'Rotary Speaker Effect'
 		,type:'singleChannel'
 		,channels:[]
@@ -641,5 +583,135 @@ exports.profiles=[
 				}
 			]
 		}
-	}
+	},
+
+	{
+		bank:0x21
+		,index:0x01
+		,name:'Note On Selection of Orchestral Articulation'
+		,type:'singleChannel'
+		,channels:[]
+		,profileLevels:{
+			0x00:'Some Implementation but Not to Minimum Requirements'
+			,0x01:'Meets Minimum Requirements'
+		},
+		profileDetailsInquiry: {
+			0x01: "Get Profile Optional Features Supported",
+			0x40: "Profile Specific – Discover Manufacturer Specific Sounds"
+		},
+		profileDetailsReplyProcess: (msgObj, midiCi, valSysex,oOptsForReply) => {
+
+			if(oOptsForReply.inquiryTarget===0x01){
+				let data =  {
+					muteTypeRC: !!(valSysex[0] & 0b1),
+					muteAmountRC: !!(valSysex[0] & 0b10),
+					playingPositionRPNC: !!(valSysex[0] & 0b100),
+					noteOffVelocity: !!(valSysex[0] & 0b1000),
+					discoveryManuSpecificSounds: !!(valSysex[0] & 0b10000),
+				};
+				oOptsForReply.dataDebug = `Supported params: Orchestral Mute Type Registered Controller(RC 0x20/0x22): ${data.muteTypeRC?' yes':'no'},
+				Orchestral Mute Amount Registered Controller (RC 0x20/0x23):${data.muteAmountRC?'yes':'no'}, 
+				Playing Position Registered Per-Note Controller (RPNC 0x0C):${data.playingPositionRPNC?'yes':'no'}, 
+				Note Off Velocity: ${data.thirdDimension?'yes':'no'}, 
+				Discovery of Manufacturer Specific Sounds: ${data.discoveryManuSpecificSounds?'yes':'no'}, 
+				`;
+				return data;
+			}else {
+				return valSysex;
+			}
+		},
+
+		profileDetailsReplyDisplay: (jq, inquiryTarget, data) => {
+
+			if(inquiryTarget===0x01){
+				jq.append(`Supported params: Orchestral Mute Type Registered Controller(RC 0x20/0x22): ${data.muteTypeRC?' yes':'no'},
+				Orchestral Mute Amount Registered Controller (RC 0x20/0x23):${data.muteAmountRC?'yes':'no'}, 
+				Playing Position Registered Per-Note Controller (RPNC 0x0C):${data.playingPositionRPNC?'yes':'no'}, 
+				Note Off Velocity: ${data.thirdDimension?'yes':'no'}, 
+				Discovery of Manufacturer Specific Sounds: ${data.discoveryManuSpecificSounds?'yes':'no'}, 
+				`);
+
+			}
+		},
+		CtrlList:[
+
+		]
+		,interoperability:{
+			"title":"Profile: " + "Orchestral Articulation",
+			sections:[
+				{
+					"title": "PfOA1: After Profile is Enabled",
+					questions: [
+						/*{
+							id: "PfMPE1.1", required:true,
+							text: "Device has the assignment of controller message destinations/functions set to the " +
+								"common, default definitions. Details of destinations/functions are in Appendix A."
+						}*/
+					]
+				}
+			]
+		}
+	},
+
+	{
+		bank:0x31
+		,index:0x00
+		,name:'MPE'
+		,type:'multiChannel'
+		,channels:[]
+		,profileLevels:{
+			0x00:'Some Implementation but Not to Minimum Requirements'
+			,0x01:'Meets Minimum Requirements'
+		},
+		profileDetailsInquiry: {
+			0x00: "Number of MIDI Channels",
+			0x01: "Get MPE Profile Optional Features"
+		},
+		profileDetailsReplyProcess: (msgObj, midiCi, valSysex,oOptsForReply) => {
+
+			if(oOptsForReply.inquiryTarget===0x01){
+				const typeSupport = ['none', 'CC', 'bipolarRPN'];
+				let data =  {
+					channelResponceNotification: !!(valSysex[0] & 0b1),
+					pitchBend: !!(valSysex[1]),
+					pressure: typeSupport[valSysex[2]],
+					thirdDimension: typeSupport[valSysex[3]]
+				};
+				oOptsForReply.dataDebug = `Supported params: Channel-Response-Notification: ${data.channelResponceNotification?' yes':'no'},
+				Pitchbend:${data.pitchBend?'yes':'no'}, Pressure:${data.pressure}, 3rd Dimension of Control: ${data.thirdDimension}`;
+				return data;
+			}else {
+				return valSysex;
+			}
+		},
+
+		profileDetailsReplyDisplay: (jq, inquiryTarget, data) => {
+
+			if(inquiryTarget===0x01){
+				const typeSupport = ['none', 'CC', 'bipolarRPN'];
+				jq.append(`Supported params: Channel-Response-Notification: ${data.channelResponceNotification?' yes':'no'},
+				Pitchbend:${data.pitchBend?'yes':'no'}, Pressure:${data.pressure}, 3rd Dimension of Control: ${data.thirdDimension}`);
+
+			}
+		},
+		CtrlList:[
+
+		]
+		,interoperability:{
+			"title":"Profile: " + "MPE",
+			sections:[
+				{
+					"title": "PfMPE1: After Profile is Enabled",
+					questions: [
+						/*{
+							id: "PfMPE1.1", required:true,
+							text: "Device has the assignment of controller message destinations/functions set to the " +
+								"common, default definitions. Details of destinations/functions are in Appendix A."
+						}*/
+					]
+				}
+			]
+		}
+	},
+
 ];

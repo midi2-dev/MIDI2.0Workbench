@@ -100,6 +100,12 @@
         "minimum": 1,
         "maximum": 32
       },
+      "paramPath": {
+        "title": "Param Path",
+        "description": "The Parameter Path indicates the grouping and display of Active Controller Messages,",
+        "type": "string",
+        "format": "json-pointer"
+      },
       "typeHint": {
         "title": "Type Hint",
         "description": "Provides a hint as to what physical (or displayed) control mechanism should be used on the Initiator to generate the Active Controller Messages.",

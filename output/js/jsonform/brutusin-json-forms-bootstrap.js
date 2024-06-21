@@ -39,7 +39,7 @@ if (("undefined" === typeof $ || "undefined" === typeof $.fn || "undefined" === 
                 element.className += " chosen-select form-control";
             } else if (tagName === "button") {
                 if (element.className === "remove") {
-                    element.className += " glyphicon glyphicon-remove";
+                    element.className += " fa fa-times";
                     while (element.firstChild) {
                         element.removeChild(element.firstChild);
                     }
@@ -61,7 +61,7 @@ if (("undefined" === typeof $ || "undefined" === typeof $.fn || "undefined" === 
                     var helpLink = document.createElement("a");
                     helpLink.setAttribute("style", "outline: 0; text-decoration: none; margin-left: 2px;");
                     helpLink.setAttribute("tabIndex", -1);
-                    helpLink.className = "glyphicon glyphicon-info-sign"
+                    helpLink.className = "fa fa-info-circle"
                     helpLink.setAttribute("data-toggle", "popover");
                     helpLink.setAttribute("data-trigger", "focus");
                     if ("undefined" === typeof markdown) {
@@ -78,7 +78,7 @@ if (("undefined" === typeof $ || "undefined" === typeof $.fn || "undefined" === 
                         placement: 'top',
                         container: 'body',
                         html: !("undefined" === typeof markdown)
-                    });
+                    }).popover('show').removeClass('fade');
                     element.parentNode.appendChild(helpLink);
                 }
             }

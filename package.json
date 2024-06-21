@@ -1,6 +1,6 @@
 {
   "name": "midi2_workbench_public",
-  "version": "1.5.6p",
+  "version": "1.5.9p",
   "description": "The MIDI 2.0 Workbench is a free tool from MIDI Association Members to help developers develop, debug (and deploy) MIDI 2.0 Applications and Devices. It runs on Windows, Mac and Linux. The Workbench connects to your device or software, to test various MIDI 2.0 implementation features against the currently released specifications.",
   "main": "main.js",
   "scripts": {
@@ -26,9 +26,10 @@
     }
   },
   "dependencies": {
+    "JSONPath": "^0.11.2",
     "ajv": "^8.6.0",
     "ajv-draft-04": "^1.0.0",
-    "bonjour-service": "^1.0.14",
+    "bonjour-service": "https://github.com/starfishmod/bonjour-service",
     "cobs": "^0.2.1",
     "commonmark": "^0.30.0",
     "glob": "^7.1.7",

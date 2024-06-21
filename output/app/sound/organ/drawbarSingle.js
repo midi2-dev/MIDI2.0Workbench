@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.uiWinId = xData.uiWinId;
 
                 midi2Tables.profiles.map(rawPF=>{
-                    if(rawPF.bank===xData.bank && rawPF.number===xData.number){
+                    if(rawPF.bank===xData.bank && rawPF.index===xData.index){
                         //Great Found match
                         window.matchedProfile={
                             ...xData,
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(
                     xData.sourceDestination !== window.sourceDestination
                     || xData.profile.bank !== window.matchedProfile.bank
-                    || xData.profile.number !== window.matchedProfile.number
+                    || xData.profile.index !== window.matchedProfile.index
                 ){
                     return; //unmatched Profile
                 }

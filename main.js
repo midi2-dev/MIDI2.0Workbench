@@ -4,10 +4,9 @@
  *     Andrew Mee
  */
 
-const package = require('./package.json');
-const { app, BrowserWindow, Menu,ipcMain, shell, protocol } = require('electron');
+const packageDetails = require('./package.json');
+const { app, BrowserWindow, Menu,ipcMain, shell, protocol, dialog} = require('electron');
 
-const glob = require('glob');
 const loki = require("lokijs");
 const events = require('events');
 const fs = require('fs');
@@ -24,7 +23,7 @@ const {whichGlobalMIDICI, midiOutFunc, removeUMPDevice} = require('./libs/umpDev
 const d = require('./libs/debugger.js');
 const interoperability = require('./libs/interoperability.js');
 const midi2Tables = require('./libs/midiCITables.js');
-const t = require("./libs/translations");
+//const t = require("./libs/translations");
 const {getRandomInt, createPopoupWin} = require("./libs/utils");
 
 process.report.reportOnFatalError =true;
@@ -66,11 +65,10 @@ logfile.write('-----------------------'+ "\n");
 
 
 
-let ipcMainProcess = {};
-let ctrlGetPromises = [];
-//let processMidiIn = [];
-let processMidiOut = [];
 
+//let ctrlGetPromises = [];
+//let processMidiIn = [];
+//let processMidiOut = [];
 
 
 
@@ -107,20 +105,26 @@ global._midici.ev.on('inUMP',(o)=>{
 	});
 });
 
-global._midiciM1 = new midici({ciEventHandler, midiOutFunc});
-global._midiciM1.debug =  true;
-global._midiciM1._muid = getRandomInt(0xFFFFF00);
-global._midiciM1.device =  configSetting.deviceInfo;
-global._midiciM1.ciVer =  parseInt(configSetting.ciVerLocal);
-global._midiciM1.ev.on('inUMP',(o)=>{
-	global._editWin.map(win => {
-		if(!win || !win.webContents)return;
-		win.webContents.send('asynchronous-reply', 'controlUpdate', o);
+const {getMIDI1Devices, load_umpVirtualMIDI} = require("./libs/UMPMIDI1");
+global._midiciM1=[];
+for(let i=0 ; i<global.configSetting.numberMIDI1UMPs;i++){
+	load_umpVirtualMIDI(i);
+	global._midiciM1[i] = new midici({ciEventHandler, midiOutFunc});
+	global._midiciM1[i].debug =  true;
+	global._midiciM1[i]._muid = getRandomInt(0xFFFFF00);
+	global._midiciM1[i].device =  configSetting.deviceInfo;
+	global._midiciM1[i].ciVer =  parseInt(configSetting.ciVerLocal);
+	global._midiciM1[i].ev.on('inUMP',(o)=>{
+		global._editWin.map(win => {
+			if(!win || !win.webContents)return;
+			win.webContents.send('asynchronous-reply', 'controlUpdate', o);
+		});
 	});
-});
+}
+
+
 
 //---- Setup UMP Devices
-const {getMIDI1Devices, load_umpVirtualMIDI1} = require("./libs/UMPMIDI1");
 
 require('./libs/UMPusb.js');
 
@@ -137,7 +141,7 @@ function createWindow () {
 		height: 800,
 		center:true,
 		icon: path.join(__dirname, '/icon.png'),
-		title: 'MIDI 2.0 Workbench '+package.version,
+		title: 'MIDI 2.0 Workbench '+packageDetails.version,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
@@ -151,7 +155,7 @@ function createWindow () {
 		const parts = url.parse(req.url,true);
 		global._editWin.map(editWin=>{
 			if(editWin._umpDev && editWin._id===parts.query.uiWinId){
-				whichGlobalMIDICI(editEin._umpDev.umpDev).sendPE(0x34,editWin._umpDev.muid
+				whichGlobalMIDICI(editWin._umpDev.umpDev).sendPE(0x34,editWin._umpDev.muid
 				 	, {resource:"File", path:parts.pathname}).then(([,resHead,resBody])=>{
 				 	cb({ statusCode: resHead.status, mimeType: resHead.mediaType || null, data: resBody || null});
 				});
@@ -186,22 +190,22 @@ function createWindow () {
 ipcMain.on('asynchronous-message', (event, arg,xData) => {
 	//console.log(arg) ;
 
-	if(ipcMainProcess[arg]){
-		ipcMainProcess[arg]({
-			event,
-			projectPath,
-			homedir,
-			xData
-		});
-		return;
-	}
+	// if(ipcMainProcess[arg]){
+	// 	ipcMainProcess[arg]({
+	// 		event,
+	// 		projectPath,
+	// 		homedir,
+	// 		xData
+	// 	});
+	// 	return;
+	// }
 
 	switch(arg) {
 
 		//### Pages
 		case 'showAbout': {
 			if (!aboutWin) {
-				const [id,editWin] = createPopoupWin({
+				const [,editWin] = createPopoupWin({
 					onClose:()=>{
 						aboutWin = null;
 					},
@@ -217,7 +221,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 		}
 		case 'showHelp': {
 			if (!helpWin) {
-				const [id,editWin] = createPopoupWin({
+				const [,editWin] = createPopoupWin({
 					onClose:()=>{
 						helpWin = null;
 					},
@@ -296,7 +300,9 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 		case 'getAllUMPDevicesFunctionBlocks':
 			if(xData && xData.resetMUID){
 				global._midici.invalidateSelf();
-				global._midiciM1.invalidateSelf();
+				global._midiciM1.map(mciM1=>{
+					mciM1.invalidateSelf();
+				});
 			}
 
 			//search_mDNS();
@@ -320,7 +326,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			if(!found) {
 				const ep = global.umpDevices[xData.umpDev].remoteEndpoint||{};
 				//const fBs = global.umpDevices[xData.umpDev]._currentFBList||[];
-				const [id, editWin] = createPopoupWin({
+				const [, editWin] = createPopoupWin({
 					fileToLoad: __dirname + '/output/project.html',
 					onClose:()=>{
 						certWin = null;
@@ -367,13 +373,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			whichGlobalMIDICI(xData.umpDev).sendDiscovery(xData.umpDev, xData.group);
 			break;
 		}
-		case 'refreshMIDIDevices': {
-			// Object.keys(global.umpDevices).map(umpDev=>{
-			// 	global.umpDevices[umpDev].refresh();
-			// });
-			//NO BREAK intention
-
-		}
+		case 'refreshMIDIDevices':
 		case 'getMIDIDevices': {
 			//MIDIDeviceBuildInOut();
 			Promise.all([
@@ -404,15 +404,18 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 				});
 				if(!found){
 					whichGlobalMIDICI(xData.umpDev).loadMUID(xData.muid, homedir, () => {
-
+						if(xData.fbIdx===undefined){
+							xData.fbIdx = global.umpDevices[xData.umpDev].getFBBasedOnGroup(xData.group);
+						}
+						xData.funcBlock = global.umpDevices[xData.umpDev].remoteEndpoint.blocks.filter(fb=>xData.fbIdx===fb.fbIdx)[0] || {};
 						createPopoupWin({
 							fileToLoad: __dirname + '/output/project.html',
 							onClose:()=>{
 								certWin = null;
 							},
-							finishLoad:xData,
+							finishLoad:{openMIDICI:true,...xData},
 							parentWindow: event.sender,
-							_umpDev: xData
+							_umpDev: {openMIDICI:true,...xData}
 						});
 
 					});
@@ -428,22 +431,24 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			whichGlobalMIDICI(xData.umpDev).sendInvalidate(xData.muid);
 			BrowserWindow.fromWebContents(event.sender).close();
 			setTimeout(()=>{
-				Object.keys(global.umpDevices).map(umpDev=>{
-					global.umpDevices[umpDev].getEndpointInfo();
-					//global.umpDevices[umpDev].getFunctionBlocks();
-				});
+				// Object.keys(global.umpDevices).map(umpDev=>{
+				// 	//global.umpDevices[umpDev].getEndpointInfo();
+				// 	//global.umpDevices[umpDev].getFunctionBlocks();
+				// });
 			},1000);
 
 			break;
 		case 'exitProjectINVLocal':
 			global._midici.invalidateSelf();
-			global._midiciM1.invalidateSelf();
+			global._midiciM1.map(mciM1=>{
+				mciM1.invalidateSelf();
+			});
 			BrowserWindow.fromWebContents(event.sender).close();
 			setTimeout(()=>{
-				Object.keys(global.umpDevices).map(umpDev=>{
-					global.umpDevices[umpDev].getEndpointInfo();
-					//global.umpDevices[umpDev].getFunctionBlocks();
-				});
+				// Object.keys(global.umpDevices).map(umpDev=>{
+				// 	if(global.umpDevices[umpDev].getEndpointInfo)global.umpDevices[umpDev].getEndpointInfo();
+				// 	//global.umpDevices[umpDev].getFunctionBlocks();
+				// });
 			},1000);
 
 			break;
@@ -511,11 +516,16 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 
 			if(xData.p === "/ciVerLocal"){
 				global._midici.ciVer = parseInt(xData.v);
-				global._midiciM1.ciVer = parseInt(xData.v);
+				global._midiciM1.map(mciM1=>{
+					mciM1.ciVer = parseInt(xData.v);
+				});
+
 			}
-			if(xData.p.match(/^\/umpVirtualMIDI1/)){
-				removeUMPDevice('umpVirtualMIDI1');
-				load_umpVirtualMIDI1();
+			let m1Match = xData.p.match(/^\/umpVirtualMIDI(\d)/);
+			if(m1Match){
+				let umpVirtualEP = parseInt(m1Match[1],10);
+				removeUMPDevice('umpVirtualMIDI'+umpVirtualEP);
+				load_umpVirtualMIDI(umpVirtualEP);
 
 			}
 
@@ -613,11 +623,75 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 		case 'showCertification': {
 			if (!certWin) {
 				const origEditWin = BrowserWindow.fromWebContents(event.sender);
-				const [id,editWin] = createPopoupWin({
+
+				//Create MIDI 2.0 Device Data
+				let devData = {};
+				const midiCIVerEnum = ["1.0","1.1","1.2"]
+				if(xData.openMIDICI){
+					let rmData = whichGlobalMIDICI(xData.umpDev).remoteDevices[xData.muid];
+					if(!rmData.devData){
+						devData = {
+							"checklistVersion": 1.8,
+							"manufacturer": rmData.device.manufacturer,
+							"model": rmData.device.model,
+							"version": rmData.device.version,
+							"manufacturerId": rmData.device.manufacturerId,
+							"familyId": rmData.device.familyId,
+							"modelId": rmData.device.modelId,
+							"versionId": rmData.device.versionId,
+							"midiCiVersion": midiCIVerEnum[rmData.messageFormatVersion],
+							"midiCiResponder": true,
+							//"uniqueMUID": true, ///interoperability/ci1.1
+							//"midiCIMinRequirements": true, ///interoperability/ciSpec
+							"midiCIProtocolNegotiation": rmData.supported.protocol || false,
+
+						};
+						if(rmData.supported.profile){
+							//debugger;
+							devData.profiles = [];
+							Object.keys(rmData.profiles).map(idx=>{
+								let pf = rmData.profiles[idx];
+								if(pf.sysex[0]!==0x7E)return;
+								devData.profiles.push({
+									profileId:`0x${(pf.sysex[1].toString(16).padStart(2,0)).slice (-2).toUpperCase()}${(pf.sysex[2].toString(16).padStart(2,0)).slice (-2).toUpperCase()}`,
+									level: pf.sysex[4],
+									responder: true
+								})
+							})
+						}
+						if(rmData.supported.pe){
+							devData.propertyExchange = [];
+							if(rmData.pe.ResourceListRaw.length){
+								devData.propertyExchange.push({
+									resource: "ResourceList",
+									responder: true
+								})
+							}
+							rmData.pe.ResourceListRaw.map(res=>{
+								if(res.resource.match(/^X-/))return;
+								devData.propertyExchange.push({
+									resource:res.resource,
+									responder: true
+								})
+							})
+						}
+						if(rmData.processInquiryMIDIReport){
+							devData.processInquiry = [{function:"MIDIMsgReport", responder:true}];
+						}
+
+						whichGlobalMIDICI(xData.umpDev).setData(xData.muid,'/devData', devData);
+
+					}
+					devData = whichGlobalMIDICI(xData.umpDev).getData(xData.muid,'/devData');
+				}
+
+
+
+				const [,editWin] = createPopoupWin({
 					onClose:()=>{
 						certWin = null;
 					},
-					finishLoad:xData,
+					finishLoad:{devData,...xData},
 					parentWindow: event.sender,
 					_umpDev: xData
 				});
@@ -626,6 +700,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 				certWin._fileData = origEditWin._fileData;
 			}
 			certWin.loadFile(__dirname + '/output/selfCertification.html');
+			//certWin.webContents.openDevTools();
 			break;
 		}
 		case 'openReport': {
@@ -650,7 +725,8 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 
 		//#### Displaying PDF's
 		case 'generateCertificate': {
-			buildPDF('selfCertification',xData);
+			let rmData = whichGlobalMIDICI(xData.umpDev).remoteDevices[xData.muid];
+			buildPDF('selfCertification',{devData: rmData.devData,...xData, printMode:true});
 			break;
 		}
 		case 'generateImplementChart': {
@@ -763,7 +839,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 		case 'profileOn': {
 			//TODO Change to Method
 			const newResponse = whichGlobalMIDICI(xData.umpDev).createMIDICIMsg(null,0x22, xData.channel
-				, xData.muid, {group:xData.group, profile: xData.profile, numberOfChannels: 1});
+				, xData.muid, {group:xData.group, profile: xData.profile, numberOfChannels: xData.numberOfChannels});
 			whichGlobalMIDICI(xData.umpDev).completeMIDICIMsg(newResponse, whichGlobalMIDICI(xData.umpDev).remoteDevicesInternal[xData.muid].umpDev);
 			break;
 		}
@@ -788,7 +864,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 		case 'openInstrument':{
 			let matchedProfile={};
 			midi2Tables.profiles.map(rawPF=>{
-				if(rawPF.bank===xData.bank && rawPF.number===xData.number){
+				if(rawPF.bank===xData.bank && rawPF.index===xData.index){
 					//Great Found match
 					matchedProfile=rawPF;
 				}
@@ -812,7 +888,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 					whichGlobalMIDICI(xData.umpDev).remoteDevicesInternal[xData.muid].cache={};
 					whichGlobalMIDICI(xData.umpDev).peCapabilityStart(xData.muid,
 						function () {
-							whichGlobalMIDICI(xData.umpDev).getResourceList(xData.muid, true).then((ResourceListRaw)=>{});
+							whichGlobalMIDICI(xData.umpDev).getResourceList(xData.muid, true).then(()=>{});
 						}
 					);
 				});
@@ -851,7 +927,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			const reqBody = fs.readFileSync(projectPath + '/peStates/' + xData.stateId);
 			whichGlobalMIDICI(xData.umpDev).sendPE(0x36, xData.muid
 				, {resource: "State", resId: xData.stateId, mediaType: oldState.mediaType}, reqBody)
-				.then(([muid, resHead, resBody]) => {
+				.then(([, resHead]) => {
 					//debugger;
 					//fs.existsSync(projectPath)
 					//fs.writeFileSync(projectPath+'/'+xData, resBody);
@@ -910,7 +986,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 							).then(()=>{}).catch(()=>{});
 						}
 					}
-				).catch(([muid, resHead, resBody]) => {
+				).catch(([, resHead, resBody]) => {
 				if (resHead.status >= 400) {
 					let error = ' PE Error: ('+resHead.status+') '
 						+reqHeader.resource;
@@ -928,7 +1004,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			break;
 		}
 		case 'getResourceWithSchemaRef':
-			whichGlobalMIDICI(xData.umpDev).getResourceList (xData.muid).then((ResourceListRaw)=>{
+			whichGlobalMIDICI(xData.umpDev).getResourceList (xData.muid).then(()=>{
 				whichGlobalMIDICI(xData.umpDev).getResourceWithSchemaRef(xData.muid,xData.resource)
 					.then(resourceObj=>{
 						event.reply('asynchronous-reply', 'callback'
@@ -979,7 +1055,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			break;
 		}
 		case 'showCtrlList':{
-			createPopoupWin({
+			const [,editWin] = createPopoupWin({
 				fileToLoad:__dirname + '/output/cmpopup.html',
 				finishLoad: {
 					link: xData.link,
@@ -989,6 +1065,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 				parentWindow: event.sender,
 				_umpDev: xData
 			});
+			//editWin.webContents.openDevTools();
 			break;
 		}
 		case 'processInquiryMIDIGet': {
@@ -1020,7 +1097,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 
 app.on('ready', createWindow);
 
-app.on('before-quit', function (evt) {
+app.on('before-quit', function () {
 	global.isAppQuitting = true;
 });
 
@@ -1029,7 +1106,9 @@ app.on('window-all-closed', () => {
 	// to stay active until the user quits explicitly with Cmd + Q
 
 	global._midici.invalidateSelf();
-	global._midiciM1.invalidateSelf();
+	global._midiciM1.map(mciM1=>{
+		mciM1.invalidateSelf();
+	});
 	app.quit();
 
 });
@@ -1085,7 +1164,7 @@ function ciEventHandler(umpDev, group, event,...args){
 			this.setData(muidRemote,"/device/versionId",device.versionId,true);
 			this.setData(muidRemote,"/outputPathId",outputPathId,true);
 
-			if((fbIdx === 0x7F || fbIdx===undefined || umpDev==='umpVirtualMIDI1' ) && global.umpDevices[umpDev].getFBBasedOnGroup){
+			if((fbIdx === 0x7F || fbIdx===undefined || umpDev.match(/umpVirtualMIDI/) ) && global.umpDevices[umpDev].getFBBasedOnGroup){
 				fbIdx = global.umpDevices[umpDev].getFBBasedOnGroup(group);
 			}
 			this.setData(muidRemote,"/fbIdx",fbIdx,true);
@@ -1094,7 +1173,7 @@ function ciEventHandler(umpDev, group, event,...args){
 
 
 			this.findMatchingFile(muidRemote,homedir,()=>{
-				const funcBlock = global.umpDevices[umpDev].remoteEndpoint.blocks[fbIdx] || {};
+				const funcBlock = global.umpDevices[umpDev].remoteEndpoint.blocks.filter(fb=>fbIdx===fb.fbIdx)[0] || {};
 
 				if(!funcBlock.muids){funcBlock.muids = {};}
 				funcBlock.muids[muidRemote] = this.remoteDevices[muidRemote];
@@ -1135,7 +1214,7 @@ function ciEventHandler(umpDev, group, event,...args){
 			this.setData(muidRemote,"/outputPathId",outputPathId,true);
 
 
-			if((fbIdx === 0x7F || fbIdx===undefined || umpDev==='umpVirtualMIDI1' ) && global.umpDevices[umpDev].getFBBasedOnGroup){
+			if((fbIdx === 0x7F || fbIdx===undefined || umpDev.match(/umpVirtualMIDI/) ) && global.umpDevices[umpDev].getFBBasedOnGroup){
 				fbIdx = global.umpDevices[umpDev].getFBBasedOnGroup(group);
 			}
 			this.setData(muidRemote,"/fbIdx",fbIdx,true);
@@ -1144,7 +1223,7 @@ function ciEventHandler(umpDev, group, event,...args){
 			this.setData(muidRemote,'/umpPacket',false);
 
 			this.findMatchingFile(muidRemote,homedir,()=>{
-				const funcBlock = global.umpDevices[umpDev].remoteEndpoint.blocks[fbIdx] || {};
+				const funcBlock = global.umpDevices[umpDev].remoteEndpoint.blocks.filter(fb=>fbIdx===fb.fbIdx)[0] || {};
 
 				if(!funcBlock.muids){funcBlock.muids = {};}
 				funcBlock.muids[muidRemote] = this.remoteDevices[muidRemote];
@@ -1158,7 +1237,7 @@ function ciEventHandler(umpDev, group, event,...args){
 		}
 		case 'InvalidRemoteID':{
 			let [muid] = args;
-			global.umpDevices[umpDev].remoteEndpoint.blocks.map((b, bIdx)=>{
+			global.umpDevices[umpDev].remoteEndpoint.blocks.map((b)=>{
 				if(b.muids[muid]){
 					delete b.muids[muid];
 					global.umpDevices[umpDev].reportEndpoint();
@@ -1173,7 +1252,7 @@ function ciEventHandler(umpDev, group, event,...args){
 
 		case 'protocolNegotiation':
 		{
-			let [muidRemote,authorityLevel,protocolList] = args;
+			let [muidRemote] = args;
 			const newResponse = this.createMIDICIMsg(
 				this._muid,
 				0x11,
@@ -1190,7 +1269,7 @@ function ciEventHandler(umpDev, group, event,...args){
 			break;
 		}
 		case 'testNewProtocol':{
-			let [muidRemote,authorityLevel] = args;
+			let [muidRemote] = args;
 			const newResponse = this.createMIDICIMsg(this._muid,
 				0x14, 0x7F,
 				muidRemote,{authorityLevel: 0x60});
@@ -1198,7 +1277,7 @@ function ciEventHandler(umpDev, group, event,...args){
 			break;
 		}
 		case 'testNewProtocolResponder':{
-			let [muidRemote,authorityLevel] = args;
+			let [muidRemote] = args;
 			const newResponse = this.createMIDICIMsg(this._muid,
 				0x15, 0x7F,
 				muidRemote,{authorityLevel: 0x60});
@@ -1231,9 +1310,9 @@ function ciEventHandler(umpDev, group, event,...args){
 			let [sourceDestination, muidRemote] = args;
 			if(sourceDestination === 0x7F){
 				//Send all...
-				Object.keys(global.configSetting.functionalBlocks).map(fbType=>{
-
-				});
+				// Object.keys(global.configSetting.functionalBlocks).map(fbType=>{
+				//
+				// });
 
 
 
@@ -1255,22 +1334,22 @@ function ciEventHandler(umpDev, group, event,...args){
 		}
 		case 'profileEnabled':{
 			//TODO This is new Responder Work!!
-			let [sourceDestination,muidRemote,profiles,profile] = args;
+			//let [sourceDestination,muidRemote,profiles,profile] = args;
 			break;
 		}
 		case 'profileDisabled':{
 			//TODO This is new Responder Work!!
-			let [sourceDestination,muidRemote,profiles,profile] = args;
+			//let [sourceDestination,muidRemote,profiles,profile] = args;
 			break;
 		}
 		case 'profileReplyList':{
 			//TODO This is new Responder Work!!
-			let [sourceDestination,muid,profiles] = args;
+			//let [sourceDestination,muid,profiles] = args;
 			break;
 		}
 		case 'profileSpecificData':{
 			//TODO This is new Responder Work!!
-			let [sourceDestination,muid,profile, profileSpecificData] = args;
+			//let [sourceDestination,muid,profile, profileSpecificData] = args;
 
 			// if (mOut._editWin) {
 			// 	Object.keys(mOut._editWin).map(id => {
@@ -1283,7 +1362,7 @@ function ciEventHandler(umpDev, group, event,...args){
 		}
 
 		case 'peCapabilities':{
-			let [muidRemote,simultaneousPERequests] = args;
+			let [muidRemote] = args;
 			const newResponse = this.createMIDICIMsg(this._muid,
 				0x31, 0x7F,
 				muidRemote,{peVersion: 0x00,simultaneousPERequests: configSetting.simultaneousPERequests});
@@ -1293,7 +1372,7 @@ function ciEventHandler(umpDev, group, event,...args){
 
 		case 'notifyMessage':{
 			//TODO This is new Responder Work!!
-			let [muid,requestId,reqHead,reqBody] = args;
+			//let [muid,requestId,reqHead,reqBody] = args;
 			break;
 		}
 		case 'peSubRequest':{

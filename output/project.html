@@ -225,7 +225,7 @@
                 <li class="nav-item" style="position: absolute; left: 5em;">
                     <h2 class="display-7 text-center" data-pathText="/name"></h2>
                 </li>
-                <li class="nav-item remoteEndpoint">
+                <li class="nav-item" id="logoImpl">
                     <a class="nav-link"  data-ipcmsg="showCertification" data-xdata="project" href="#">Logo Impl. Checklist</a>
                 </li>
                 <li class="nav-item">
@@ -1516,11 +1516,11 @@
                                 <tbody data-visibleifequal="/messageFormatVersion>=2">
                                     <tr>
                                         <td>
-                                            <a data-ipcmsg="getEndpointInfo" data-xdata="3" href="#">
-                                                Product Instance Id (0x03)
+                                            <a data-ipcmsg="getEndpointInfo" data-xdata="0" href="#">
+                                                Product Instance Id (0x00)
                                             </a>
                                         </td>
-                                        <td align="right"><span data-pathText="/endpointInformation/status_3"></span></td>
+                                        <td align="right"><span data-pathText="/endpointInformation/status_0"></span></td>
                                     </tr>
                                 </tbody>
                                 <thead>
@@ -1883,26 +1883,28 @@
                             </div>
                             <input type="number" step="1" min="1" max="16" class="form-control" id="MDGroup1b" />
                             <div class="input-group-prepend">
-                                    <span class="input-group-text" >Channel</span>
+                                    <span class="input-group-text" >FB/Grp./Ch.</span>
                                 </div>
                             <select class="form-control" id="MDChannel" >
-                                    <option value="0" selected>1</option>
-                                    <option value="1">2</option>
-                                    <option value="2">3</option>
-                                    <option value="3">4</option>
-                                    <option value="4">5</option>
-                                    <option value="5">6</option>
-                                    <option value="6">7</option>
-                                    <option value="7">8</option>
-                                    <option value="8">9</option>
-                                    <option value="9">10</option>
-                                    <option value="10">11</option>
-                                    <option value="11">12</option>
-                                    <option value="12">13</option>
-                                    <option value="13">14</option>
-                                    <option value="14">15</option>
-                                    <option value="15">16</option>
-                                    <option value="127">Port</option>
+                                <option value="127">Function Block</option>
+                                <option value="126">Group (Use Group to choose which Group)</option>
+                                    <option value="0" selected>Channel 1</option>
+                                    <option value="1">Channel 2</option>
+                                    <option value="2">Channel 3</option>
+                                    <option value="3">Channel 4</option>
+                                    <option value="4">Channel 5</option>
+                                    <option value="5">Channel 6</option>
+                                    <option value="6">Channel 7</option>
+                                    <option value="7">Channel 8</option>
+                                    <option value="8">Channel 9</option>
+                                    <option value="9">Channel 10</option>
+                                    <option value="10">Channel 11</option>
+                                    <option value="11">Channel 12</option>
+                                    <option value="12">Channel 13</option>
+                                    <option value="13">Channel 14</option>
+                                    <option value="14">Channel 15</option>
+                                    <option value="15">Channel 16</option>
+
                                 </select>
                             <div class="input-group-prepend">
                                     <button type="button" id="processInquiryTabMIDIGet"

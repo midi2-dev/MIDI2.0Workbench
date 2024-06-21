@@ -2,6 +2,14 @@ const t = require("./translations");
 const d = require("./debugger");
 const {JsonPointer: ptr} = require("json-ptr");
 const {arrayToHex} = require("./debugger");
+const {midici} = require("./midici");
+const {getRandomInt} = require("./utils");
+
+const bridgeMIDICI = new midici({ciEventHandler: ()=>{}, midiOutFunc: ()=>{}});
+bridgeMIDICI.debug =  true;
+//bridgeMIDICI.device =  global.configSetting.deviceInfo;
+bridgeMIDICI.ciVer = 2;
+bridgeMIDICI.ev.on('inUMP',(o)=>{});
 
 
 if(!global.umpDevices){
@@ -9,7 +17,8 @@ if(!global.umpDevices){
 }
 
 const whichGlobalMIDICI = (umpDev)=>{
-    return umpDev==='umpVirtualMIDI1'?global._midiciM1: global._midici;
+    let matches = umpDev.match(/umpVirtualMIDI(\d)/);
+    return matches?global._midiciM1[matches[1]]: global._midici;
 };
 
 module.exports = {
@@ -34,7 +43,8 @@ module.exports = {
                 let fbIdx = null;
                 (classFunc.remoteEndpoint.blocks || []).map(gb => {
                     if (fbIdx ===null && gb.direction === 0b11 && gb.firstGroup <= group && gb.firstGroup+gb.numberGroups > group) {
-                        fbIdx = gb.fbIdx;
+                        fbIdx = gb.fbIdx===undefined?gb.gbIdx:gb.fbIdx;
+
                     }
                 });
                 return fbIdx;
@@ -288,9 +298,12 @@ function midiToProc(umpDev, ump){
         global.umpDevices[umpDev].sendUMPOutNetwork(umpDev,ump);
     }
 
+    let bridgeEnabled = false;
     if(global.configSetting.bridging.indexOf(umpDev)!==-1){
         global.configSetting.bridging.filter(v=> v!==umpDev).map(umpDevBridge=>{
             global.umpDevices[umpDevBridge].midiOutFunc(umpDevBridge,ump,true);
+            bridgeEnabled = true;
+
         });
     }
 
@@ -298,12 +311,14 @@ function midiToProc(umpDev, ump){
         switch (type){
             case 'sysex':
                 if (data.msgObj) {
-
-                    //if(umpDev!=="umpVirtualMIDI1")console.log("UMP Sysex In",group,"", arrayToHex(data.msgObj.sysex));
-
                     if (data.msgObj.sysex[1] === 0x7E) {
                         if (data.msgObj.sysex[3] === 0x0D) { //MIDI-CI Message
-                            whichGlobalMIDICI(umpDev).processCI(data.msgObj, group, umpDev);
+
+                            if(bridgeEnabled){
+                                bridgeMIDICI.processCI(data.msgObj, group, umpDev);
+                            }else{
+                                whichGlobalMIDICI(umpDev).processCI(data.msgObj, group, umpDev);
+                            }
                             //console.log('Processed sysex for',umpDev)
                         } else {
                             //this._connectedMout._u.processUni(data);
@@ -317,8 +332,27 @@ function midiToProc(umpDev, ump){
 
                 break;
             case 'ump':
-                whichGlobalMIDICI(umpDev).processUMP(data,group,umpDev);
-                whichGlobalMIDICI(umpDev).ev.emit('inUMP', {ump:data, umpDev});
+                if(bridgeEnabled){
+                    bridgeMIDICI.processUMP(data, group, umpDev);
+                }else {
+                    whichGlobalMIDICI(umpDev).processUMP(data, group, umpDev);
+                    whichGlobalMIDICI(umpDev).ev.emit('inUMP', {ump: data, umpDev});
+
+                    if((data[0] & 0xFFFF00FF) === 0x50000000 ){ //Developer Transport Test
+                        let subId2 = data[1]  & 0xFF;
+                        // if(subId2 === 0x00){ //Discovery
+                        //     global.umpDevices[umpDev].midiOutFunc(umpDev,[data[0], data[1]+1,0x01010100,0]);
+                        // }
+                        if(subId2 === 0x01){ //Discovery Reply
+                            global.umpDevices[umpDev].remoteEndpoint['transportTest'] = {
+                                loopbackPacket: !!((data[1] >> 24) & 0xFF),
+                                loopbackMessage: !!((data[1] >> 16) & 0xFF),
+                                validateTestData: !!((data[1] >> 8) & 0xFF),
+                            };
+                            global.umpDevices[umpDev].updateEndpoint();
+                        }
+                    }
+                }
                 if(!data){console.log("bad UMP:"+umpDev);console.log(data);}
                 d.msg('ump',data,'in',umpDev, group,errors,warnings);
                 break;
@@ -360,10 +394,10 @@ function midiToProc(umpDev, ump){
 
                 break;
             case 'umpEndpointProcess':
-                if(global.umpDevices[umpDev].processUMPEndpoint){
-                    global.umpDevices[umpDev].processUMPEndpoint(data)
+                if(!bridgeEnabled && global.umpDevices[umpDev].processUMPEndpoint){
+                    global.umpDevices[umpDev].processUMPEndpoint(data);
                 }else{
-                    debugger;
+                    //debugger;
                 }
                 if(!data.ump){console.log("bad UMP:"+umpDev);console.log(data.ump);}
                 d.msg('ump',data.ump,'in',umpDev, group,errors,warnings);

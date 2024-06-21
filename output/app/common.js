@@ -23,7 +23,10 @@ let ipcRenderer;
 let resourceCache={};
 let localSubscriptionData={};
 let roles = {
-
+	cluster: (link, channelListData, trLink, jq) =>{
+        debugger;
+        //TODO complete this role
+    }
 };
 
 
@@ -452,38 +455,38 @@ exports.setPESetup = function(retry=0) {
     }
     const jqpeDi = $('#peDeviceLinks');
     if(resListOrder.indexOf('DeviceInfo')!==-1) {
-    sendPE(0x34, {resource:"DeviceInfo"}, null).then(([resHead, deviceInfo]) => {
-        $('#peDeviceLinks').empty();
-        const html = prettyPrintJson.toHtml(deviceInfo, {quoteKeys: true});
-        $('#peDeviceInfoHeading')
-            .attr('data-content',html);
-        const jqDIDet = $('#peDeviceInfoDetails').empty();
-        $('<div/>',{'data-tooltip':"tooltip", title:"Manufacturer"})
-            .append(deviceInfo.manufacturer + " ("+ d.arrayToHex(deviceInfo.manufacturerId)+")")
-            .appendTo(jqDIDet);
-        $('<div/>',{'data-tooltip':"tooltip", title:"Family"})
-            .append(deviceInfo.family + " ("+ d.arrayToHex(deviceInfo.familyId)+")")
-            .appendTo(jqDIDet);
-        $('<div/>',{'data-tooltip':"tooltip", title:"Model"})
-            .append(deviceInfo.model + " ("+ d.arrayToHex(deviceInfo.modelId)+")")
-            .appendTo(jqDIDet);
-        $('<div/>',{'data-tooltip':"tooltip", title:"Version"})
-            .append("Ver: ")
-            .append(deviceInfo.version + " ("+ d.arrayToHex(deviceInfo.versionId)+")")
-            .appendTo(jqDIDet);
-        if(deviceInfo.serialNo){
-            $('<div/>',{'data-tooltip':"tooltip", title:"Serial Number"})
-                .append(deviceInfo.serialNo)
+        sendPE(0x34, {resource: "DeviceInfo"}, null).then(([resHead, deviceInfo]) => {
+            $('#peDeviceLinks').empty();
+            const html = prettyPrintJson.toHtml(deviceInfo, {quoteKeys: true});
+            $('#peDeviceInfoHeading')
+                .attr('data-content', html);
+            const jqDIDet = $('#peDeviceInfoDetails').empty();
+            $('<div/>', {'data-tooltip': "tooltip", title: "Manufacturer"})
+                .append(deviceInfo.manufacturer + " (" + d.arrayToHex(deviceInfo.manufacturerId) + ")")
                 .appendTo(jqDIDet);
-        }
+            $('<div/>', {'data-tooltip': "tooltip", title: "Family"})
+                .append(deviceInfo.family + " (" + d.arrayToHex(deviceInfo.familyId) + ")")
+                .appendTo(jqDIDet);
+            $('<div/>', {'data-tooltip': "tooltip", title: "Model"})
+                .append(deviceInfo.model + " (" + d.arrayToHex(deviceInfo.modelId) + ")")
+                .appendTo(jqDIDet);
+            $('<div/>', {'data-tooltip': "tooltip", title: "Version"})
+                .append("Ver: ")
+                .append(deviceInfo.version + " (" + d.arrayToHex(deviceInfo.versionId) + ")")
+                .appendTo(jqDIDet);
+            if (deviceInfo.serialNo) {
+                $('<div/>', {'data-tooltip': "tooltip", title: "Serial Number"})
+                    .append(deviceInfo.serialNo)
+                    .appendTo(jqDIDet);
+            }
 
 
-        (deviceInfo.links || []).map(link => {
-            const jqRow = $('<tr/>').appendTo(jqpeDi);
-            displayResource(jqRow, {}, link.resource, link);
+            (deviceInfo.links || []).map(link => {
+                const jqRow = $('<tr/>').appendTo(jqpeDi);
+                displayResource(jqRow, {}, link.resource, link);
+            });
+
         });
-
-    });
 
     }
     //*** Simple Resources
@@ -2112,8 +2115,8 @@ function buildProfileTab(pf){
     //debugger;
     let jqTestTab = $('#profileUserTestTabli');
     midi2Tables.profiles.map(function(pfLookup){
-        if(pfLookup.bank===pf.bank && pfLookup.number===pf.number && pfLookup.interoperability){
-            let id='pftest_'+pf.bank+'_'+pf.number;
+        if(pfLookup.bank===pf.bank && pfLookup.index===pf.index && pfLookup.interoperability){
+            let id='pftest_'+pf.bank+'_'+pf.index;
             if(!pf.isMMA || $('#'+id).length)return;
 
             let jqPFTab = $('<li/>').addClass('nav-item pf-test '+id).insertAfter(jqTestTab);
@@ -2178,6 +2181,7 @@ function buildProfileButton(jqtd,sourceDestination,isEnabled,pf){
                     group,
                     channel,
                     profile,
+                    numberOfChannels:parseInt($(e.currentTarget).parent().find('.numChannelEnabled').val(),10) || 1
                 });
 
             }else{
@@ -2193,23 +2197,41 @@ function buildProfileButton(jqtd,sourceDestination,isEnabled,pf){
         .text(name)
         .appendTo(jdWrapDiv);
 
+
+    if(pf.type==="multiChannel"){
+        jdWrapDiv.append(" #Chan.");
+        $('<input/>',{
+            type: 'number',
+            min: 1, max: 256,
+            disabled:isEnabled,
+            class:"form-control form-control-sm numChannelEnabled",
+            style:"width: 4em; display:inline-block",
+        })
+            .attr("data-toggle","tooltip")
+            .attr("title","Number of MIDI Channels on MultiChannel Profile")
+            .val(pf.sourceDestinations[sourceDestination].numChannelEnabled || 1)
+            .appendTo(jdWrapDiv);
+    }
+
     if(pf.isMMA){
         let matchedProfile={};
         midi2Tables.profiles.map(rawPF=>{
-            if(rawPF.bank===pf.bank && rawPF.number===pf.number){
+            if(rawPF.bank===pf.bank && rawPF.index===pf.index){
                 //Great Found match
                 matchedProfile=rawPF;
 
             }
         });
 
-        const existingContButton = $('[pfContid='+pf.bank+'_'+pf.number+']',jqtd);
-        if(isEnabled && matchedProfile.CtrlList && !existingContButton.length){
+        const existingContButton = $('[pfContid='+pf.bank+'_'+pf.index+']',jqtd);
+        if(isEnabled && !existingContButton.length
+            && (matchedProfile.CtrlList?.length || Object.keys(matchedProfile.profileDetailsInquiry || {}).length || Object.keys(matchedProfile.profileSpecificData || {}).length )
+        ){
 
             $('<button/>',{
                 type:"button"
                 ,"class":"btn btn-sm btn-outline-secondary fa fa-sliders-h fa-rotate-90"
-                ,pfContid: pf.bank+'_'+pf.number
+                ,pfContid: pf.bank+'_'+pf.index
             }).data('sourceDestination',sourceDestination)
                 .data('pf',pf)
                 .data('CtrlList',matchedProfile.CtrlList)
@@ -2222,14 +2244,14 @@ function buildProfileButton(jqtd,sourceDestination,isEnabled,pf){
                     showChCtrlList({
                         link:{title: pf.name + ' Profile Controller Messages'}
                         ,ChCtrlList
-                        ,group, channel,
+                        ,group, channel, pf,
                         profile: true
                     });
                 })
                 .appendTo(jdWrapDiv);
         }
 
-        const existingExtButton = $('[pfExtid='+pf.bank+'_'+pf.number+']',jqtd);
+        const existingExtButton = $('[pfExtid='+pf.bank+'_'+pf.index+']',jqtd);
         if(isEnabled && !existingExtButton.length
             && (matchedProfile.profileSpecificData || matchedProfile.extendedUI)
         ){
@@ -2237,7 +2259,7 @@ function buildProfileButton(jqtd,sourceDestination,isEnabled,pf){
             $('<button/>',{
                 type:"button"
                 ,"class":"btn btn-sm btn-outline-secondary fa fa-cog fa-rotate-90"
-                ,pfExtid: pf.bank+'_'+pf.number
+                ,pfExtid: pf.bank+'_'+pf.index
             }).data('sourceDestination',sourceDestination)
                 .data('matchedProfile',matchedProfile)
                 .data('isEnabled',isEnabled)
@@ -2247,7 +2269,7 @@ function buildProfileButton(jqtd,sourceDestination,isEnabled,pf){
                     ipcRenderer.send('asynchronous-message', 'openInstrument',{
                         sourceDestination,
                         bank: matchedProfile.bank,
-                        number: matchedProfile.number,
+                        index: matchedProfile.index,
                         level: pf.level,
                         version: pf.version,
                         profileSysex: pf.sysex,
@@ -2286,24 +2308,38 @@ exports.buildModalAlert = buildModalAlert;
 //*********************************************************************
 
 exports.buildProfilePage = function(pf){
-    const jqMain = $('#main')
+
+    let matchedProfile={};
+    midi2Tables.profiles.map(rawPF=>{
+        if(rawPF.bank===pf.bank && rawPF.index===pf.index){
+            //Great Found match
+            matchedProfile=rawPF;
+
+        }
+    });
+
+    const jqMain = $('<div/>',{id:'profileDetails'})
+        .prependTo('#main')
         .append('<h1 class="col-md-12 m-1 p-0">'+ pf.name + '</h1>')
         .append('<h4 class="col-md-12 m-2 p-0">Profile Version: '+ pf.version + '</h4>');
 
     const jqLevels = $('<div class="col-md-12 m-2 p-0"/>').appendTo(jqMain);
     for (const profileLevelsKey in pf.profileLevels) {
-        const jqLevel = $('<div/>',{class:'badge '+ (profileLevelsKey===pf.level?'badge-success':'badge-light')})
+        const jqLevel = $('<div/>',{class:'badge '+ (parseInt(profileLevelsKey,10)===pf.level?'badge-success':'badge-light')})
             .append(pf.profileLevels[profileLevelsKey])
             .appendTo(jqLevels);
     }
 
-    const jqSpecificData = $('<div class="col-md-12 m-2 p-0"/>').appendTo(jqMain);
-    for (const opCode in pf.profileDetailsInquiry){
+    const jqSpecificData = $('<table/>').appendTo(jqMain);
+    for (const opCode in matchedProfile.profileDetailsInquiry){
+        let jqtr = $('<tr/>').appendTo(jqSpecificData);
+        let jqtdButton = $('<td/>').appendTo(jqtr);
+
         $('<button/>',{"class":"btn"})
             .addClass('btn-light')
-            .text(pf.profileDetailsInquiry[opCode])
+            .text(matchedProfile.profileDetailsInquiry[opCode])
             .data('opCode',opCode)
-            .appendTo(jqSpecificData)
+            .appendTo(jqtdButton)
             .on('click',function(){
                 const opCode = $(this).data('opCode');
                 ipcRenderer.send('asynchronous-message'
@@ -2312,16 +2348,26 @@ exports.buildProfilePage = function(pf){
                         sourceDestination: window.sourceDestination,
                         inquiryTarget: opCode,
                         profile: {
-                            bank: window.matchedProfile.bank,
-                            number: window.matchedProfile.number,
-                            version: window.matchedProfile.version,
-                            level: window.matchedProfile.level,
-                            name: window.matchedProfile.name,
+                            bank: matchedProfile.bank,
+                            index: matchedProfile.index,
+                            version: pf.version,
+                            level: pf.level,
+                            name: matchedProfile.name,
                         },
                         ...window.ump
                     }
                 );
             });
+
+        let jqtdData = $('<td/>').appendTo(jqtr);
+        let data = (pf.sourceDestinations[window.ump.group + '_' + window.sourceDestination]?.detailsInquiry || {})[opCode];
+        if(data !== undefined) {
+            if (parseInt(opCode, 10) === 0x00) {
+                jqtdData.append(`Channels In Use: ${data.channelsInUse} Available:${data.channelsAvailable}`);
+            } else {
+                matchedProfile.profileDetailsReplyDisplay(jqtdData, parseInt(opCode, 10), data);
+            }
+        }
     }
 
 
@@ -2342,7 +2388,7 @@ exports.buildProfilePage = function(pf){
                         profileSpecificData: profileSpecificDataKey,
                         profile: {
                             bank: window.matchedProfile.bank,
-                            number: window.matchedProfile.number,
+                            index: window.matchedProfile.index,
                             version: window.matchedProfile.version,
                             level: window.matchedProfile.level,
                             name: window.matchedProfile.name,
@@ -2356,7 +2402,7 @@ exports.buildProfilePage = function(pf){
 }
 
 exports.buildinteroperability = function(jqTabRef,topic){
-
+    
     const jqTab = $(jqTabRef).empty();
     if(window.isReport){
         $('<h2/>').text(topic.title||'')
@@ -2378,8 +2424,8 @@ exports.buildinteroperability = function(jqTabRef,topic){
         .appendTo($('thead',jqtable));
 
 
-    if(!topic.sections)debugger;
-    topic.sections.map(section=>{
+    //if(!topic.sections)debugger;
+    (topic.sections||[]).map(section=>{
         if(section.visibleiftrue){
             let skip=true;
 

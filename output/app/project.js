@@ -10,7 +10,6 @@ const interoperability = require('./../libs/interoperability.js');
 const common = require('./app/common.js');
 const t = require('./../libs/translations.js');
 const d = require('./../libs/debugger.js');
-
 const {messageType} = require("./../libs/messageTypes");
 
 
@@ -66,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             }
             case 'firstLoad': {
-                window.ump = {group:xData.group,umpDev:xData.umpDev,muid:xData.muid,funcBlock:xData.funcBlock};
+                window.ump = {group:xData.group,umpDev:xData.umpDev,muid:xData.muid,funcBlock:xData.funcBlock, openMIDICI:xData.openMIDICI || false};
                 window.uiWinId = xData.uiWinId;
 
                 let rem = ['.remoteEndpoint', '.midiciDevice', '.functionBlock', '.umpStream',
@@ -79,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     rem = rem.filter(c=>c!=='.midiciDevice');
                 }
 
-                if(xData.funcBlock && xData.funcBlock.fbIdx!==0x7F && !xData.funcBlock.isMIDI1){
+                if(xData.funcBlock && xData.funcBlock.fbIdx!==0x7F && !xData.funcBlock.isMIDI1 && !xData.openMIDICI){
                     rem = rem.filter(c=>c!=='.functionBlock');
                 }
 
@@ -91,6 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     rem = rem.filter(c=>c!=='.remoteEndpoint');
                 }
                 $(rem.join(',')).remove();
+
+                if(!xData.remoteEndpoint && !xData.umpDev.match(/umpVirtualMIDI/)){
+                    $('#logoImpl').remove();
+                }
 
                 if(!$('#tbProjDet').length){
                     $('#midici-tab').trigger('click');
@@ -211,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             let pf = profileConfig[pfid];
                             const jqPFTabContent = $('<div/>',{id:pfid}).insertAfter('#'+topic.tab);
                             midi2Tables.profiles.map(function(pfLookup){
-                                if(pfLookup.bank===pf.bank && pfLookup.number===pf.number && pfLookup.interoperability){
+                                if(pfLookup.bank===pf.bank && pfLookup.index===pf.index && pfLookup.interoperability){
                                     common.buildinteroperability(jqPFTabContent,pfLookup.interoperability,{profileLevels:true,level:pf.level});
                                 }
                             });
@@ -419,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const pf = profileList[pfid];
             if(!pf.sourceDestinations[ch]?.active) continue;
             midi2Tables.profiles.map(rawPF=>{
-                if(rawPF.bank===pf.bank && rawPF.number===pf.number){
+                if(rawPF.bank===pf.bank && rawPF.index===pf.index){
                     //Great Found match
                     CtrlList.push(...rawPF.CtrlList);
                 }

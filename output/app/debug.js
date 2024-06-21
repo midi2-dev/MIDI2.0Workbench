@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 break;
+            case 'configSettings':
+                window.configSetting = xData;
+
+                break;
         }
     });
 
