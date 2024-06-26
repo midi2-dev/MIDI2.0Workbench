@@ -60,9 +60,9 @@ nvm use 16
 git clone https://github.com/midi2-dev/MIDI2.0Workbench.git
 cd MIDI2.0Workbench
 sudo apt-get install yarnpkg
-yanrpkg
-yanrpkg run build
-yanrpkg run start
+yarnpkg
+yarnpkg run build
+yarnpkg run start
 ```
 
 #### Issues and Updates
