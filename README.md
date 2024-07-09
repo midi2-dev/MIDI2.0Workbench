@@ -59,7 +59,7 @@ nvm install 16
 nvm use 16
 git clone https://github.com/midi2-dev/MIDI2.0Workbench.git
 cd MIDI2.0Workbench
-sudo apt-get install yarnpkg
+sudo apt-get install yarnpkg libasound2-dev
 yarnpkg
 yarnpkg run build
 yarnpkg run start
