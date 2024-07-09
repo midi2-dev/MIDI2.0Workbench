@@ -406,7 +406,7 @@ exports.profiles=[
 		}
 	},
 	{
-		bank:0x21
+		bank:0x20
 		,index:0x02
 		,name:'General MIDI 2 Single Channel'
 		,type:'singleChannel'
@@ -529,7 +529,7 @@ exports.profiles=[
 		]
 	},
 	{
-		bank:0x61
+		bank:0x22
 		,index:0x00
 		,name:'Rotary Speaker Effect'
 		,type:'singleChannel'
