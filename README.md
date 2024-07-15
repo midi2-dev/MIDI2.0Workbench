@@ -64,6 +64,11 @@ yarnpkg
 yarnpkg run build
 yarnpkg run start
 ```
+If you have issues with running electron then the following commands may help:
+```
+node_modules/electron/dist $ sudo chown root:root chrome-sandbox
+node_modules/electron/dist $ sudo chmod 4755 chrome-sandbox
+```
 
 #### Issues and Updates
 -----------------
