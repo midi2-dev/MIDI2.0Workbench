@@ -7,11 +7,17 @@
 const defMapLists = {
 	volume:[
 		{value:0,"title":"-infinity"},
-		{value:2048,"title":"-36.0 dB"},
-		{value:4096,"title":"-23.9 dB"},
-		{value:8192,"title":"-11.9 dB"},
-		{value:12353,"title":"-4.9 dB"},
-		{value:16383,"title":"0 dB"}
+		{value:0x20000000,"title":"-36.0 dB"},
+		{value:0x40000000,"title":"-23.9 dB"},
+		{value:0x80000000,"title":"-11.9 dB"},
+		{value:0xC1041041,"title":"-4.9 dB"},
+		{value:0xFFFFFFFF,"title":"0 dB"}
+	],
+	holdHalfPedal:[
+		{value:0,"title":"Up"},
+		{value:0x60000000,"title":"Half Pedal Start"},
+		{value:0xA0000000,"title":"Half Pedal End"},
+		{value:0xFFFFFFFF,"title":"Down"}
 	]
 }
 
@@ -406,7 +412,7 @@ exports.profiles=[
 		}
 	},
 	{
-		bank:0x20
+		bank:0x21
 		,index:0x02
 		,name:'General MIDI 2 Single Channel'
 		,type:'singleChannel'
@@ -529,7 +535,7 @@ exports.profiles=[
 		]
 	},
 	{
-		bank:0x22
+		bank:0x61
 		,index:0x00
 		,name:'Rotary Speaker Effect'
 		,type:'singleChannel'
@@ -588,7 +594,7 @@ exports.profiles=[
 	{
 		bank:0x21
 		,index:0x01
-		,name:'Note On Selection of Orchestral Articulation'
+		,name:'Note On Orchestral Articulation'
 		,type:'singleChannel'
 		,channels:[]
 		,profileLevels:{
@@ -633,8 +639,268 @@ exports.profiles=[
 
 			}
 		},
-		CtrlList:[
 
+		noteOnAttributes:{
+			0x10: 'Core Sounds - Sustains and Strikes',
+			0x11: 'Staccatos and Shorts',
+			0x12: 'Same Note Trills/Repeats',
+			0x13: 'Intervallic Trills',
+			0x14: 'Additional Colors - Sustained',
+			0x15: 'Pitch and Dynamic Gestures',
+			0x16: 'Scales, Runs, and Arpeggios',
+			0x17: 'Effects and Noises',
+			0x18: 'Reserved',
+			0x19: 'Reserved',
+			0x1A: 'Custom',
+			0x1B: 'Custom',
+			0x1C: 'Custom',
+			0x1D: 'Custom',
+			0x1E: 'Custom',
+			0x1F: 'Custom'
+		},
+		noteOffAttributes: {
+			0x10: 'Note ending characteristics.'
+		},
+		renderNoteOffAttribute: (attribute,ump,val,offset)=> {
+			let subclassLabel = {
+				0x10: [
+					'No Note Off Sample',
+					'Soft Ending',
+					'Hard Ending',
+					'Pitch Rise',
+					'Pitch Fall'
+				]
+			};
+			const stringAssLabel = [
+				'No string assignment (Receiver may determine)',
+				'First string, highest pitched (usually E on guitar, E on violin)',
+				'Second string (usually B on guitar, A on violin)',
+				'Third string (usually G on guitar, D on violin)',
+				'Fourth string (usually D on guitar, G on violin)',
+				'Fifth string (usually A on guitar, usually G drone on 5 String Banjo)',
+				'Sixth string (usually E on guitar)',
+				'Other String'
+			];
+			return [
+				{
+					range:[0 + offset,3 + offset], title:'Sub-Class',
+					list: subclassLabel[attribute], classes:"bg-warning text-dark"
+				},{
+					range:[4 + offset,7 + offset], title:'Variation',  classes:'text-white bg-secondary'
+				},{
+					range:[13 + offset,15 + offset], title:'String Assignment', list: stringAssLabel,  classes:'text-white bg-dark'
+				},
+			];
+		},
+		renderNoteOnAttribute: (attribute,ump,val,offset)=>{
+			let subclassLabel = {
+				0x10:[
+					'Normal Sustains & Strikes (PART 1)',
+					'Normal Sustains & Strikes (PART 2)',
+					'Legato and Legato Slurred',
+					'Molto Legato',
+					'Glissando',
+					'Detaché',
+					'Marcato',
+					'Martelé',
+					'Senza Vibrato',
+					'Con Vibrato',
+					'Synchronized Vibrato',
+				],
+				0x11:[
+					'Normal Staccato Off String',
+					'Normal Staccato Off String',
+					'Slurred Staccato',
+					'Accented Staccato',
+					'Staccatissimo',
+					'Sautillé',
+					'Martellato',
+					'Portato',
+					'Bartok Pizzicato',
+					'Col Legno Battuto',
+					'Col Legno Gestrichen',
+					'String Hand Tap',
+					'Jete',
+				],
+				0x12:[
+					'Tremolo / Flutter tongue',
+					'Growl / Razz',
+					'Other Coloristic Tremolo',
+					'One Note Trills',
+					'2 Repeats',
+					'3 Repeats',
+					'4 Repeats',
+					'5 Repeats',
+					'6 Repeats',
+					'Faster Repeats'
+				],
+				0x13:[
+					'Half Step (Classical)',
+					'Half Step (Baroque)',
+					'Whole Step (Classical)',
+					'Whole Step (Baroque)',
+					'Minor 3rd',
+					'Major 3rd',
+					'Perfect 4th',
+					'Tritone',
+					'Perfect 5th',
+					'Minor 6th',
+					'Major 6th',
+					'Minor 7th',
+					'Major 7th',
+					'Octave'
+				],
+				0x14:[
+					'Harmonics – Natural',
+					'Harmonics – Artificial',
+					'Col Legno Tratto',
+					'Flautando',
+					'Polyphony: multiple octaves',
+					'Polyphony: intervals, chords, etc.',
+					'Cuivré',
+					'Lontano',
+					'Singing into Instrument'
+				],
+				0x15:[
+					'Pitch Fall End',
+					'Pitch Fall Start',
+					'Pitch Rise End',
+					'Pitch Rise Start',
+					'Blue Note Down',
+					'Blue Note Up',
+					'Grace Notes “Classical”',
+					'Grace Notes “Baroque”',
+					'Shakes',
+					'Crescendo',
+					'Decrescendo',
+					'Cresc -> Decresc',
+					'Decresc -> Cresc',
+					'Sfz Crescendo'
+				],
+				0x16:[
+					'Playable Runs',
+					'Playable Tremolos',
+					'Scales/Runs Major',
+					'Scales/Runs Minor',
+					'Scales/Runs Dominant 7th',
+					'Scales/Runs diminished (whole/half) or Other 1',
+					'Scales/Runs diminished (whole/half) or Other 2',
+					'Whole Tone Scale 1 (includes C)',
+					'Whole Tone Scale 1 (includes C#)',
+					'Pentatonic Scale (maj)',
+					'Pentatonic Scale (min)',
+					'Lydian',
+					'Lydian b7',
+					'Chromatic',
+					'Other Scales and Runs'
+				],
+				0x17:[
+					'Assorted noises, Air Sound, or effects – Sustained',
+					'Behind the Bridge – Sustained',
+					'Random Pizz – Sustained',
+					'Harmonic Glissando',
+					'Random Glissando',
+					'Air sound, Chiffs/Squeak/Lip-Pizz – Short',
+					'Mechanical sounds – Sustained',
+					'Mechanical sounds – Short',
+					'Finger Glide',
+					'Fret Buzz/Noise',
+					'Thump',
+					'Knock',
+					'Slap',
+					'Pop',
+					'Tap',
+					'Click'
+				]
+			};
+			const directionLabel = [
+				'Determined by the receiver or automatic',
+				'Down stroke, right hand pizzicato, or right-hand strike',
+				'Up stroke, left hand pizzicato, or left-hand strike',
+				'Reserved'
+			];
+
+			const stringAssLabel = [
+				'No string assignment (Receiver may determine)',
+				'First string, highest pitched (usually E on guitar, E on violin)',
+				'Second string (usually B on guitar, A on violin)',
+				'Third string (usually G on guitar, D on violin)',
+				'Fourth string (usually D on guitar, G on violin)',
+				'Fifth string (usually A on guitar, usually G drone on 5 String Banjo)',
+				'Sixth string (usually E on guitar)',
+				'Other String'
+			]
+
+			return [
+				{
+					range:[0 + offset,3 + offset], title:'Sub-Class',
+					list: subclassLabel[attribute], classes:"bg-warning text-dark"
+				},{
+					range:[4 + offset,7 + offset], title:'Variation',  classes:'text-white bg-secondary'
+				},{
+					range:[8 + offset,9 + offset], title:'Direction',
+					list: directionLabel,  classes:'text-white bg-info'
+				},{
+					range:[12 + offset,12 + offset], title:'Reset Round Robin',  classes:'text-white bg-success'
+				},{
+					range:[13 + offset,15 + offset], title:'String Assignment', list: stringAssLabel,  classes:'text-white bg-dark'
+				},
+			];
+
+		},
+		CtrlList:[
+			{
+				title:"Orchestral Mute Type"
+				,ctrlType:"rpn"
+				,ctrlIndex:[0x20, 0x22]
+				,contMapList: [
+					{value:0x04000000,"title":"No Mute"},
+					{value:0x0C000000,"title":"Straight mute (brass) or Standard mute (strings and others)"},
+					{value:0x14000000,"title":"Practice mute"},
+					{value:0x1C000000,"title":"Cup Mute"},
+					{value:0x24000000,"title":"Wah-wah/Harmon Mute, stem in"},
+					{value:0x2C000000,"title":"Wah-wah/Harmon Mute, stem extended"},
+					{value:0x34000000,"title":"Wah-wah/Harmon, stem removed"},
+					{value:0x3C000000,"title":"Plunger Mute"},
+					{value:0x44000000,"title":"Bucket Mute"},
+					{value:0x4C000000,"title":"Mica Mute"},
+					{value:0x54000000,"title":"Solotone Mute"},
+					{value:0x5C000000,"title":"Whispa/Whisper Mute"},
+					{value:0x64000000,"title":"Hat"},
+					{value:0x6C000000,"title":"Hand"},
+					{value:0x74000000,"title":"Stopped"},
+					{value:0x7C000000,"title":"Into the Stand"},
+
+
+
+
+					{value:0xA0000000,"title":"Reserved"},
+
+
+					{value:0xD4000000,"title":"Manufacturer Specific Mute 1"},
+					{value:0xDC000000,"title":"Manufacturer Specific Mute 2"},
+					{value:0xE4000000,"title":"Manufacturer Specific Mute 3"},
+					{value:0xEC000000,"title":"Manufacturer Specific Mute 4"},
+					{value:0xF4000000,"title":"Manufacturer Specific Mute 5"},
+					{value:0xFC000000,"title":"Manufacturer Specific Mute 6"}
+				]
+				, "paramPath": "/muteType"
+			},
+			{
+				title:"Orchestral Mute Amount"
+				,ctrlType:"rpn"
+				,ctrlIndex:[0x20, 0x23]
+				//,contMapList: defMapLists['holdHalfPedal']
+				, "paramPath": "/muteAmount"
+			},
+			{
+				title:"Playing Position"
+				,ctrlType:"pnrc"
+				,ctrlIndex:[0x0C]
+				,contMapList:[{value:0,"title":"At the Bridge/Center"},
+					{value:0x80000000,"title":"Normal Playing Position"},
+					{value:0xFFFFFFFF,"title":"At the Nut/Rim"}]
+			}
 		]
 		,interoperability:{
 			"title":"Profile: " + "Orchestral Articulation",
@@ -642,11 +908,48 @@ exports.profiles=[
 				{
 					"title": "PfOA1: After Profile is Enabled",
 					questions: [
-						/*{
-							id: "PfMPE1.1", required:true,
-							text: "Device has the assignment of controller message destinations/functions set to the " +
-								"common, default definitions. Details of destinations/functions are in Appendix A."
-						}*/
+						{
+							id: "PfOA1.1", required:true,
+							text: "When Reset Round Robin is set the Note On shall be played with the first sound in the round robin and restart the progress through the available round\n" +
+								"robin sounds."
+						},
+						{
+							id: "PfOA1.2", required:true,
+							text: "When a Device receivesa MIDI 2.0 Note On Message with Attribute Type set to 0x10 through 0x1F, the Device shall play a note with the best available sound properties to suit the requested Classification and Subclass of note articulation and the other fields in the Note On."
+						},
+						{
+							id: "PfOA1.3", required:true,
+							text: "If the Device does not have a sound specifically designed for the Classification and Subclass of a received Note\n" +
+								"On, the Device shall substitute another sound according to the rules in Section 6.1, Fallback Mechanism"
+						},
+						{
+							id: "PfOA1.4", required:true,
+							text: "If a Receiver receives a Note On with any Attribute Type other than 0x10-1F, then the Receiver shall decide which articulation to use."
+						}
+						,
+						{
+							id: "PfOA1.5", required:true,
+							text: "A Device shall not use Attribute Type values from 0x18-0x19."
+						},
+						{
+							id: "PfOA1.6", required:true,
+							text: "A Device or Library shall provide a suitable note in Classification 0x10, Subclass 0x0, Variation 0x0 for\n" +
+								"every instrument that is part of the sound set."
+						},
+						{
+							id: "PfOA1.7", required:true,
+							text: "When using custom, library specific, or device specific sounds, the Variation, Direction, Reset Round Robin, and String fields remain valid and shall not be used for any other function."
+						},
+						{
+							id: "PfOA1.8",
+							text: "A receiver shall follow the Fallback mechanisms as defined in Section 6.1."
+						},
+						{
+							id: "PfOA1.9",
+							text: "If a Receiver declares in a Reply to Profile Details Inquiry message (See Section 9) that it supports Note Off\n" +
+								"Release Velocity, then the envelope release time of the Note in the Receiver shall be determined by the value of\n" +
+								"the Release Velocity field, ranging from 0x0000 to 0xFFFF."
+						}
 					]
 				}
 			]

@@ -165,6 +165,23 @@ exports.updateView = function (){
             });
     });
 
+
+    $('[data-visibleiffalse]')
+        .css({display:'none'})
+        .each(function(){
+            $(this)[0].dataset['visibleiffalse'].split(',').map(path=>{
+                let val, configpath = path.match(/^\/config(\/.*)/);
+                if(configpath){
+                    val = ptr.get(window.configSetting, configpath[1]);
+                }else{
+                    val = ptr.get(settings, path.trim());
+                }
+                if(val == undefined){
+                    $(this).css({display:''});
+                }
+            });
+        });
+
     $('[data-visibleifalltrue]')
         .css({display:'none'})
         .each(function(){
@@ -235,6 +252,61 @@ exports.umpLog = function(jqtd,ump){
 
     let parts;
 
+    const processParts = (parts) =>{
+        parts.map(p=>{
+            let val=0;
+            //if(p.title=='Channel')debugger;
+            for(let i = p.range[0]; i<p.range[1]+1;i++){
+                val = (val<<1) + parseInt(outarr[i],2);
+            }
+            val = val >>> 0;
+            if(p.list){
+                const list = typeof p.list === "function" ?p.list():p.list;
+                val = list[val];
+            }else if(p.subparts){
+                const subParts = p.subparts(ump, val, p.range[0]);
+                if(subParts){
+                    processParts(subParts );
+                    return;
+                }
+            }
+
+            switch(p.format ||''){
+                case '':
+                    break;
+                case 'hex':
+                    val = "0x"+("00" + val.toString(16)).slice (-2).toUpperCase();
+                    break;
+                case 'twosComplement':
+                    val = t.TwosComplementToValue(val, p.range[1] - p.range[0] + 1);
+                    break;
+                case '+1':
+                    val = val+1;
+                    break;
+                case 'pitch7.25':
+                    const note = val >> 25;
+                    const cent = (val & 33554431) / 33554431;
+                    val = note  + cent;
+                    break;
+                default:
+                    debugger;
+                    break;
+            }
+
+            if(p.calcVal){
+                val = p.calcVal(ump, val);
+                if(Object.isObject(val)){
+                    processParts(val, p.range[0]);
+                    return;
+                }
+            }
+
+            if(val===0) val = val.toString();
+
+            highlight(p.range[0] ,p.range[1],p.title, val,p.classes||'');
+        });
+    };
+
     if(mtDetails.status10bit){
         const form = mess >>> 26 & 0x3;
         highlight(4,5,'Form', mtDetails.form[form],'text-danger');
@@ -266,42 +338,48 @@ exports.umpLog = function(jqtd,ump){
 
     if(!parts)parts = ((mtDetails.status[status]||{}).parts ||[]);
 
-    parts.map(p=>{
-        let val=0;
-        //if(p.title=='Channel')debugger;
-        for(let i = p.range[0]; i<p.range[1]+1;i++){
-            val = (val<<1) + parseInt(outarr[i],2);
-        }
-        if(p.list){
-            val = p.list[val];
-        }
+    // parts.map(p=>{
+    //     let val=0;
+    //     //if(p.title=='Channel')debugger;
+    //     for(let i = p.range[0]; i<p.range[1]+1;i++){
+    //         val = (val<<1) + parseInt(outarr[i],2);
+    //     }
+    //     if(p.list){
+    //         val = p.list[val];
+    //     }
+    //
+    //     switch(p.format ||''){
+    //         case '':
+    //             break;
+    //         case 'hex':
+    //             val = "0x"+("00" + val.toString(16)).slice (-2).toUpperCase();
+    //             break;
+    //         case 'twosComplement':
+    //             val = t.TwosComplementToValue(val, p.range[1] - p.range[0] + 1);
+    //             break;
+    //         case '+1':
+    //             val = val+1;
+    //             break;
+    //         case 'pitch7.25':
+    //             const note = val >> 25;
+    //             const cent = (val & 33554431) / 33554431;
+    //             val = note  + cent;
+    //             break;
+    //         default:
+    //             debugger;
+    //             break;
+    //     }
+    //
+    //     if(p.calcVal){
+    //         val = p.calcVal(ump, val);
+    //     }
+    //
+    //     if(val===0) val = val.toString();
+    //
+    //     highlight(p.range[0],p.range[1],p.title, val,p.classes||'');
+    // });
 
-        switch(p.format ||''){
-            case '':
-                break;
-            case 'hex':
-                val = "0x"+("00" + val.toString(16)).slice (-2).toUpperCase();
-                break;
-            case 'twosComplement':
-                val = t.UpscaleTwosComplement(val, p.range[1] - p.range[0] + 1);
-                break;
-            case '+1':
-                val = val+1;
-                break;
-            case 'pitch7.25':
-                const note = val >> 25;
-                const cent = (val & 33554431) / 33554431;
-                val = note  + cent;
-                break;
-            default:
-                debugger;
-                break;
-        }
-
-        if(val===0) val = val.toString();
-
-        highlight(p.range[0],p.range[1],p.title, val,p.classes||'');
-    });
+    processParts(parts);
 
 
 
@@ -2319,15 +2397,21 @@ exports.buildProfilePage = function(pf){
     });
 
     const jqMain = $('<div/>',{id:'profileDetails'})
+        .addClass('w-100')
         .prependTo('#main')
-        .append('<h1 class="col-md-12 m-1 p-0">'+ pf.name + '</h1>')
-        .append('<h4 class="col-md-12 m-2 p-0">Profile Version: '+ pf.version + '</h4>');
+        .append('<h3 class="col-md-12 m-1 p-0">Profile: '+ pf.name + '</h3>')
+        .append('<div class="m-2">Profile Version: '+ pf.version + '</div>');
 
-    const jqLevels = $('<div class="col-md-12 m-2 p-0"/>').appendTo(jqMain);
+
     for (const profileLevelsKey in pf.profileLevels) {
-        const jqLevel = $('<div/>',{class:'badge '+ (parseInt(profileLevelsKey,10)===pf.level?'badge-success':'badge-light')})
-            .append(pf.profileLevels[profileLevelsKey])
-            .appendTo(jqLevels);
+        if(parseInt(profileLevelsKey,10)===pf.level){
+            $('<div/>',{class:'m-2'})
+                .append(`Level : 0x${("00" + pf.level.toString(16)).slice (-2).toUpperCase()} ${pf.profileLevels[profileLevelsKey]}`)
+                .appendTo(jqMain);
+        }
+        // const jqLevel = $('<div/>',{class:'badge '+ (parseInt(profileLevelsKey,10)===pf.level?'badge-success':'badge-light')})
+        //     .append(pf.profileLevels[profileLevelsKey])
+        //     .appendTo(jqLevels);
     }
 
     const jqSpecificData = $('<table/>').appendTo(jqMain);
@@ -2583,7 +2667,16 @@ function confirmDialog(confirmObj,cb){
             jqModal.modal('dispose').remove();
         });
 
-};
+}
+
+
+
+function showUIList(opts) {
+    ipcRenderer.send('asynchronous-message'
+        , 'showUIList'
+        , {...opts,...window.ump}
+    );
+}
 
 //**********************************************************************
 document.addEventListener("keydown", function (e) {

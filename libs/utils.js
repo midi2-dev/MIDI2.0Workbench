@@ -52,8 +52,6 @@ function createPopoupWin(oOpt){
     if(oOpt.fileToLoad) editWin.loadFile(oOpt.fileToLoad );
     if(oOpt._umpDev) editWin._umpDev = oOpt._umpDev;
 
-
-
     editWin._id = id;
     global._editWin.push(editWin);
 

@@ -4,6 +4,7 @@
  *     Andrew Mee
  */
 
+const midi2Tables = require("./midiCITables");
 let mtColours={
     messageType:"text-danger bg-warning",
     Group:"text-danger",
@@ -52,8 +53,17 @@ let byteRangeArr = [
     {range:[112,119],title:'Byte 11',classes:mtColours.lsb},
     {range:[120,127],title:'Byte 12',classes:mtColours.msb}
 ]
+const grchIndex = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
 
-
+const sysexParts = [
+    {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
+    {range:[17,23],title:'Byte 1',classes:mtColours.msb,format: 'hex'},
+    {range: [25, 31],title: 'Byte 2',classes:mtColours.lsb,format: 'hex'},
+    {range:[33,39],	title:'Byte 3',classes:mtColours.msb,format: 'hex'},
+    {range:[41,47],title:'Byte 3',classes:mtColours.lsb,format: 'hex'},
+    {range:[49,55],title:'Byte 5',classes:mtColours.msb,format: 'hex'},
+    {range:[57,63],title:'Byte 6',classes:mtColours.lsb,format: 'hex'}
+];
 
 exports.messageType = [
     {
@@ -130,7 +140,7 @@ exports.messageType = [
             0b1000: {
                 title: 'Note Off',
                 parts:[
-                    {range:[12,15], title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15], title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23], title:'Note Number',classes:mtColours.noteNumber},
                     {range:[25,31], title:'Velocity',classes:mtColours.velocity}
                 ]
@@ -138,7 +148,7 @@ exports.messageType = [
             0b1001: {
                 title: 'Note On',
                 parts:[
-                    {range:[12,15], title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15], title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23], title:'Note Number',classes:mtColours.noteNumber},
                     {range:[25,31], title:'Velocity',classes:mtColours.velocity}
                 ]
@@ -146,7 +156,7 @@ exports.messageType = [
             0b1010: {
                 title: 'Poly Pressure',
                 parts:[
-                    {range:[12,15], title:'Channel',format:'+1',classes:mtColours.channel},
+                    {range:[12,15], title:'Channel',list:grchIndex /*format:'+1'*/,classes:mtColours.channel},
                     {range:[17,23], title:'Note Number',classes:mtColours.noteNumber},
                     {range:[25,31], title:'Pressure',classes:mtColours.pressure}
                 ]
@@ -154,7 +164,7 @@ exports.messageType = [
             0b1011: {
                 title: 'Control Change Message',
                 parts:[
-                    {range:[12,15], title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15], title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23], title:'Index',classes:mtColours.index},
                     {range:[25,31], title:'Value',classes:mtColours.value}
                 ]
@@ -162,21 +172,21 @@ exports.messageType = [
             0b1100: {
                 title: 'Program Change Message',
                 parts:[
-                    {range:[12,15], title:'Channel',format:'+1',classes:mtColours.channel},
+                    {range:[12,15], title:'Channel',list:grchIndex /*format:'+1'*/,classes:mtColours.channel},
                     {range:[17,23], title:'Program',classes:mtColours.program}
                 ]
             },
             0b1101: {
                 title: 'Channel Pressure Message',
                 parts:[
-                    {range:[12,15], title:'Channel',format:'+1',classes:mtColours.channel},
+                    {range:[12,15], title:'Channel',list:grchIndex /*format:'+1'*/,classes:mtColours.channel},
                     {range:[17,23], title:'Pressure',classes:mtColours.pressure}
                 ]
             },
             0b1110: {
                 title: 'Pitch Bend',
                 parts:[
-                    {range:[12,15], title:'Channel',format:'+1',classes:mtColours.channel},
+                    {range:[12,15], title:'Channel',list:grchIndex /*format:'+1'*/,classes:mtColours.channel},
                     {range:[17,23], title:'LSB data',classes:mtColours.lsb},
                     {range:[25,31], title:'MSB data',classes:mtColours.msb}
                 ]
@@ -189,51 +199,19 @@ exports.messageType = [
         status:{
             0x0:{
                 title: 'Complete System Exclusive Message in One Packet',
-                parts:[
-                    {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
-                    {range:[17,23],title:'Byte 1',classes:mtColours.msb,format: 'hex'},
-                    {range: [25, 31],title: 'Byte 2',classes:mtColours.lsb,format: 'hex'},
-                    {range:[33,39],	title:'Byte 3',classes:mtColours.msb,format: 'hex'},
-                    {range:[41,47],title:'Byte 3',classes:mtColours.lsb,format: 'hex'},
-                    {range:[49,55],title:'Byte 5',classes:mtColours.msb,format: 'hex'},
-                    {range:[57,63],title:'Byte 6',classes:mtColours.lsb,format: 'hex'}
-                ]
+                parts:sysexParts
             },
             0x1:{
                 title: 'System Exclusive Start Packet',
-                parts:[
-                    {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
-                    {range:[17,23],title:'Byte 1',classes:mtColours.msb,format: 'hex'},
-                    {range: [25, 31],title: 'Byte 2',classes:mtColours.lsb,format: 'hex'},
-                    {range:[33,39],	title:'Byte 3',classes:mtColours.msb,format: 'hex'},
-                    {range:[41,47],title:'Byte 3',classes:mtColours.lsb,format: 'hex'},
-                    {range:[49,55],title:'Byte 5',classes:mtColours.msb,format: 'hex'},
-                    {range:[57,63],title:'Byte 6',classes:mtColours.lsb,format: 'hex'}
-                ]
+                parts:sysexParts
             },
             0x2:{
                 title: 'System Exclusive Continue Packet',
-                parts:[
-                    {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
-                    {range:[17,23],title:'Byte 1',classes:mtColours.msb,format: 'hex'},
-                    {range: [25, 31],title: 'Byte 2',classes:mtColours.lsb,format: 'hex'},
-                    {range:[33,39],	title:'Byte 3',classes:mtColours.msb,format: 'hex'},
-                    {range:[41,47],title:'Byte 3',classes:mtColours.lsb,format: 'hex'},
-                    {range:[49,55],title:'Byte 5',classes:mtColours.msb,format: 'hex'},
-                    {range:[57,63],title:'Byte 6',classes:mtColours.lsb,format: 'hex'}
-                ]
+                parts:sysexParts
             },
             0x3:{
                 title: 'System Exclusive End Packet',
-                parts:[
-                    {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
-                    {range:[17,23],title:'Byte 1',classes:mtColours.msb,format: 'hex'},
-                    {range: [25, 31],title: 'Byte 2',classes:mtColours.lsb,format: 'hex'},
-                    {range:[33,39],	title:'Byte 3',classes:mtColours.msb,format: 'hex'},
-                    {range:[41,47],title:'Byte 3',classes:mtColours.lsb,format: 'hex'},
-                    {range:[49,55],title:'Byte 5',classes:mtColours.msb,format: 'hex'},
-                    {range:[57,63],title:'Byte 6',classes:mtColours.lsb,format: 'hex'}
-                ]
+                parts:sysexParts
             }
         }
     },
@@ -244,47 +222,92 @@ exports.messageType = [
             0b1000: {
                 title: 'Note Off',
                 parts:[
-                    {range:[12,15], title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15], title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23], title:'Note Number',classes:mtColours.noteNumber},
                     {
                         range:[25,31],
                         title:'Attribute Type',
-                        list:{
-                            0x00: 'No Attribute Data',
-                            0x01: 'Manufacturer Specific Attribute Data',
-                            0x02: 'Profile Specific Attribute Data',
-                            0x03: 'Pitch 7.9 (See Section 8.3)'
+                        list:()=>{
+                            let list = {
+                                0x00: 'No Attribute Data',
+                                0x01: 'Manufacturer Specific Attribute Data',
+                            };
+                            midi2Tables.profiles.map((profile)=>{
+                                if(profile.noteOffAttributes){
+                                    Object.keys(profile.noteOffAttributes).map((attribute)=>{
+                                        list[attribute] = `${profile.name} Profile: ${profile.noteOffAttributes[attribute]}`
+                                    });
+                                }
+                            });
+                            return list;
                         }
                         ,classes:mtColours.attrType
                     },
                     {range:[32,47], title:'Velocity',classes:mtColours.velocity},
-                    {range:[48,63], title:'Attribute',classes:mtColours.attribute}
+                    {range:[48,63], title:'Attribute',
+                        classes:mtColours.attribute,
+                        subparts: (ump, val) => {
+                            const mess = ump[0];
+                            const attribute = mess & 0xFF;
+                            for(let i=0; i<midi2Tables.profiles.length; i++ ){
+                                if (midi2Tables.profiles[i].noteOffAttributes &&
+                                    midi2Tables.profiles[i].noteOffAttributes[attribute] && midi2Tables.profiles[i].renderNoteOffAttribute) {
+                                    return midi2Tables.profiles[i].renderNoteOffAttribute(attribute, ump, val, 48);
+                                }
+                            }
+                            return false;
+                        }
+                    }
                 ]
             },
             0b1001: {
                 title: 'Note On',
                 parts:[
-                    {range:[12,15], title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15], title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23], title:'Note Number',classes:mtColours.noteNumber},
                     {
                         range:[25,31],
                         title:'Attribute Type',
-                        list:{
-                            0x00: 'No Attribute Data',
-                            0x01: 'Manufacturer Specific Attribute Data',
-                            0x02: 'Profile Specific Attribute Data',
-                            0x03: 'Pitch 7.9 (See Section 8.3)'
+                        list:()=>{
+                            let list = {
+                                0x00: 'No Attribute Data',
+                                0x01: 'Manufacturer Specific Attribute Data',
+                                0x02: 'Profile Specific Attribute Data',
+                                0x03: 'Pitch 7.9'
+                            };
+                            midi2Tables.profiles.map((profile)=>{
+                                if(profile.noteOnAttributes){
+                                    Object.keys(profile.noteOnAttributes).map((attribute)=>{
+                                        list[attribute] = `${profile.name} Profile: ${profile.noteOnAttributes[attribute]}`
+                                    });
+                                }
+                            });
+                            return list;
                         }
                         ,classes:mtColours.attrType
+                        ,reRenderFormOnChange: true
                     },
                     {range:[32,47], title:'Velocity',classes:mtColours.velocity},
-                    {range:[48,63], title:'Attribute',classes:mtColours.attribute}
+                    {
+                        range: [48, 63], title: 'Attribute', classes: mtColours.attribute,
+                        subparts: (ump, val) => {
+                            const mess = ump[0];
+                            const attribute = mess & 0xFF;
+                            for(let i=0; i<midi2Tables.profiles.length; i++ ){
+                                if (midi2Tables.profiles[i].noteOnAttributes &&
+                                    midi2Tables.profiles[i].noteOnAttributes[attribute] && midi2Tables.profiles[i].renderNoteOnAttribute) {
+                                    return midi2Tables.profiles[i].renderNoteOnAttribute(attribute, ump, val, 48);
+                                }
+                            }
+                            return false;
+                        }
+                    }
                 ]
             },
             0b1010: {
                 title: 'Poly Pressure',
                 parts:[
-                    {range:[12,15], title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15], title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23], title:'Note Number',classes:mtColours.noteNumber},
                     {range:[32,63], title:'Pressure',classes:mtColours.pressure}
                 ]
@@ -292,7 +315,7 @@ exports.messageType = [
             0b1011: {
                 title: 'Control Change Message',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23],title:'Index',classes:mtColours.index},
                     {range:[32,63],title:'Value',classes:mtColours.value}
                 ]
@@ -300,7 +323,7 @@ exports.messageType = [
             0b0010: {
                 title: 'Registered Controller (RPN)',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23],title:'Bank',classes:mtColours.bank},
                     {range:[25,31],title:'Index',classes:mtColours.index},
                     {range:[32,63],title:'Value',classes:mtColours.value}
@@ -310,7 +333,7 @@ exports.messageType = [
             0b0011: {
                 title: 'Assignable Controller (NRPN) Messages',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23],title:'Bank',classes:mtColours.bank},
                     {range:[25,31],title:'Index',classes:mtColours.index},
                     {range:[32,63],title:'Value',classes:mtColours.value}
@@ -320,7 +343,7 @@ exports.messageType = [
             0b0100: {
                 title: 'Relative Registered Controller (RPN)',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23],title:'Bank',classes:mtColours.bank},
                     {range:[25,31],title:'Index',classes:mtColours.index},
                     {range:[32,63],title:'Value',format:'twosComplement',classes:mtColours.value}
@@ -330,7 +353,7 @@ exports.messageType = [
             0b0101: {
                 title: 'Relative Assignable Controller (NRPN)',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23],title:'Bank',classes:mtColours.bank},
                     {range:[25,31],title:'Index',classes:mtColours.index},
                     {range:[32,63],title:'value',format:'twosComplement',classes:mtColours.value}
@@ -340,7 +363,7 @@ exports.messageType = [
             0b1100: {
                 title: 'Program Change Message',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[31,31],title:'Bank Valid',classes:mtColours.bank},
                     {range:[33,39],title:'Program',classes:mtColours.program},
                     {range:[49,55],title:'Bank MSB',classes:mtColours.msb},
@@ -351,7 +374,7 @@ exports.messageType = [
             0b1101: {
                 title: 'Channel Pressure Message',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[32,63],title:'Pressure',classes:mtColours.pressure}
                 ]
             },
@@ -359,7 +382,7 @@ exports.messageType = [
             0b1110: {
                 title: 'Pitch Bend',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[32,63],title:'Pitch'
                         //,format:'pitch7.25'
                         ,classes:mtColours.pitch}
@@ -369,7 +392,7 @@ exports.messageType = [
             0b0110: {
                 title: 'Per-Note Pitch Bend',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23],title:'Note Number',classes:mtColours.noteNumber},
                     {range:[32,63],title:'Pitch'
                         //,format:'pitch7.25'
@@ -380,7 +403,7 @@ exports.messageType = [
             0b0001: {
                 title: 'Assignable Per-Note Controller',
                 parts:[
-                    {range:[12,15],title:'Channel',classes:mtColours.channel,format:'+1'},
+                    {range:[12,15],title:'Channel',classes:mtColours.channel,list:grchIndex /*format:'+1'*/},
                     {range:[17,23],title:'Note Number',classes:mtColours.noteNumber},
                     {range:[24,31],title:'Index',classes:mtColours.index},
                     {range:[32,63],title:'Value',classes:mtColours.value}
@@ -393,7 +416,7 @@ exports.messageType = [
                     {
                         range:[12,15],
                         title:'Channel',classes:mtColours.channel
-                        ,format:'+1'
+                        ,list:grchIndex /*format:'+1'*/
                     },
                     {
                         range:[17,23],
@@ -419,7 +442,7 @@ exports.messageType = [
                     {
                         range:[12,15],
                         title:'Channel',classes:mtColours.channel
-                        ,format:'+1'
+                        ,list:grchIndex /*format:'+1'*/
                     },
                     {
                         range:[17,23],

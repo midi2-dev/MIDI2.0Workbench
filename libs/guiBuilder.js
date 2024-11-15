@@ -441,7 +441,7 @@ module.exports  = class guibuilder {
 			}
 		
 			if(cm.recognize!=='none'){
-				let ctrlIndex = cm.ctrlIndex.length>1?cm.ctrlIndex[0]<<7 + cm.ctrlIndex[1]:cm.ctrlIndex[0];
+				let ctrlIndex = cm.ctrlIndex.length>1?(cm.ctrlIndex[0]<<7) + cm.ctrlIndex[1]:cm.ctrlIndex[0];
 				if(!this._cmsRx[cm.ctrlType])this._cmsRx[cm.ctrlType]={};
 				this._cmsRx[cm.ctrlType][ctrlIndex]= cm;
 			}

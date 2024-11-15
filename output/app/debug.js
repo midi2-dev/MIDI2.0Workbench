@@ -8,6 +8,7 @@ const {ipcRenderer} = require('electron');
 
 const d = require('./../libs/debugger.js');
 const common = require('./app/common.js');
+const {sendOutUMPBrokenUp} = require("./../libs/utils.js");
 const { prettyPrintJson }= require('pretty-print-json');
 
 let jqdWarn, jqdError;

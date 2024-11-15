@@ -4,6 +4,10 @@ const {addUMPDevice, removeUMPDevice,
 const t = require("./translations");
 const d = require("./debugger");
 const {sendOutUMPBrokenUp} = require("./utils");
+const os = require("os");
+const {execSync, spawn} = require("child_process");
+
+let child;
 
 
 midi2usb.setRecvMIDI((umpDev,umpArr)=>{
@@ -123,8 +127,18 @@ function addDev(umpDev,m2){
                 });
             }
 
+            if(os.platform()==='win32' && child){
+                child.stdin.cork();
+                sendOutUMPBrokenUp(ump,0,(umpSplit,group)=>{
+                    child.stdin.write(JSON.stringify({"a":"u","i":m2.devId,"u":umpSplit}
+                    ) + "\n");
+                });
 
-            midi2usb.sendMIDI(m2.devId,ump);
+                child.stdin.uncork();
+            }else{
+                midi2usb.sendMIDI(m2.devId,ump);
+            }
+
             sendOutUMPBrokenUp(ump,0,(umpSplit,group)=>{
                 d.msg('ump',umpSplit,'out',umpDev, group);
             });
@@ -137,3 +151,107 @@ function addDev(umpDev,m2){
     }
     newDev.reportEndpoint();
 }
+
+
+///WINDOWS HERE
+
+
+if(os.platform()==='win32'){
+    //Check if MIDI Service is running
+    const { execSync, spawn } = require('child_process');
+    const { app } = require('electron');
+    const path = require('path');
+
+    const appPath = app.getAppPath();
+    const extrasPath = !app.isPackaged ?
+        path.join(appPath, 'extras') :
+        path.join(appPath, '..', '..', 'extras');
+
+// We finally have our exe!
+    const exePath = path.join(extrasPath, 'watch-endpoints-cpp.exe');
+
+
+    try {
+        if (execSync("midi service status", {encoding: "utf8"}).match(/Service MidiSrv is running/).length) {
+            //Window MIDI Service is running
+
+            child = spawn( exePath );
+
+            child.stdout.on( 'data', ( data ) => {
+
+                data.toString().split("\r\n").map(eData=>{
+                    try{
+                        if(!eData)return;
+                        const dataJ = JSON.parse(eData);
+                        switch (dataJ['c']){
+                            case 'm':
+                                console.log(`WIN Error: ${dataJ['m']}`);
+                                break;
+                            case 'u':
+                                if(global.umpDevices[dataJ['i']]){
+                                    global.umpDevices[dataJ['i']].midiToProc(dataJ['i'],dataJ['u']);
+                                }else{
+                                    //debugger;
+                                    setTimeout((umpDev1 ,umpArr1)=> {
+                                        if(global.umpDevices[umpDev1]){
+                                            global.umpDevices[umpDev1].midiToProc(umpDev,umpArr);
+                                        }
+                                    },2000,dataJ['i'] ,dataJ['u']);
+                                }
+                                break;
+                            case 'r':
+                                //remove
+                                //midi2usb.setRemoveDeviceAlert(dataJ['i']);
+                                removeUMPDevice(dataJ['i']);
+                                break;
+                            case 'a':
+                                //add
+                                console.log('New EP:' + dataJ['n']);
+
+                                let MIDI2Device = {
+                                    devId: dataJ['i'],
+                                    blocks: [],
+                                    clientName: dataJ['n'],
+                                    usbDetails: dataJ['usbDetails'] || {}
+
+                                }
+
+
+                                if(dataJ['g']){
+
+                                    MIDI2Device.usbDetails.groupBlocks = JSON.parse(JSON.stringify(dataJ['g']));
+                                    MIDI2Device.blocks =  dataJ['g'].map(gb=>{
+                                        gb.direction = gb.direction===0? 3 :  gb.direction===3? 0 : gb.direction;
+                                        gb.active = true;
+                                        return gb;
+                                    })
+                                }
+
+                                addDev(dataJ['i'], MIDI2Device);
+                        }
+                    }catch (e) {
+                        console.log("parse error")
+                    }
+
+                })
+
+
+
+            } );
+            child.stderr.on( 'data', ( data ) => console.log( `stderr: ${ data }` ) );
+            child.on( 'close', ( code ) => console.log( `child process exited with code ${code}` ));
+
+
+            child.stdin.setEncoding('utf-8');
+
+
+
+        }
+    }catch (e) {
+        //Ignore errors
+    }
+
+    //WinMIDI
+}
+
+

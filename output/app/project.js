@@ -518,6 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const parts =[];
 
+        const jqPartsAll =$('<div/>',{class:'form-group'}).appendTo(jqbu);
+
         if(messageType[mt].statusMSBLSB){
 
             const jqP = $('<div/>',{class:'form-group status'}).appendTo(jqbu);
@@ -565,40 +567,136 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        (messageType[mt].status[status].parts || []).map(p=>{
-            const jqP = $('<div/>',{class:'form-group'}).appendTo(jqbu);
-            $('<label class="col-form-label">'+p.title+'</label>').appendTo(jqP);
-            parts.push($('<input/>',{type:"number"
-                , class:"form-control "
-                 })
-                .appendTo(jqP));
-        });
+        const renderParts = (jqblock, parts, ump = [0,0,0,0]) => {
+            let outarr = [];
+            ump.map(function(d){
+                outarr = outarr.concat((d>>>0).toString(2).padStart(32,'0').split(''));
+            });
+
+            jqblock.empty();
+
+            parts.map(p=>{
+                let val=0;
+                //if(p.title=='Channel')debugger;
+                for(let i = p.range[0]; i<p.range[1]+1;i++){
+                    val = (val<<1) + parseInt(outarr[i],2);
+                }
+                const jqP = $('<div/>',{class:'form-group'}).appendTo(jqblock);
+                $('<label class="col-form-label">'+p.title+'</label>').appendTo(jqP);
+
+                let jqPart;
+                if(p.list) {
+                    jqPart = $('<select/>', {class: "form-control "}).appendTo(jqP);
+                    const list = typeof p.list === "function" ? p.list() : p.list;
+
+                    Object.keys(list).map((attribute) => {
+                      $('<option/>', {value: attribute, selected: !!(val==attribute)})
+                          .text(list[attribute]).appendTo(jqPart);
+                    })
+                }else if(p.subparts) {
+                    const subParts = p.subparts(ump, val, p.range[0]);
+                    if (subParts) {
+                        jqPart = $('<div/>', {class: 'ml-3'}).appendTo(jqP);
+                        renderParts(jqPart, subParts, ump);
+                        return;
+                    } else {
+                        jqPart = $('<input/>', {type: "number", class: "form-control"}).val(val).appendTo(jqP);
+                    }
+                }else if(p.range[1] - p.range[0] === 0){
+                    jqPart = $('<input/>',{type:"checkbox", value: 1, checked: !!(val),
+                        class:"form-control-md ml-3 "
+                    }).appendTo(jqP);
+                }else if(p.format === 'twosComplement'){
+                    let bitDepth = p.range[1] - p.range[0] + 1;
+                    let range = Math.pow(2,bitDepth) / 2;
+                    jqPart = $('<input/>',{type:"number", min: (range * -1),
+                        max:  range -1,
+                        class:"form-control "
+                    }).val(t.TwosComplementToValue(val,bitDepth)).appendTo(jqP);
+                }else{
+
+                  jqPart = $('<input/>',{type:"number", min: 0,
+                      max: Math.pow(2,p.range[1] - p.range[0] + 1) -1,
+                      class:"form-control "
+                  }).val(val).appendTo(jqP);
+                }
+
+              //     switch(p.format ||''){
+              //         case '':
+              //             break;
+              //         case 'hex':
+              //             val = "0x"+("00" + val.toString(16)).slice (-2).toUpperCase();
+              //             break;
+              //         case 'twosComplement':
+              //             val = t.TwosComplementToValue(val, p.range[1] - p.range[0] + 1);
+              //             break;
+              //         case '+1':
+              //             val = val+1;
+              //             break;
+              //         case 'pitch7.25':
+              //             const note = val >> 25;
+              //             const cent = (val & 33554431) / 33554431;
+              //             val = note  + cent;
+              //             break;
+              //         default:
+              //             debugger;
+              //             break;
+              //     }
+              //
+
+
+              jqPart.data('partData',p).addClass('partData');
+                if(p.reRenderFormOnChange){
+                    jqPart.on('change',()=>{
+                        const ump = calcUMPValue();
+                        renderParts(jqblock, parts, ump );
+                    })
+                }
+          });
+        };
+
+        const calcUMPValue = () =>{
+            const numofUMP = messageType[mt].bits/32;
+            const umpGroup = parseInt($('#umpKeyGr').val()) - 1;
+            let ump = [];
+            ump[0] = (mt<<28) //Message Type
+                + (!messageType[mt].noGroup? umpGroup<< 24: 0 ) //Group
+            ;
+            if(messageType[mt].status8bit){
+                ump[0] += status << 16;
+            }else  if(messageType[mt].status10bit){
+                ump[0] += status << 16;
+            }else if(messageType[mt].statusMSBLSB){
+                debugger; //Should not hit here
+            }else {
+                ump[0] += status << 20;
+            }
+            if(numofUMP>1){ump[1]=0;}
+            if(numofUMP>2){ump[2]=0;}
+            if(numofUMP>3){ump[3]=0;}
+
+            $('.partData',jqbu).each((idx,e)=>{
+                const p = $(e).data('partData');
+                let pval = parseInt($(e).val(),10);
+                if(p.format === 'twosComplement'){
+                    let bitDepth = p.range[1] - p.range[0] + 1;
+                    pval = t.ValueToTwosComplement(pval,bitDepth);
+                }
+                ump[Math.floor(p.range[1]/32)] += pval << (31 - (p.range[1]%32));
+            })
+            ump = ump.map(u=>u>>>0);
+
+            return ump;
+        };
+
+        renderParts(jqPartsAll, messageType[mt].status[status].parts || []);
+
+
         $('<button/>',{class:"form-control",type:'button'}).text("Send")
             .appendTo(jqbu)
             .on("click",()=>{
-                const numofUMP = messageType[mt].bits/32;
-                const umpGroup = parseInt($('#umpKeyGr').val()) - 1;
-                let ump = [];
-                ump[0] = (mt<<28) //Message Type
-                    + (!messageType[mt].noGroup? umpGroup<< 24: 0 ) //Group
-                    ;
-                if(messageType[mt].status8bit){
-                    ump[0] += status << 16;
-                }else  if(messageType[mt].status10bit){
-                    ump[0] += status << 16;
-                }else if(messageType[mt].statusMSBLSB){
-                    debugger; //Should not hit here
-                }else {
-                    ump[0] += status << 20;
-                }
-                if(numofUMP>1){ump[1]=0;}
-                if(numofUMP>2){ump[2]=0;}
-                if(numofUMP>3){ump[3]=0;}
-                (messageType[mt].status[status].parts || []).map((p,idx)=>{
-                    const pval = parseInt(parts[idx].val(),10);
-                    ump[Math.floor(p.range[1]/32)] += pval << (31 - (p.range[1]%32))
-                });
-                ump = ump.map(u=>u>>>0);
+
+                let ump = calcUMPValue();
                 ipcRenderer.send('asynchronous-message', 'sendUMP',{ump,...window.ump});
 
 

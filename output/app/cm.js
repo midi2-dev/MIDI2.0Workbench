@@ -273,7 +273,7 @@ function buildCtrlListOutput(xData){
                 buildInput(jqBody, cm, ctrlMapList);
             });
         } else {
-            buildInput(jqBody, cm);
+            buildInput(jqBody, cm, cm.contMapList);
         }
     });
 }
@@ -289,7 +289,7 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
                     'min': cm.minMax[0],
                     'max': cm.minMax[1],
                     'step': 1,
-                    'value': (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || 0,
+                    'value': (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || cm.default || 0,
                     list:id
                 }
             )
@@ -314,7 +314,7 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
                     'min': cm.minMax[0],
                     'max': cm.minMax[1],
                     'step': 1,
-                    'value': (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || 0,
+                    'value': (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || cm.default || 0,
                     list:id
                 }
             )
@@ -339,7 +339,7 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
                 'min': cm.minMax[0],
                 'max': cm.minMax[1],
                 'step': 1,
-                'value': (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || 0,
+                'value': (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || cm.default || 0,
                 'orient': 'vertical',
                 list:id
             }
@@ -349,7 +349,9 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
             .data('cm', cm)
             .data('notenumber', notenumber);
         _elementLookup.push(jqInput);
-        if (cm.ctrlMapId && ctrlMapList) {
+        if (
+            (cm.ctrlMapId || cm.contMapList)
+            && ctrlMapList) {
             let jqdl = $('<datalist/>',{id:id}).appendTo(jqBody);
             ctrlMapList.map(cml=>{
                 $('<option\>',{value:cml.value,label:cml.title, style:'--val:'+cml.value}).appendTo(jqdl);
@@ -358,7 +360,7 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
     };
 
     const createValueSelect = () => {
-        let defVal = (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || 0;
+        let defVal = (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || cm.default || 0;
         const jqInput = $('<select/>')
             .appendTo(jqBody)
             .data('cm', cm)

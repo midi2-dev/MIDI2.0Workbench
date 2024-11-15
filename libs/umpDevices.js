@@ -131,6 +131,8 @@ module.exports = {
                         classFunc.remoteEndpoint['midi2Supp'].umpver = `${o.versionMajor}.${o.versionMinor}`;
                         classFunc.remoteEndpoint['staticBlocks'] = !!o.staticFuncBlocks;
                         classFunc.remoteEndpoint['numOfBlocks'] = o.numOfFuncBlocks;
+
+                        classFunc.remoteEndpoint.rawFunctionBlocks = Array(o.numOfFuncBlocks).fill({});
                         classFunc.remoteEndpoint['midi2Supported'] = o.midi2Supported;
                         classFunc.remoteEndpoint['midi1Supported'] = o.midi1Supported;
                         classFunc.remoteEndpoint['jrrxSupported'] = o.jrrxSupported;
@@ -173,19 +175,28 @@ module.exports = {
                         classFunc.remoteEndpoint.blocks = classFunc.remoteEndpoint.blocks.filter(b=>b.gbIdx===undefined);
 
                         classFunc.remoteEndpoint['midi2Supp'].umpFBReport = true;
-                        let idxRaw = classFunc.remoteEndpoint.rawFunctionBlocks.findIndex(b => b.fbIdx === o.fbIdx);
-                        if (idxRaw === -1) {
-                            idxRaw = classFunc.remoteEndpoint.rawFunctionBlocks.push({}) - 1;
+                        if(classFunc.remoteEndpoint.rawFunctionBlocks[o.fbIdx]===undefined){
+                            //report error
+                            let err = `Function Block Index (${o.fbIdx}) does not match number of FBs`;
+                            d.msg('ump',o.ump
+                                ,'in',umpDev,
+                                0,[err], null);
+                        }else{
+                            classFunc.remoteEndpoint.rawFunctionBlocks[o.fbIdx] = o;
                         }
-
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].fbIdx = o.fbIdx;
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].active = o.active;
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].isMIDI1 = o.isMIDI1;
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].direction = o.direction;
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].firstGroup = o.firstGroup;
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].numberGroups = o.numberGroups;
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].ciVersion = o.ciVersion;
-                        classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].sysex8Streams = o.sysex8Streams;
+                        // let idxRaw = classFunc.remoteEndpoint.rawFunctionBlocks.findIndex(b => b.fbIdx === o.fbIdx);
+                        // if (idxRaw === -1) {
+                        //     idxRaw = classFunc.remoteEndpoint.rawFunctionBlocks.push({}) - 1;
+                        // }
+                        //
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].fbIdx = o.fbIdx;
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].active = o.active;
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].isMIDI1 = o.isMIDI1;
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].direction = o.direction;
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].firstGroup = o.firstGroup;
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].numberGroups = o.numberGroups;
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].ciVersion = o.ciVersion;
+                        // classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw].sysex8Streams = o.sysex8Streams;
 
                         let idx = classFunc.remoteEndpoint.blocks.findIndex(b => b.fbIdx === o.fbIdx);
                         if (idx === -1) {
@@ -193,7 +204,7 @@ module.exports = {
                         }
                         classFunc.remoteEndpoint.blocks[idx] = {
                             ...classFunc.remoteEndpoint.blocks[idx],
-                            ...classFunc.remoteEndpoint.rawFunctionBlocks[idxRaw],
+                            ...classFunc.remoteEndpoint.rawFunctionBlocks[o.fbIdx] || {},
                             sentDiscovery: false
                         }
                         classFunc.reportBlocks(classFunc.remoteEndpoint['staticBlocks'], classFunc.remoteEndpoint.blocks);

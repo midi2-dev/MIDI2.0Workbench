@@ -1,4 +1,5 @@
-/* (C) Copyright 2020 Yamaha Corporation.
+/**
+ * (C) Copyright 2020 Yamaha Corporation.
  * Licensed under the MIT License (see LICENSE.txt in this project)
  * Contributors:
  *     Andrew Mee
@@ -772,6 +773,9 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 				});
 
 				debugWin.setMenuBarVisibility(false);
+				debugWin.webContents.on('did-finish-load', () => {
+					debugWin.webContents.send('asynchronous-reply', 'configSettings', global.configSetting);
+				});
 				debugWin.loadFile(__dirname + '/output/debug.html');
 				//debugWin.webContents.openDevTools();
 				d.setDebugWindow(debugWin);

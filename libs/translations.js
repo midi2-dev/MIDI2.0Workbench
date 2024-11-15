@@ -90,7 +90,7 @@ t.ump10To20 = function(ump10,deviceid){
                                         out1 +=  channel << 16;
                                         out1 += (deviceHistory[deviceid].cctorpn.MSB <<8) + deviceHistory[deviceid].cctorpn.LSB;
                                         let val = (deviceHistory[deviceid].cctorpn.valueMSB<< 7) + deviceHistory[deviceid].cctorpn.valueLSB;
-                                        out2 = scaleUp(val,7,32) >>> 0;
+                                        out2 = scaleUp(val,14,32) >>> 0;
                                         deviceHistory[deviceid].cctorpn.valueMSB=null;
                                         deviceHistory[deviceid].cctorpn.valueLSB=null;
                                         clearTimeout(deviceHistory[deviceid].cctorpn.timeout);
@@ -105,7 +105,7 @@ t.ump10To20 = function(ump10,deviceid){
                                         ump[0] +=  channel << 16;
                                         ump[0] += (t.cctorpn.MSB <<8) + t.cctorpn.LSB;
                                         const val = (t.cctorpn.valueMSB<< 7);
-                                        ump[1] = scaleUp(val,7,32) >>> 0;
+                                        ump[1] = scaleUp(val,14,32) >>> 0;
                                         t.cctorpn.valueMSB=null;
                                         t.cctorpn.valueLSB=null;
                                         clearTimeout(t.cctorpn.timeout);
@@ -124,7 +124,7 @@ t.ump10To20 = function(ump10,deviceid){
                                 out1 +=  channel << 16;
                                 out1 += (deviceHistory[deviceid].cctorpn.MSB <<8) + deviceHistory[deviceid].cctorpn.LSB;
                                 const val = (deviceHistory[deviceid].cctorpn.valueMSB<< 7) + deviceHistory[deviceid].cctorpn.valueLSB;
-                                out2 = scaleUp(val,7,32) >>> 0;
+                                out2 = scaleUp(val,14,32) >>> 0;
                                 deviceHistory[deviceid].cctorpn.valueMSB=null;
                                 deviceHistory[deviceid].cctorpn.valueLSB=null;
                                 clearTimeout(deviceHistory[deviceid].cctorpn.timeout);
@@ -158,7 +158,7 @@ t.ump10To20 = function(ump10,deviceid){
                             out1 += 1;
                             out2 += (deviceHistory[deviceid].msb <<8) + deviceHistory[deviceid].lsb;
                         }
-                        out2 += val2 << 24;
+                        out2 += val1 << 24;
                         break;
                     case 0xD0: //Channel Pressure
                         out1 = ((0x04 << 4) + group) << 24;
@@ -182,13 +182,11 @@ t.ump10To20 = function(ump10,deviceid){
             case 3:
             case 4:
                 outarr.push(mess);
-                outarr.push(ump10[i++]);
+                outarr.push(ump10[++i]);
                 break;
             case 5:
                 outarr.push(mess);
-                outarr.push(ump10[i++]);
-                outarr.push(ump10[i++]);
-                outarr.push(ump10[i++]);
+                outarr.push(ump10[++i]);outarr.push(ump10[++i]);outarr.push(ump10[++i]);
                 break;
         }
     }
@@ -615,7 +613,7 @@ t.processUMP = function(ump10,id,cbResponse){
                                     case 0x05:{ //set Key Signature
                                         cbResponse('umpFlexData', group, {
                                                 ump, statusBank, status, form, addr, channel,
-                                                sharpFlats: t.UpscaleTwosComplement(ump[1] >>> 28,4),
+                                                sharpFlats: t.TwosComplementToValue(ump[1] >>> 28,4),
                                                 tonicMode: chordTonic[(ump[1] >>> 24) & 0xF]
                                             },
                                             errors,warnings);
@@ -624,7 +622,7 @@ t.processUMP = function(ump10,id,cbResponse){
                                     case 0x06:{ //Set Chord Name Message
                                         cbResponse('umpFlexData', group, {
                                                 ump, statusBank, status, form, addr, channel,
-                                                sharpFlats: t.UpscaleTwosComplement(ump[1] >>> 28,4),
+                                                sharpFlats: t.TwosComplementToValue(ump[1] >>> 28,4),
                                                 chordTonicNote: chordTonic[(ump[1] >>> 24) & 0xF]
                                                 //TODO Skipping Extra for now
                                             },
@@ -780,6 +778,8 @@ t.processUMP = function(ump10,id,cbResponse){
                                     deviceHistory[id].warnings.push("UMP Minor Version should be at least 1.");
                                 }
 
+                                deviceHistory[id].numOfFuncBlocks = (deviceHistory[id].ump[1] >> 24) & 0x7F;
+
                                 cbResponse('umpEndpointProcess', 0xFF, {
                                     ump:deviceHistory[id].ump,
                                     mt: deviceHistory[id].mt,
@@ -787,7 +787,7 @@ t.processUMP = function(ump10,id,cbResponse){
                                     versionMajor: (deviceHistory[id].ump[0]>>8) & 0xFF,
                                     versionMinor: deviceHistory[id].ump[0] & 0xFF,
                                     staticFuncBlocks: (deviceHistory[id].ump[1] >> 31) & 1,
-                                    numOfFuncBlocks: (deviceHistory[id].ump[1] >> 24) & 0x7F,
+                                    numOfFuncBlocks: deviceHistory[id].numOfFuncBlocks,
                                     midi2Supported: (deviceHistory[id].ump[1] >>> 9) & 1,
                                     midi1Supported: (deviceHistory[id].ump[1] >>> 8) & 1,
                                     jrrxSupported: (deviceHistory[id].ump[1] >>> 1) & 1,
@@ -898,6 +898,11 @@ t.processUMP = function(ump10,id,cbResponse){
                                 if(fbIdx> 31){
                                     deviceHistory[id].errors.push("FB index is outside of boundary.");
                                 }
+
+                                if(deviceHistory[id].numOfFuncBlocks !== undefined && fbIdx > deviceHistory[id].numOfFuncBlocks){
+                                    deviceHistory[id].errors.push("FB index is outside of Number of Function Blocks Endpoint Details.");
+                                }
+
                                 cbResponse('umpEndpoint', 0xFF, {
                                     ump: deviceHistory[id].ump,
                                     fbIdx,
@@ -1161,24 +1166,36 @@ t.stringToTypeF = function(status, fbIdx, theString) {
 }
 
 
-//https://www.codeproject.com/Tips/1079637/Twos-Complement-for-Unusual-Integer-Sizes
-//Under CPOL License -> C++ to JS conversion by Andrew Mee
-t.UpscaleTwosComplement = function(value, length)
+t.TwosComplementToValue = function(value, length)
 {
-    let mask = (~0) << length;
-    // Too small for complement?
-    if (length < 2) {
-        return (~mask & value);
+    let halfValue = ((~0) << length) >>> 1;
+    if(value>halfValue){
+        return -(~value + 1);
     }
-    // Two's complement?
-    let msb = 1 << (length-1);
-    if (value & msb) {
-        return (mask | value);
-    }
-    else {
-        return (~mask & value);
-    }
+
+    return value;
 }
 
+
+//https://jsbin.com/misupikili/edit?js,console
+t.ValueToTwosComplement = function(value, bitCount) {
+    let binaryStr;
+
+    if (value >= 0) {
+        let twosComp = value.toString(2);
+        binaryStr    = padAndChop(twosComp, '0', (bitCount || twosComp.length));
+    } else {
+        binaryStr = (Math.pow(2, bitCount) + value).toString(2);
+
+        if (Number(binaryStr) < 0) {
+            return undefined
+        }
+    }
+
+    return Number(`0b${binaryStr}`);
+}
+function padAndChop(str, padChar, length) {
+    return (Array(length).fill(padChar).join('') + str).slice(length * -1);
+}
 
 

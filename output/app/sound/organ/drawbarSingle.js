@@ -11,7 +11,7 @@ const common = require('../../common.js');
 const t = require('../../../../libs/translations.js');
 const {JsonPointer: ptr } = require('json-ptr');
 
-const setupSynth =require ('../../../../extensions/exp_ProfileDrawbarOrgan/sound').setupSynth;
+const setupSynth =require ('./').setupSynth;
 
 const dbOrgan = new setupSynth();
 
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     },
                     UIStyleList: [],
-                    CtrlList: window.matchedProfile.CtrlList || [],
+                    CtrlList: window.matchedProfile.ChCtrlList || [],
                     channelListData:{channel:window.sourceDestination,umpGroup:window.ump.group},
                     schemaName:'GUI',//+opts.link.resId+opts.link.data.resId,
                     onFileRequest: function (type, resId, cb) {

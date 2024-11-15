@@ -536,132 +536,158 @@
                         <tbody id="GBLIST"></tbody>
                     </table>
 
-                    <h5 data-visibleiftrue="/remoteEndpoint/usbDetails">USB Descriptor Details</h5>
-                    <table  data-visibleiftrue="/remoteEndpoint/usbDetails" class="table table-striped table-bordered table-sm">
+                    <div data-visibleiftrue="/remoteEndpoint/usbDetails">
+                        <h5>USB Descriptor Details</h5>
+                        <p data-visibleiffalse="/remoteEndpoint/usbDetails/descriptor">
+                            USB Diagnostic is not supported. Try OSX or Linux and make sure the permissions are set correctly.
+                        </p>
+                        <table  data-visibleiftrue="/remoteEndpoint/usbDetails/descriptor" class="table table-striped table-bordered table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">Descriptor</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">Expected Value</th>
+                                <th scope="col">Valid</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr><th colspan="4">Interface</th></tr>
+                            <tr>
+                                <td>bLength</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bLength" class="hexinput7"/></td>
+                                <td>0x09</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bLength==9">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bLength!=9">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>bDescriptorType</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bDescriptorType" class="hexinput7"/></td>
+                                <td>INTERFACE(0x04)</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bDescriptorType==4">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bDescriptorType!=4">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>bInterfaceNumber</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceNumber" class="hexinput7"/></td>
+                                <td></td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>bAlternateSetting</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bAlternateSetting" class="hexinput7"/></td>
+                                <td>0x01 Preferred</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>bNumEndpoints</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bNumEndpoints" class="hexinput7"/></td>
+                                <td></td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>bInterfaceClass</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass" class="hexinput7"/></td>
+                                <td>AUDIO(0x01)</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass==1">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass!=1">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>bInterfaceSubClass</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass" class="hexinput7"/></td>
+                                <td>MIDISTREAMING(0x03)</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass==3">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass!=3">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>bInterfaceProtocol</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol" class="hexinput7"/></td>
+                                <td>0x00 - Unused</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol==0">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol!=0">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>iInterface</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/iInterface" class="hexinput7"/></td>
+                                <td></td>
+                                <td>-</td>
+                            </tr>
+                            <tr><th colspan="4">Class-Specific MS Interface Header Descriptor</th></tr>
+                            <tr>
+                                <td>bLength</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength" class="hexinput7"/></td>
+                                <td>0x07</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength==7">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength!=7">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>bDescriptorType</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType" class="hexinput7"/></td>
+                                <td>CS_INTERFACE(0x24)</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType==36">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType!=36">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>bDescriptorSubtype</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype" class="hexinput7"/></td>
+                                <td>MS_HEADER(0x01)</td>
+                                <td>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype==1">Y</span>
+                                    <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype!=1">N</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>bcdMSC</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bcdMSC" class="hexinput16"/></td>
+                                <td>0x0200</td>
+                                <td><span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bcdMSC==512">Y</span> </td>
+                            </tr>
+                            <tr>
+                                <td>wTotalLength</td>
+                                <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/wTotalLength" class="hexinput16"/></td>
+                                <td>0x0007</td>
+                                <td><span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/wTotalLength==7">Y</span> </td>
+                            </tr>
+                            </tbody>
+                            <tbody id="usbendpoints">
+                            </tbody>
+
+                            <tbody id="grptrmblks">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5 data-visibleiftrue="/remoteEndpoint/remoteSerialDev">Serial Details</h5>
+                    <table data-visibleiftrue="/remoteEndpoint/remoteSerialDev" class="table table-striped table-bordered table-sm">
                         <thead>
                         <tr>
-                            <th scope="col">Descriptor</th>
+                            <th scope="col">Serial Settings</th>
                             <th scope="col">Value</th>
-                            <th scope="col">Expected Value</th>
-                            <th scope="col">Valid</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr><th colspan="4">Interface</th></tr>
                         <tr>
-                            <td>bLength</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bLength" class="hexinput7"/></td>
-                            <td>0x09</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bLength==9">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bLength!=9">N</span>
-                            </td>
+                            <td>Manufacturer Specific Data</td>
+                            <td><span class="hexinput16" data-pathText="/remoteEndpoint/manuSpecificData"></span></td>
                         </tr>
                         <tr>
-                            <td>bDescriptorType</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bDescriptorType" class="hexinput7"/></td>
-                            <td>INTERFACE(0x04)</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bDescriptorType==4">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bDescriptorType!=4">N</span>
-                            </td>
+                            <td>Bandwidth</td>
+                            <td><select id="serialBandwidth"></select></td>
                         </tr>
-                        <tr>
-                            <td>bInterfaceNumber</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceNumber" class="hexinput7"/></td>
-                            <td></td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>bAlternateSetting</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bAlternateSetting" class="hexinput7"/></td>
-                            <td>0x01 Preferred</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>bNumEndpoints</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bNumEndpoints" class="hexinput7"/></td>
-                            <td></td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>bInterfaceClass</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass" class="hexinput7"/></td>
-                            <td>AUDIO(0x01)</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass==1">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceClass!=1">N</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>bInterfaceSubClass</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass" class="hexinput7"/></td>
-                            <td>MIDISTREAMING(0x03)</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass==3">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceSubClass!=3">N</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>bInterfaceProtocol</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol" class="hexinput7"/></td>
-                            <td>0x00 - Unused</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol==0">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/bInterfaceProtocol!=0">N</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>iInterface</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/iInterface" class="hexinput7"/></td>
-                            <td></td>
-                            <td>-</td>
-                        </tr>
-                        <tr><th colspan="4">Class-Specific MS Interface Header Descriptor</th></tr>
-                        <tr>
-                            <td>bLength</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength" class="hexinput7"/></td>
-                            <td>0x07</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength==7">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bLength!=7">N</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>bDescriptorType</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType" class="hexinput7"/></td>
-                            <td>CS_INTERFACE(0x24)</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType==36">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorType!=36">N</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>bDescriptorSubtype</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype" class="hexinput7"/></td>
-                            <td>MS_HEADER(0x01)</td>
-                            <td>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype==1">Y</span>
-                                <span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bDescriptorSubtype!=1">N</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>bcdMSC</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/bcdMSC" class="hexinput16"/></td>
-                            <td>0x0200</td>
-                            <td><span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/bcdMSC==512">Y</span> </td>
-                        </tr>
-                        <tr>
-                            <td>wTotalLength</td>
-                            <td><span data-pathText="/remoteEndpoint/usbDetails/descriptor/extraDetail/wTotalLength" class="hexinput16"/></td>
-                            <td>0x0007</td>
-                            <td><span data-visibleifequal="/remoteEndpoint/usbDetails/descriptor/extraDetail/wTotalLength==7">Y</span> </td>
-                        </tr>
-                        </tbody>
-                        <tbody id="usbendpoints">
-                        </tbody>
 
-                        <tbody id="grptrmblks">
                         </tbody>
                     </table>
 
@@ -709,6 +735,13 @@
                             </div>
                             <div id="buildUMP"></div>
                         </div>
+                        <hr/>
+                        <h5>Universal System Exclusive 8: Transport Tests</h5>
+                        <div class="form-group">
+                            <button class="form-control btn btn-secondary" data-ipcmsg="transportTestDiscovery"
+                                    style="max-width: 400px;">Developer Transport Test Discovery Inquiry</button>
+                        </div>
+                        <div id="transportTestDiscoveryResult"></div>
                         <hr/>
                         <h5>Raw UMP Message Send</h5>
                         <div class="input-group">
