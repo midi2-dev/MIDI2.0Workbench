@@ -95,7 +95,7 @@ exports.messageType = [
             4:{
                 title:'Delta Clockstamp'
                 ,parts:[
-                    {range:[16,31],title:"Number of Ticks Since Last Event",classes:mtColours.msb}
+                    {range:[12,31],title:"Number of Ticks Since Last Event",classes:mtColours.msb}
                 ]
             }
         }
