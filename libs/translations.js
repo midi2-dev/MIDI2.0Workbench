@@ -2,7 +2,7 @@ const t=exports;
 const deviceHistory={};
 const d = require('./debugger.js');
 const {getManufacturer16bit} = require("./manufactuers");
-const {chordTonic} = require("./messageTypes");
+const {chordTonic, messageType} = require("./messageTypes");
 
 
 //*********** Translations *************************
@@ -409,7 +409,7 @@ t.umpToMidi10 = function(ump,mode){
 };
 
 t.processUMP = function(ump10,id,cbResponse){
-    if (!deviceHistory[id])deviceHistory[id]={sysex:{},endpoint:{},fb:{},umpPos:0, ump:[], flexObj:{}, sysex8:{}};
+    if (!deviceHistory[id])deviceHistory[id]={sysex:{},endpoint:{},fb:{},umpPos:0, ump:[], flexObj:{}, sysex8:{},MDS:{}};
 
     for(let i=0; i<ump10.length;i++) {
         const mess = ump10[i];
@@ -474,9 +474,9 @@ t.processUMP = function(ump10,id,cbResponse){
                                 if(deviceHistory[id].sysex[deviceHistory[id].group].length){ //Timing Clock
                                     deviceHistory[id].warnings.push("Received new Sysex Before End of Last Sysex.");
                                 }
-                                if (deviceHistory[id].sysex[deviceHistory[id].group].length) {
-                                    debugger;
-                                }
+                                // if (deviceHistory[id].sysex[deviceHistory[id].group].length) {
+                                //     //debugger;
+                                // }
                                 deviceHistory[id].sysex[deviceHistory[id].group] = [0xF0].concat(smesg.slice(0, numbytes)).concat([0xF7]);
                                 process = true;
                                 break;
@@ -573,7 +573,11 @@ t.processUMP = function(ump10,id,cbResponse){
 
                         if(addr > 1) errors.push("Addrs is a reserved value");
                         if(addr === 1 && channel) errors.push("Addrs is > 1, Channel must be set to 0");
-                        if(statusBank > 2) warnings.push("Status Bank is unknown");
+                        if(!messageType[0xD].status[statusBank]){
+                            warnings.push("Status Bank is unknown");
+                        } else if(!messageType[0xD].status[statusBank].status[status]) {
+                            warnings.push("Status is unknown");
+                        }
 
                         switch(statusBank){
                             case 0x00:{
@@ -694,50 +698,111 @@ t.processUMP = function(ump10,id,cbResponse){
 
                                 break;
                             }
+                            default:
+                                cbResponse('umpFlexData', group, {
+                                        ump: ump
+                                    },
+                                    errors,warnings);
+                                break;
                         }
 
 
 
-                        cbResponse('umpFlexData', 0xFF, {
-                            ump: deviceHistory[id].ump, statusBank, status, form, addr, channel
-                            },
-                            deviceHistory[id].errors,deviceHistory[id].warnings);
+                        // cbResponse('umpFlexData', 0xFF, {
+                        //     ump: deviceHistory[id].ump, statusBank, status, form, addr, channel
+                        //     },
+                        //     deviceHistory[id].errors,deviceHistory[id].warnings);
                         break;
                     case 0xE: //Reserved
                     case 0x5: { //128 bits Data Messages
                         const status = (deviceHistory[id].ump[0] >> 20) & 0xF;
-                        const numBytes = (deviceHistory[id].ump[0] >> 16) & 0xF;
-                        const streamId = (deviceHistory[id].ump[0] >> 8) & 0xFF;
-                        const idGRStr = deviceHistory[id].group+'_'+streamId;
 
-                        const ump = deviceHistory[id].ump;
-                        let numBytesStart = 0;
-                        if(status <= 1){ //Complete or First Message
-                            deviceHistory[id].sysex8[idGRStr] = {
-                                data:[],
-                                mnrfId: ((ump[0] & 0xFF) << 8) + ((ump[1] >> 24) & 0xFF),
-                                deviceId: (ump[1] >> 16) & 0xFF,
-                                subId1: (ump[1] >> 8) & 0xFF,
-                                subId2: ump[1]  & 0xFF
+                        if(status <= 3) { // Sysex 8
+                            const numBytes = (deviceHistory[id].ump[0] >> 16) & 0xF;
+                            const streamId = (deviceHistory[id].ump[0] >> 8) & 0xFF;
+                            const idGRStr = deviceHistory[id].group + '_' + streamId;
+
+                            const ump = deviceHistory[id].ump;
+                            let numBytesStart = 0;
+                            if (status <= 1) { //Complete or First Message
+                                deviceHistory[id].sysex8[idGRStr] = {
+                                    data: [],
+                                    mnrfId: ((ump[0] & 0xFF) << 8) + ((ump[1] >> 24) & 0xFF),
+                                    deviceId: (ump[1] >> 16) & 0xFF,
+                                    subId1: (ump[1] >> 8) & 0xFF,
+                                    subId2: ump[1] & 0xFF
+                                };
+                                numBytesStart = 5;
+                            }
+
+                            let numBytesSoFar = 0;
+                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].data.push(ump[0] & 0xFF);
+                            for (let j = status > 1 ? 1 : 2; j < 4; j++) {
+                                if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].data.push((ump[j] >> 24) & 0xFF);
+                                if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].data.push((ump[j] >> 16) & 0xFF);
+                                if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].data.push((ump[j] >> 8) & 0xFF);
+                                if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].data.push(ump[j] & 0xFF);
+                            }
+
+                            if (status === 0 || status === 3) {
+                                cbResponse('sysex8', deviceHistory[id].group, {
+                                        ump: deviceHistory[id].ump,
+                                        streamId,
+                                        sysex8: deviceHistory[id].sysex8
+                                    },
+                                    deviceHistory[id].errors, deviceHistory[id].warnings);
+                            }
+                        }
+                        else if(status === 8) { // MDS Header
+                            const mdsId = (deviceHistory[id].ump[0] >> 16) & 0xF;
+                            const idGRStr = deviceHistory[id].group + '_' + mdsId;
+                            const ump = deviceHistory[id].ump;
+                            deviceHistory[id].MDS[idGRStr] = {
+                                data: [],
+                                numOfBytes: ump[0] & 0xFFFF ,
+                                numOfChunks: (ump[1]>> 16 )  & 0xFFFF,
+                                chunkNum: ump[1] & 0xFFF,
+                                mnrfId: (ump[2] >> 16)& 0xFFFF ,
+                                deviceId: ump[2]  & 0xFFFF,
+                                subId1: (ump[3] >> 16) & 0xFFFF,
+                                subId2: ump[4] & 0xFFFF
                             };
-                            numBytesStart = 5;
-                        }
 
-                        let numBytesSoFar = 0;
-                        if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push(ump[0] & 0xFF);
-                        for (let j = status > 1?1:2; j < 4; j++) {
-                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push((ump[j] >> 24) & 0xFF);
-                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push((ump[j] >> 16) & 0xFF);
-                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push((ump[j] >> 8) & 0xFF);
-                            if (numBytesStart <= numBytesSoFar && numBytes > numBytesSoFar++) deviceHistory[id].sysex8[idGRStr].push(ump[j] & 0xFF);
-                        }
+                        }else if(status === 9) { // MDS Payload
+                            const mdsId = (deviceHistory[id].ump[0] >> 16) & 0xF;
+                            const idGRStr = deviceHistory[id].group + '_' + mdsId;
+                            const ump = deviceHistory[id].ump;
+                            if(!deviceHistory[id].MDS[idGRStr]){
+                                let errors = ["No MDS Header Found?"];
+                                cbResponse('mds', deviceHistory[id].group, {
+                                        ump: deviceHistory[id].ump,
+                                        mdsId
+                                    },
+                                    errors, deviceHistory[id].warnings);
+                                return;
+                            }
 
-                        if(status === 0 || status ===3){
-                            cbResponse('sysex8', deviceHistory[id].group, {
-                                    ump: deviceHistory[id].ump,
-                                    streamId
-                                },
-                                deviceHistory[id].errors, deviceHistory[id].warnings);
+                            let numOfByte = deviceHistory[id].MDS[idGRStr].numOfBytes;
+
+
+                            deviceHistory[id].MDS[idGRStr].data.push((ump[0]>>8) & 0xFF);
+                            deviceHistory[id].MDS[idGRStr].data.push(ump[0] & 0xFF);
+                            for (let j = 1 ; j < 4; j++) {
+                                deviceHistory[id].MDS[idGRStr].data.push((ump[j] >> 24) & 0xFF);
+                                deviceHistory[id].MDS[idGRStr].data.push((ump[j] >> 16) & 0xFF);
+                                deviceHistory[id].MDS[idGRStr].data.push((ump[j] >> 8) & 0xFF);
+                                deviceHistory[id].MDS[idGRStr].data.push(ump[j] & 0xFF);
+                            }
+                            if(deviceHistory[id].MDS[idGRStr].data.length >= numOfByte){
+                                deviceHistory[id].MDS[idGRStr].data = deviceHistory[id].MDS[idGRStr].data.slice(0, numOfByte);
+                                cbResponse('mds', deviceHistory[id].group, {
+                                        ump: deviceHistory[id].ump,
+                                        mdsId,
+                                        MDS: deviceHistory[id].MDS
+                                    },
+                                    deviceHistory[id].errors, deviceHistory[id].warnings);
+                            }
+
                         }
 
                         cbResponse('ump', deviceHistory[id].group, deviceHistory[id].ump,
@@ -895,7 +960,7 @@ t.processUMP = function(ump10,id,cbResponse){
                             }
                             case 0x0010: { //Get Function Block Info
                                 const fbIdx = (deviceHistory[id].ump[0] >> 8) & 0xFF;
-                                if(fbIdx> 31){
+                                if(fbIdx> 31 && fbIdx!==255){
                                     deviceHistory[id].errors.push("FB index is outside of boundary.");
                                 }
 
@@ -919,7 +984,7 @@ t.processUMP = function(ump10,id,cbResponse){
                                 const ciVersion = (deviceHistory[id].ump[1] >> 8) & 0x7F;
                                 const active = !!((deviceHistory[id].ump[0] >> 15) & 0x1);
 
-                                if(fbIdx> 31){
+                                if(fbIdx> 31  && fbIdx!==255){
                                     deviceHistory[id].errors.push("FB index is outside of boundary.");
                                 }
                                 if(active){
@@ -1001,22 +1066,7 @@ t.processUMP = function(ump10,id,cbResponse){
     }
 };
 
-t.getNumberFromBytes = function(sysex,offset,amount){
-    let num = 0;const upperOffset = offset+amount;
-    for(let offsetC = offset; offsetC<upperOffset;offsetC++){
-        num += sysex[offsetC] << (7* (offsetC-offset));
-    }
-    return num;
-};
 
-t.getBytesFromNumbers = function(number,amount){
-    const bytes = [];
-    for(let amountC = amount; amountC>0;amountC--){
-        bytes.push(number & 127);
-        number = number >> 7;
-    }
-    return bytes;
-};
 
 
 function scaleUp(srcVal, srcBits, dstBits) {

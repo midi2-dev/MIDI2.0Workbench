@@ -45,6 +45,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" id="udp-tab" data-toggle="tab" href="#udp" role="tab" aria-selected="false">
+                        UDP
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" id="warn-tab" data-toggle="tab" href="#warn" role="tab" aria-selected="false">
                         Warnings <span id="warnNotif" class="badge badge-warning"></span>
 
@@ -143,6 +148,26 @@
                                         class="bg-white btn btn-alert btn-sm emptyTable"
                                         style=""
                                         data-logtype="pe"
+                                >Clear</button>
+                            </div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="udp" role="tabpanel">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">IP:Port</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">i/o</th>
+                            <th scope="col"><div style="text-align: right">
+                                <button type="button"
+                                        class="bg-white btn btn-alert btn-sm emptyTable"
+                                        style=""
+                                        data-logtype="udp"
                                 >Clear</button>
                             </div></th>
                         </tr>

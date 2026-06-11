@@ -1,6 +1,8 @@
 const {BrowserWindow} = require("electron");
 const {JsonPointer: ptr } = require('json-ptr');
-module.exports = {getRandomInt, createPopoupWin, sendOutUMPBrokenUp, setRemoteEndpointValueFromMUID};
+const {networkMIDICodes} = require("./networkMIDITables");
+module.exports = {getRandomInt, createPopoupWin, processPacket, sendOutUMPBrokenUp, setRemoteEndpointValueFromMUID
+,getNumberFromBytes,getBytesFromNumbers};
 
 
 const startPacket = 0x4D494449; //“MIDI”
@@ -55,11 +57,82 @@ function createPopoupWin(oOpt){
     editWin._id = id;
     global._editWin.push(editWin);
 
-
-
     return [id,editWin];
 }
 
+
+function processPacket(msg,oOpts={}){
+    let length = msg.length;
+    let pos = 0;
+
+    const getWord = ()=>{
+        return ((msg[pos++] << 24) + (msg[pos++] << 16) + (msg[pos++] << 8) + msg[pos++])>>>0;
+    }
+
+    if(getWord() !== startPacket){
+        if(oOpts.badPacket)oOpts.badPacket();
+        return; //Bad Packet no 'startPacket'
+    }
+
+    while(pos < length){
+        let cCode=msg[pos];
+
+        let mType = networkMIDICodes[cCode];
+        if(!mType){
+            if(oOpts.badPacket)oOpts.badPacket();
+            return;
+        }
+        let keys = {};
+        mType.bytes.map(d=>{
+            let v=[];
+            let length = d.length;
+            if(typeof d.length === 'function'){
+                length = d.length(keys);
+            }
+            for(let i=0;i<length;i++){
+               v.push(msg[pos++]);
+            }
+            switch(d.type) {
+                case 'text':
+                    let text = new TextDecoder().decode(new Uint8Array(v));
+                    keys[d.key] = text;
+                    break;
+                case 'array':
+                    keys[d.key] = v;
+                    break;
+                case 'function':
+                    keys[d.key] = d.cval(keys, v);
+                    break;
+                case 'wordArray': {
+                    keys[d.key] = [];
+                    let vc = 0;
+                    for (let i = 0; i < v.length; i++) {
+                        vc = (vc << 8) + v[i];
+                        if((i+1)%4 === 0){
+                            keys[d.key].push(vc>>>0);
+                            vc=0;
+                        }
+                    }
+                    break;
+                }
+                default: {
+                    let vc = 0;
+                    for (let i = 0; i < v.length; i++) vc += v[i] << ((v.length - i -1) * 8);
+                    keys[d.key] = vc >>> 0;
+                    break;
+                }
+
+            }
+        });
+        let args = [];
+        (mType.oOptArgs || []).map(k=>{
+            args.push(keys[k]);
+        });
+        if(oOpts[mType.oOptName]){
+            oOpts[mType.oOptName](...args);
+        }
+    }
+}
 
 async function sendOutUMPBrokenUp(ump,sleep,cb){
     for(let i=0; i<ump.length;i++){
@@ -108,5 +181,44 @@ function setRemoteEndpointValueFromMUID(muid, path, val, force=false){
     if(force || ptr.get(global.umpDevices[umpDev],path)!==undefined)return;
     ptr.set(global.umpDevices[umpDev],path,val,true);
 }
+
+
+function getNumberFromBytes(sysex,offset,amount){
+    let num = 0;const upperOffset = offset+amount;
+    for(let offsetC = offset; offsetC<upperOffset;offsetC++){
+        num += sysex[offsetC] << (7* (offsetC-offset));
+    }
+    return num;
+}
+
+function getBytesFromNumbers(number,amount){
+    const bytes = [];
+    for(let amountC = amount; amountC>0;amountC--){
+        bytes.push(number & 127);
+        number = number >> 7;
+    }
+    return bytes;
+}
+
+function wordsToIPv6(w1, w2, w3, w4) {
+    const buffer = new ArrayBuffer(16);
+    const view = new DataView(buffer);
+
+    // Set 32-bit words
+    view.setUint32(0, w1);
+    view.setUint32(4, w2);
+    view.setUint32(8, w3);
+    view.setUint32(12, w4);
+
+    // Convert to 16-bit segments for IPv6 notation
+    let segments = [];
+    for (let i = 0; i < 16; i += 2) {
+        segments.push(view.getUint16(i).toString(16));
+    }
+
+    return segments.join(':');
+}
+
+
 
 

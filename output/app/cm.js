@@ -8,6 +8,8 @@ const {ipcRenderer} = require('electron');
 const common = require('./app/common.js');
 const t = require('./../libs/translations.js');
 
+const {evaluate} = require('mathjs');
+
 let ipccallbacks={};
 let ipccallbacksSubs={};
 
@@ -18,6 +20,18 @@ window.gui = gui;
 window.link=null;
 window.channel=null;
 window.uiWinId=null;
+
+const ctrlLabels = {
+    "cc":{title: "CC", suffix:'#'},
+    "chPress":{title: "Channel Pressure", noNum:true},
+    "pPress":{title: "Poly Pressure", noNum:true},
+    "nrpn":{title: "AC(NRPN)", asHex:true},
+    "rpn":{title: "RC(RPN)", asHex:true},
+    "pBend":{title: "Pitch Bend", noNum:true},
+    "pnrc":{title: "Per-note Register Controller", asHex:true},
+    "pnac":{title: "Per-note Assignable Controller", asHex:true},
+    "pnp":{title: "Per-note Pitch Bend", noNum:true},
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -240,13 +254,22 @@ function buildCtrlListOutput(xData){
             jqCMEntries = $('<div/>').appendTo($('#main').parent());
         }
 
-        const jqCard = $('<div/>', {"class": 'card ml-3',style:'min-width: 150px;'})
+        const jqCard = $('<div/>', {"class": 'card ml-3'})
             .appendTo(jqCMEntries);
         const jqHead = $('<div/>', {"class": 'card-header p-3 '})
             .css({padding: 0})
             .append('<h4>' + cm.title + '</h4>')
-            .append('<div>' + cm.ctrlType + ' ' + (Array.isArray(cm.ctrlIndex) ? cm.ctrlIndex.join() : '') + '</div>')
+           // .append('<div>' + cm.ctrlType + ' ' + (Array.isArray(cm.ctrlIndex) ? cm.ctrlIndex.join() : '') + '</div>')
             .appendTo(jqCard);
+
+        let jqLabel = $('<div/>').appendTo(jqHead);
+        const cLabel = ctrlLabels[cm.ctrlType];
+        jqLabel.append(cLabel.title);
+        if(!cLabel.noNum){
+            let vlab = cm.ctrlIndex.map(val=>cLabel.asHex?"0x"+("00" + val.toString(16)).slice (-2).toUpperCase():val).join(" / ");
+            jqLabel.append(` ${cLabel.suffix||''}${vlab}`);
+        }
+
         if (cm.priority) {
             jqHead.append('<div>Priority: ' + (cm.priority || '') + '</div>')
         }
@@ -257,6 +280,12 @@ function buildCtrlListOutput(xData){
 
         const jqBody = $('<div/>', {"class": 'card-body'})
             .appendTo(jqCard);
+
+        if(['pnac','pnrc','pPress','pnp'].indexOf(cm.ctrlType)===-1){
+            jqCard.css('width','200px');
+            jqHead.css('overflow-x','hidden');
+            jqBody.css('overflow-x','hidden');
+        }
 
         if(['pnac','pnrc','pPress','pnp'].indexOf(cm.ctrlType)!==-1){
             jqBody.css({'overflow-x': 'scroll','overflow-y': 'hidden','height': '17em',padding: 0});
@@ -283,7 +312,7 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
     const id = Math.random().toString(36).substr(2, 9);
     let value = 0;
     const createButton = (toggle)=>{
-        if(!toggle){
+
             const jqInput = $('<button/>'
                 , {
                     'min': cm.minMax[0],
@@ -296,43 +325,42 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
                 .append("0x"+("0000000" + cm.minMax[0].toString(16)).slice (-8).toUpperCase())
                 .appendTo(jqBody)
                 .on('mousedown', (e)=>{
-                    const cm = $(e.currentTarget).data('cm');
-                    $(e.currentTarget).empty().append("0x"+("0000000" + cm.minMax[1].toString(16)).slice (-8).toUpperCase());
-                    _jqValChange(e);
+                    if(!toggle) {
+                        const cm = $(e.currentTarget).data('cm');
+                        $(e.currentTarget).empty().append("0x" + ("0000000" + cm.minMax[1].toString(16)).slice(-8).toUpperCase());
+                        $(e.currentTarget).val( cm.minMax[1]);
+                        _jqValChange(e);
+                    }
                 })
                 .on('mouseup', (e)=>{
                     const cm = $(e.currentTarget).data('cm');
-                    $(e.currentTarget).empty().append("0x"+("0000000" + cm.minMax[0].toString(16)).slice (-8).toUpperCase());
+                    if(!toggle) {
+
+                        $(e.currentTarget).empty().append("0x" + ("0000000" + cm.minMax[0].toString(16)).slice(-8).toUpperCase());
+                        $(e.currentTarget).val( cm.minMax[0]);
+                    }else{
+                        let cVal = parseInt( $(e.currentTarget).val());
+                        if(cVal === cm.minMax[0] ){
+                            $(e.currentTarget).empty().append("0x" + ("0000000" + cm.minMax[1].toString(16)).slice(-8).toUpperCase());
+                            $(e.currentTarget).val( cm.minMax[1]);
+                        }else{
+                            $(e.currentTarget).empty().append("0x" + ("0000000" + cm.minMax[0].toString(16)).slice(-8).toUpperCase());
+                            $(e.currentTarget).val( cm.minMax[0]);
+                        }
+                    }
+
+
                     _jqValChange(e);
                 })
                 .data('cm', cm);
             _elementLookup.push(jqInput);
-        }else{
-            const jqInput = $('<input/>'
-                , {
-                    type:'checkbox',
-                    'min': cm.minMax[0],
-                    'max': cm.minMax[1],
-                    'step': 1,
-                    'value': (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || cm.default || 0,
-                    list:id
-                }
-            )
-                .appendTo(jqBody)
-                .on('onChange', (e)=>{
-                    const cm = $(e.currentTarget).data('cm');
-                    $(e.currentTarget).val($(e.currentTarget).isChecked()?cm.minMax[1]:cm.minMax[0]);
-                    _jqValChange(e);
-                })
-                .data('cm', cm);
-            _elementLookup.push(jqInput);
-        }
+
 
 
     };
 
     const createSlider = () => {
-        jqBody.addClass('slider');
+        let jqslider = $('<div/>',{class:'slider',style:'position: relative;'}).appendTo(jqBody);
         const jqInput = $('<input/>'
             , {
                 type: 'range',
@@ -344,7 +372,7 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
                 list:id
             }
         )
-            .appendTo(jqBody)
+            .appendTo(jqslider)
             .on('input', _jqValChange)
             .data('cm', cm)
             .data('notenumber', notenumber);
@@ -352,7 +380,7 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
         if (
             (cm.ctrlMapId || cm.contMapList)
             && ctrlMapList) {
-            let jqdl = $('<datalist/>',{id:id}).appendTo(jqBody);
+            let jqdl = $('<datalist/>',{id:id}).appendTo(jqslider);
             ctrlMapList.map(cml=>{
                 $('<option\>',{value:cml.value,label:cml.title, style:'--val:'+cml.value}).appendTo(jqdl);
             });
@@ -361,18 +389,45 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
 
     const createValueSelect = () => {
         let defVal = (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || cm.default || 0;
-        const jqInput = $('<select/>')
+        const jqInput = $('<select/>',{style:'width: 165px'})
             .appendTo(jqBody)
             .data('cm', cm)
             .data('notenumber', notenumber);
         _elementLookup.push(jqInput);
         ctrlMapList.map(cml=>{
-            $('<option\>',{value:cml.value, style:'--val:'+cml.value})
+            let value = cml.value ||null;
+            if(cml.minValue && cml.maxValue){
+                value = cml.minValue + (cml.maxValue - cml.minValue)/2;
+            }
+            $('<option\>',{value:value, style:'--val:'+value})
                 .append(cml.title)
                 .appendTo(jqInput);
         });
         jqInput.val(defVal);
         jqInput.on('change', _jqValChange);
+    };
+
+    const createNumber = () => {
+        let defVal = (((MIDIReportMessage?.controllerMsg || {})[channel] || {})[cm.ctrlType] || {})[cm.idx] || cm.default || 0;
+
+        const jqInputHidden = $('<input/>',{type:'hidden'})
+            .appendTo(jqBody)
+            .data('cm', cm)
+
+        _elementLookup.push(jqInputHidden);
+        jqInputHidden.val(defVal);
+        jqInputHidden.on('change', _jqValChange);
+
+        const jqInput = $('<input/>',{style:'width: 120px'})
+            .appendTo(jqBody)
+            .data('cm', cm);
+
+        jqInput.val(evaluate(cm.convertToValue,{v:defVal>>>0}));
+        jqInput.on('change', (e)=>{
+            let cVal = $(e.currentTarget).val() >>> 0;
+            jqInputHidden.val(evaluate(cm.convertFromValue,{v:cVal})).trigger('change');
+        });
+        jqBody.append(cm.prefix);
     };
 
     cm.minMax = cm.minMax || [0, 4294967295];
@@ -394,12 +449,16 @@ function buildInput(jqBody, cm, ctrlMapList,notenumber){
                 case 'momentary':
                     createButton(false);
                     break;
+                case 'number':
+                    createNumber();
+                    break;
                 case 'valueSelect':
                     if(ctrlMapList){
                         createValueSelect();
                     }else{
                         createSlider();
                     }
+                    break;
                 //case 'relative':
                 case 'continuous':
                 default:

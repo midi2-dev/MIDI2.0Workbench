@@ -290,12 +290,15 @@ module.exports = {
         }
 
         delete global.umpDevices[umpDev];
-        global.indexWindow.webContents.send('asynchronous-reply', 'umpDevRemove', {umpDev});
-        global._editWin.map(editWin=>{
-            if(editWin._umpDev && editWin._umpDev.umpDev===umpDev){
-                editWin.close();
-            }
-        });
+        if(global.indexWindow?.webContents){
+            global.indexWindow.webContents.send('asynchronous-reply', 'umpDevRemove', {umpDev});
+            global._editWin.map(editWin=>{
+                if(editWin._umpDev && editWin._umpDev.umpDev===umpDev){
+                    editWin.close();
+                }
+            });
+        }
+
     },
     midiOutFunc:(umpDev, ump) => {
         global.umpDevices[umpDev].midiOutFunc(umpDev, ump);
@@ -342,6 +345,8 @@ function midiToProc(umpDev, ump){
                 d.msg('ump',data.ump,'in',umpDev, group,errors,warnings);
 
                 break;
+            case 'umpFlexData':
+                data = data.ump;
             case 'ump':
                 if(bridgeEnabled){
                     bridgeMIDICI.processUMP(data, group, umpDev);
@@ -375,32 +380,36 @@ function midiToProc(umpDev, ump){
                 d.msg('ump',data.ump,'in',umpDev, group,errors,warnings);
 
 
-                switch(data.status){
-                    case 0x000://Get MIDI Endpoint Info
-                        if(data.filter & 0x1){
-                            const umpMess = [0,0,0,0];
-                            umpMess[0] = ((0xF << 28) >>> 0) + (0x001 << 16) +  (1<<8) + 1;
-                            umpMess[1] = (( 1 << 24) >>> 0) + 8 + 4 ; //bad guessing here
-                            // if(global.umpDevices[umpDev].sendUMPOutNetwork){
-                            //     global.umpDevices[umpDev].sendUMPOutNetwork(umpDev,umpMess);
-                            // }
-                        }
-                        if(data.filter & 0x3) {
-                            // if(global.umpDevices[umpDev].sendUMPOutNetwork){
-                            //     global.umpDevices[umpDev].sendUMPOutNetwork(umpDev,t.stringToTypeF(3,null, m2.iProduct));
-                            // }
-                        }
-                        if(data.filter & 0x4) {
-                            // if(global.umpDevices[umpDev].sendUMPOutNetwork){
-                            //     global.umpDevices[umpDev].sendUMPOutNetwork(umpDev,t.stringToTypeF(4,null, m2.iSerialNumber));
-                            // }
-                        }
-                        break;
-                    case 0x0010: { //Get Function Block Info
-                        
-                        break;
-                    }
+                if(global.umpDevices[umpDev].extendedProcessUMPEndpoint){
+                    global.umpDevices[umpDev].extendedProcessUMPEndpoint(data);
                 }
+
+                // switch(data.status){
+                //     case 0x000://Get MIDI Endpoint Info has been requested of the workbench
+                //         if(data.filter & 0x1){
+                //             const umpMess = [0,0,0,0];
+                //             umpMess[0] = ((0xF << 28) >>> 0) + (0x001 << 16) +  (1<<8) + 1;
+                //             umpMess[1] = (( 1 << 24) >>> 0) + 8 + 4 ; //bad guessing here
+                //             // if(global.umpDevices[umpDev].sendUMPOutNetwork){
+                //             //     global.umpDevices[umpDev].sendUMPOutNetwork(umpDev,umpMess);
+                //             // }
+                //         }
+                //         if(data.filter & 0x3) {
+                //             // if(global.umpDevices[umpDev].sendUMPOutNetwork){
+                //             //     global.umpDevices[umpDev].sendUMPOutNetwork(umpDev,t.stringToTypeF(3,null, m2.iProduct));
+                //             // }
+                //         }
+                //         if(data.filter & 0x4) {
+                //             // if(global.umpDevices[umpDev].sendUMPOutNetwork){
+                //             //     global.umpDevices[umpDev].sendUMPOutNetwork(umpDev,t.stringToTypeF(4,null, m2.iSerialNumber));
+                //             // }
+                //         }
+                //         break;
+                //     case 0x0010: { //Get Function Block Info
+                //
+                //         break;
+                //     }
+                // }
 
 
                 break;

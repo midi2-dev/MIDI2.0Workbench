@@ -99,7 +99,7 @@ exports.msg= function(type,data,dir,umpDev,group,errors,warnings) {
 		}
 
 		const status = (data[0] >>> 16) & 0xFF;
-		if(mt===0x1 && [0xFE,0xF80].indexOf(status)!==-1 && !global.configSetting.debugActiveSenseClock){
+		if(mt===0x1 && [0xFE,0xF8].indexOf(status)!==-1 && !global.configSetting.debugActiveSenseClock){
 			return;
 		}
 
@@ -176,7 +176,8 @@ exports.msg= function(type,data,dir,umpDev,group,errors,warnings) {
 	if(type ==='ump'){
 		let outarr = []
 		data.map(function(d){
-			outarr = outarr.concat((d>>>0).toString(2).padStart(32,'0').split(''));
+			//outarr = outarr.concat((d>>>0).toString(2).padStart(32,'0').split(''));
+			outarr = outarr.concat("0x"+("0000000" +(d>>>0).toString(16)).slice (-8).toUpperCase());
 		});
 		outData = outarr.join();
 	}

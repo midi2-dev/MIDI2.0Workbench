@@ -23,14 +23,115 @@ let ipcRenderer;
 let resourceCache={};
 let localSubscriptionData={};
 let roles = {
-	cluster: (link, channelListData, trLink, jq) =>{
+    cluster: (link, channelListData, trLink, jq) =>{
         debugger;
         //TODO complete this role
+    },
+    simpleAction: (link, channelListData, trLink) =>{
+
+        if (link.confirmMsg) {
+            confirmDialog(link, trLink)
+            return;
+        }
+        trLink();
+
+    },
+    selectorAction: (link) =>{
+        if(window.configSetting.experimentalSpecs) {
+            common.getResourceWithSchemaRef(link.resource).then(([resourceObj]) => {
+                const reqHeader = {resource: resourceObj.resource};
+
+                if (resourceObj.requireResId) {
+                    if (!link.resId) {
+                        //debugger;
+                    }
+                    reqHeader.resId = link.resId;
+                }
+                const jqModal = common.buildListModal({
+                    resource: resourceObj.resource
+                    , resourceObj: resourceObj
+                    , resId: reqHeader.resId || null
+                    , title: link.title || resourceObj.schema.title || ''
+                    , cbSelect: function (data) {
+                        const val = data[link.selectProperty];
+                        const reqHeader = {resource: link.triggerResource.resource};
+                        if (link.triggerResource.resId) {
+                            reqHeader.resId = link.triggerResource.resId;
+                        }
+                        common.sendPE(0x36, reqHeader, val).then(([resHead]) => {
+                            if (resHead.message) {
+                                alert(resHead.message);
+                            }
+                        });
+                        jqModal.modal('hide');
+                    }
+                });
+            });
+        }
+    },
+    uiView: (link,channelListData, trLink) =>{
+        if(window.configSetting.experimentalSpecs) {
+            showUIList({
+                link: link
+                , channelListData: channelListData
+            });
+        }
+    },
+    fileSelectorAction: (link) =>{
+        if(window.configSetting.experimentalSpecs){
+            exports.buildFileAccessModal(link);
+        }
+    },
+    fileAccess: (link) =>{
+        if(window.configSetting.experimentalSpecs){
+            exports.buildFileAccessModal(link);
+        }
+    },
+    fileGet: (link, channelListData, trLink, jq) =>{
+        if(window.configSetting.experimentalSpecs){
+            ipcRenderer.send('asynchronous-message'
+                , 'saveFile'
+                , {file: link.path,...window.ump}
+            )
+        }
+    },
+    fileSet: (link, channelListData, trLink, jq) =>{
+        if(window.configSetting.experimentalSpecs){
+            const jqparent = jq.parent();
+            jq.remove();
+
+            $('<input/>',{type:"file", id:"input-file-now"
+                , class:"form-control-file btn btn-outline-secondary btn-sm"
+                //,accept:file.acceptedMediaTypes.join(',')
+                ,'data-title':"Set"}
+            )
+                .on("change",(e)=>{
+                    common.uploadFile(e,  (fileName, mediaType, data) => {
+                        //jqFileInput[0].setAttribute("data-title", "Sending...");
+                        common.sendPE(0x36,
+                            {resource:"File",path:link.path,"mediaType":mediaType}
+                            ,data).then(([resHead])=>{
+                                //jqFileInput[0].setAttribute("data-title", "Sent");
+                                // setTimeout(()=>{
+                                //     jqFileInput[0].setAttribute("data-title", "Drag and drop a file");
+                                // },5000);
+                                // data.instance.refresh_node(n);
+                            }
+                        );
+                    })
+                })
+                .appendTo(jqparent);
+        }
+    },
+    document: (link) =>{
+        if(window.configSetting.experimentalSpecs){
+            ipcRenderer.send('asynchronous-message'
+                , 'showDocument'
+                , {link, ...window.ump}
+            );
+        }
     }
 };
-
-
-
 
 
 exports.setipc = function(ipcRendererSet,ipccallbacksSet,ipccallbacksSubsSet){
@@ -765,6 +866,9 @@ exports.setPESetup = function(retry=0) {
                     }},
                 {"title": "Set",display:function(row,td){
                         let set = resourceList[row.resource].canSet;
+                        if(set && resourceList[row.resource].fcOnSet) {
+                            set += ' (Flow Control)'
+                        }
                         td.text(set);
                     }}
 
@@ -1273,6 +1377,9 @@ function displayResource(jqRootObj,channelListData={},resource='',link={}){
                     e.stopPropagation();
                     buildFileModal($(this).data('reqHeader'));
                 });
+        }else {
+            $('<span/>', {"class": "", 'data-toggle': "popover", 'data-content': schema.description})
+                .append(title ).appendTo(jqAppendText);
         }
 
         if(link.role){
@@ -1630,6 +1737,8 @@ exports.getResourceWithSchemaRef =getResourceWithSchemaRef;
 function getcallBackId(){
     return performance.now().toString().replace('.','')+Math.random().toString(36).substr(2, 9);
 }
+
+exports.getcallBackId = getcallBackId;
 
 function sendPE (subId,reqHeader,reqBody,subscribe){
     //resHead, resBody, reqHead

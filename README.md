@@ -1,8 +1,10 @@
 # MIDI 2.0 Workbench
 ![img.png](img.png)
 
-The MIDI 2.0 Workbench is a free tool from MIDI Association Members to help developers develop, debug (and deploy) MIDI 2.0 Applications and Devices. It runs on Windows, Mac and Linux.
-The Workbench connects to your device or software, to test various MIDI 2.0 implementation features against the currently released specifications.
+The MIDI 2.0 Workbench is a free tool from MIDI Association Members to help developers develop, debug (and deploy) 
+MIDI 2.0 Applications and Devices. It runs on Windows, Mac and Linux.
+The Workbench connects to your device or software to test various MIDI 2.0 implementation features against the 
+currently released specifications.
 
 It provides a comprehensive debug of: 
 * UMP messages
@@ -16,7 +18,7 @@ It provides a comprehensive debug of:
   * Property Exchange
   * Profiles
   * Process Inquiry
-  * Protocol Negotiation (1.1. only)
+  * Protocol Negotiation (MIDI-CI 1.1 only)
 * Standard MIDI File 2 - Processor and validator
 
 The MIDI 2.0 Workbench also test various UMP transports where possible.
@@ -24,7 +26,7 @@ The MIDI 2.0 Workbench also test various UMP transports where possible.
 To test USB MIDI 2.0 please make sure you use either:
 * OSX 14+
 * Linux with a 6.5+ Kernel and ALSA libs 1.2.10+
-
+ 
 Some prior version may work with mixed results.
 
 
@@ -33,7 +35,7 @@ available, and this project should not been seen as reference code.
 
 ### How To Build this Project
 -----------------------
-Use version 16.x of NodeJS. Later versions have issues with the C++ plugins.
+Use version 18.x of Node.js. Later versions have issues with the C++ plugins.
 On Mac please make sure the Xcode command line tools are installed.
 
 After you cloned this repository
@@ -51,21 +53,23 @@ yarn run start
 _Q: Why are there no binary releases?_<br/>
 A: This will happen eventually. Once code-signing is set up and working this will occur.
 
-_Q: Later Ubuntu distro's don't support Node 16. How do I get it work?_<br/>
-A: Use yarnpkg and nvm
+_Q: Later Ubuntu distro's don't support Node 18. How do I get it work?_<br/>
+A: Use yarn and nvm
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-nvm install 16
-nvm use 16
+nvm install 18
+nvm use 18
 git clone https://github.com/midi2-dev/MIDI2.0Workbench.git
 cd MIDI2.0Workbench
-sudo apt-get install yarnpkg libasound2-dev
-yarnpkg
-yarnpkg run build
-yarnpkg run start
+sudo apt-get install libasound2-dev
+sudo npm -g install yarn
+yarn
+yarn run build
+yarn run start
 ```
 If you have issues with running electron then the following commands may help:
 ```
+cd node_modules/electron/dist
 node_modules/electron/dist $ sudo chown root:root chrome-sandbox
 node_modules/electron/dist $ sudo chmod 4755 chrome-sandbox
 ```

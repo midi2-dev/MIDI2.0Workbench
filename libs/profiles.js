@@ -4,6 +4,26 @@
  *     Andrew Mee
  */
 
+const {getNumberFromBytes} = require("./utils.js");
+
+function buildContMapListFromArray(items){
+    const stepcount = items.length;
+    const vRange =Math.pow(2,32);
+    const binSize =  vRange/ stepcount;
+    let out =[];
+    for(let i=0; i<items.length; i++){
+        let v = Math.floor((vRange * i + stepcount - 1) / stepcount) + Math.floor(vRange / (2 * stepcount));
+        let min = 0;//v - Math.round(binSize/2);
+        if (i>0){
+            min = out[i-1].maxValue+1;
+        }
+
+        let max = Math.min(v + Math.floor(binSize/2),vRange-1);
+        out.push({minValue:min,maxValue:max,value:v,title:items[i]});
+    }
+    return out;
+}
+
 const defMapLists = {
 	volume:[
 		{value:0,"title":"-infinity"},
@@ -15,8 +35,8 @@ const defMapLists = {
 	],
 	holdHalfPedal:[
 		{value:0,"title":"Up"},
-		{value:0x60000000,"title":"Half Pedal Start"},
-		{value:0xA0000000,"title":"Half Pedal End"},
+		{value:0x50000000,"title":"Half Pedal Start"},
+		{value:0xB0000000,"title":"Half Pedal End"},
 		{value:0xFFFFFFFF,"title":"Down"}
 	]
 }
@@ -472,7 +492,7 @@ exports.profiles=[
 				return valSysex;
 			}
 		},
-		ChCtrlList:[
+		ctrlList:[
 			{
 				title:"Volume"
 				,ctrlType:"cc"
@@ -535,7 +555,7 @@ exports.profiles=[
 		]
 	},
 	{
-		bank:0x61
+		bank:0x22
 		,index:0x00
 		,name:'Rotary Speaker Effect'
 		,type:'singleChannel'
@@ -709,7 +729,7 @@ exports.profiles=[
 				],
 				0x11:[
 					'Normal Staccato Off String',
-					'Normal Staccato Off String',
+					'Normal Staccato On String',
 					'Slurred Staccato',
 					'Accented Staccato',
 					'Staccatissimo',

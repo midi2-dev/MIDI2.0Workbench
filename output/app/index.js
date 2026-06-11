@@ -52,6 +52,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             }
 
+            case 'udpPendingAuthCheck':{
+                //debugger;
+                if($('#pendingUDP').length)return;
+                const jqModal = $('<div>',{"id":"pendingUDP","class":"modal fade bd-example-modal-lg"})
+                    .appendTo('body');
+                const jqModalMain = $('<div>',{"class":"modal-dialog modal-lg modal-dialog-centered"})
+                    .appendTo(jqModal);
+                const jqModalContent = $('<div>',{"class":"modal-content"})
+                    .appendTo(jqModalMain);
+                $('<div/>',{"class":"modal-body fade show mb-0"})
+                    .appendTo(jqModalContent)
+                    .append(`<h2>A Device Would like to Connect to ${xData.connectTo}</h2>`)
+                    .append(`<p>${xData.name} (${xData.productInstId}) ${xData.address}:${xData.port}</p>`)
+                ;
+
+                const jqModalFooter = $('<div/>',{class:"modal-footer"})
+                    .appendTo(jqModalContent);
+
+                $('<button/>',{class:"btn btn-primary"}).text('Accept').appendTo(jqModalFooter)
+                    .on('click',(e)=>{
+                       //Send Approval Pending
+
+                        ipcRenderer.send('asynchronous-message', 'udpPendingAccept',xData);
+                        jqModal.modal('dispose').remove();
+                    });
+
+                $('<button/>',{class:"btn btn-error"}).text('Deny').appendTo(jqModalFooter)
+                    .on('click',(e)=>{
+                        //Send Approval Pending
+
+                        ipcRenderer.send('asynchronous-message', 'udpPendingDeny',xData);
+                        jqModal.modal('dispose').remove();
+                    });
+
+
+
+                jqModal
+                    .modal({show:true,backdrop:false})
+                    .on('hidden.bs.modal', function (e) {
+                        jqModal.modal('dispose').remove();
+                    });
+
+                break;
+            }
+
 
 
             case 'MIDIDevices':
@@ -86,7 +131,112 @@ document.addEventListener('DOMContentLoaded', () => {
                     firstLoad = false;
                 }
                 buildUMPDevice();
+                const jqUH = $('#udpHostsList').empty();
+                const jqNList = $('#networkList').empty();
+                Object.keys(window.configSetting.mdnsRemoteAnswers || {}).map(name => {
+                    const ra = window.configSetting.mdnsRemoteAnswers[name];
 
+                    if(!ra.port || ra.addresses.length===0){
+                        return;
+                    }
+
+
+
+                    let jqtr = $('<tr/>').appendTo(jqUH);
+                    $('<td/>')
+                        .append(`<b><b>${ra.txt.UMPEndpointName}</b> ${ra.fqdn  || ''}<br/>${ra.addresses.join()} : ${ra.port  || ''}`)
+                        .appendTo(jqtr);
+                    const jqSt = $('<td/>')
+                        .appendTo(jqtr);
+                    let action = ra.state || 'Connect';
+
+                    if(ra.state==='Send User/Password'){
+                        $("<input/>",{id:"shauser", class:"input-primary"})
+                            .appendTo(jqSt)
+                    }else{
+                        $('#shauser').remove();
+                    }
+
+                    if(ra.state === "Send Password" || ra.state==='Send User/Password'){
+                        $("<input/>",{id:"shapass",type:"password", class:"input-primary"})
+                            .appendTo(jqSt)
+                    }else{
+                        $('#shapass').remove();
+                    }
+
+
+                     const onclickAction = function(){
+                          const ra = $(this).data('ra');
+                          const name = $(this).data('name');
+                         if(!ra.state){
+                             ipcRenderer.send('asynchronous-message', 'udpConnect',name);
+                         }else if(ra.state==="Connected"){
+                             ipcRenderer.send('asynchronous-message', 'udpDisconnect',name);
+                         }else if(ra.state === "Send Password"){
+                             ipcRenderer.send('asynchronous-message', 'udpSendUserPass',{
+                                 type: 'SHAPasscode',
+                                 pass: $('#shapass').val(),
+                                 id: name
+                             });
+
+                         }else if(ra.state === "Send User/Password"){
+                             ipcRenderer.send('asynchronous-message', 'udpSendUserPass',{
+                                 type: 'SHAPasscode',
+                                 user: $('#shauser').val(),
+                                 pass: $('#shapass').val(),
+                                 id: name
+                             });
+
+                         }
+                     }
+
+
+                    $("<button/>",{type:"button", class:"btn btn-primary"})
+                        .append(action).appendTo(jqSt)
+                         .data('ra',ra)
+                         .data('name',name)
+                        .on('click',onclickAction);
+
+
+                    //***********
+                    let jqDiv = $('<a/>',{class:"dropdown-item",href:"#"})
+                        .appendTo(jqNList)
+                        .append(ra.txt.UMPEndpointName)
+                        .data('ra',ra)
+                        .data('name',name)
+                        .on('click', onclickAction);
+
+                    if(ra.state==="Connected"){
+                        jqDiv.addClass('active')
+                    }
+
+                    if(ra.state === "Send Password" || ra.state==='Send User/Password'){
+                        let jqform = $('<form/>',{class:"px-4 py-3"}).appendTo(jqNList)
+
+                        if(ra.state==="Send User/Password"){
+                            $('<div/>',{class:"form-group"})
+                                .appendTo(jqform)
+                                .append('<label for="shauser">username</label>')
+                                .append('<input id="shauser" class="form-control" />');
+                        }
+                        $('<div/>',{class:"form-group"})
+                            .appendTo(jqform)
+                            .append('<label for="shapass">Password</label>')
+                            .append('<input id="shapass" type="password" class="form-control" />');
+                        $('<button/>',{class:"form-group"})
+                            .append('Submit')
+                            .appendTo(jqform)
+                            .data('ra',ra)
+                            .data('name',name)
+                            .on('click', onclickAction);
+                    }
+
+
+
+
+                    //*********
+
+                });
 
                 common.setValues();
                 common.setValueOnChange();
@@ -129,8 +279,12 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
 
-
-
+    $('#dcConnect').on('click',()=>{
+        ipcRenderer.send('asynchronous-message', 'dcUDPConnect',{
+            ip: $('#dcIP').val(),
+            port: $('#dcPort').val()
+        });
+    });
 
     setTimeout(()=>{
         //jqDiscover.trigger('click');
@@ -405,7 +559,29 @@ function addUMPDevHead(umpDev,info){
         jqCardHead.append('<br/><sub>' + info.extraText + '</sub>');
     }
 
+    if(!info.udpClient){
+        $('<a/>',{href:'#'})
+            .css({position: 'absolute', bottom: '5px', right:'5px', fontSize:'0.8em'})
+            .text('Turn UDP Host '+ (info.udpServer?`Off ${info.udpServer}`:'On'))
+            .on('click',function(){
+                //setupMIDI2UDPHost
+                if(info.udpServer){
+                    ipcRenderer.send('asynchronous-message', 'removeMIDI2UDPHost', umpDev );
+                }else{
+                    ipcRenderer.send('asynchronous-message', 'setupMIDI2UDPHost', umpDev );
+                }
 
+            })
+            .appendTo(jqCardHead);
+    }else{
+        $('<a/>',{href:'#'})
+            .css({position: 'absolute', bottom: '5px', right:'5px', fontSize:'0.8em'})
+            .text('Disconnect from UDP Host')
+            .on('click',function(){
+               ipcRenderer.send('asynchronous-message', 'disconnectUDPHost', {id:umpDev} );
+            })
+            .appendTo(jqCardHead);
+    }
 
     $('<a/>',{href:'#'})
         .css({position: 'absolute', bottom: '5px', left:'5px', fontSize:'0.8em'})

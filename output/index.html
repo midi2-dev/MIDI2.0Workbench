@@ -35,6 +35,12 @@
 						MIDI 2.0 Workbench
 					</h2>
 				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Network</a>
+					<div id="networkList" class="dropdown-menu">
+
+					</div>
+				</li>
 				<li class="nav-item">
 					<a id="ddbLink" class="nav-link" data-ipcmsg="openDebug" href="#">
 						Debug
@@ -101,6 +107,9 @@
 						<li class="nav-item">
 							<a class="nav-link"   data-toggle="tab" href="#settingExp" role="tab">Experimental</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link"   data-toggle="tab" href="#udpUMP" role="tab">Network UMP</a>
+						</li>
 					</ul>
 					<div class="tab-content" id="settingTabContent">
 
@@ -110,6 +119,7 @@
 								<select id="ciVerLocal"  data-path="/config/ciVerLocal" class="form-control">
 									<option value="1">0x01 (MIDI-CI 1.1)</option>
 									<option value="2">0x02 (MIDI-CI 1.2)</option>
+									<option value="7">0x07 (simulated higher version)</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -137,13 +147,21 @@
 						</div>
 
 						<div class="tab-pane fade " id="settingExp" role="tabpanel" >
+							<div class="form-group" data-visibleifequal="/config/osPlatform==darwin">
+								<div class="form-check">
+									<label for="osProtocol" class="col-form-label">MIDI Protocol to Connect with (requires restart):</label>
+									<select id="osProtocol"  data-path="/config/osProtocol" class="form-control">
+										<option value="1">kMIDIProtocol_1_0 (MT=0x4 translated to MIDI 1.0)</option>
+										<option value="2">kMIDIProtocol_2_0 (MT=0x2 translated to MIDI 2.0)</option>
+									</select>
+								</div>
+							</div>
 							<div class="form-group">
 								<div class="form-check">
 									<label for="numberMIDI1UMPs" class="form-check-label">Number of MIDI 1.0 UMP Devices (requires restart)</label>
 									<input type="number" id="numberMIDI1UMPs" data-path="/config/numberMIDI1UMPs" class="form-control" min="0" max="4" />
 								</div>
 							</div>
-
 
 							<div class="form-group">
 								<div class="form-check">
@@ -157,14 +175,82 @@
 									<label for="debugUMPSysEx" class="form-check-label">Debug/Log UMP SysEx Messages</label>
 								</div>
 							</div>
-							<div data-visibleiftrue="/config/expExtensions" class="form-group">
+							<div class="form-group">
+								<div class="form-check">
+									<input type="checkbox" id="debugUMPUDP" data-path="/config/debugUMPUDP" class="form-check-input" />
+									<label for="debugUMPUDP" class="form-check-label">Debug/Log UDP UMP Data Commands</label>
+								</div>
+								<div class="form-check">
+									<input type="checkbox" id="debugPingUDP" data-path="/config/debugPingUDP" class="form-check-input" />
+									<label for="debugPingUDP" class="form-check-label">Don't Debug/Log UDP Ping Commands</label>
+								</div>
+							</div>
+							<div class="form-group">
 								<div class="form-check">
 									<label for="sysexTimer" class="col-form-label">SysEx Time between SysEx Messages:</label>
 									<input type="number" step="1" id="sysexTimer" value="4" max="2000" min="10" data-path="/config/sysexTimer" class="form-control" />
 								</div>
 							</div>
+						</div>
+
+						<div class="tab-pane fade " id="udpUMP" role="tabpanel" >
+							<div class="form-group">
+								<div class="form-check">
+									<label class="col-form-label">Authentication Method</label>
+									<div class="input-group ">
+										<select data-path="/config/umpUDP/authMethod" class="form-control">
+											<option value="">-- Please set Auth Method --</option>
+											<option value="">Allow Any Connections</option>
+											<option value="pending">Manually Approve Pending Connections</option>
+											<option value="sha256">Use a shared passcode</option>
+											<option value="userAuth">User Authentication</option>
+										</select>
 
 
+									</div>
+								</div>
+							</div>
+
+							<div  class="form-group">
+								<div class="form-check">
+									<label class="col-form-label">Username:</label>
+									<input type="text" data-path="/config/umpUDP/username" class="form-control">
+								</div>
+								<div class="form-check">
+									<label class="col-form-label">Shared Passcode:</label>
+									<input type="text" data-path="/config/umpUDP/passcode" class="form-control">
+								</div>
+							</div>
+							<hr/>
+							<h4>Available Network Hosts
+								<button class="form-control btn btn-secondary" data-ipcmsg="refreshUDPUMPDevices" style="float:right;max-width: 200px;" >
+								Search
+								</button>
+							</h4>
+							<table class="table table-sm table-striped">
+								<thead>
+								<th>Host</th>
+								<th>Status</th>
+								</thead>
+								<tbody id="udpHostsList"></tbody>
+							</table>
+							<hr/>
+							<h4>Direct Connect
+
+							</h4>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">IP</span>
+								</div>
+									<input type="text" id="dcIP" class="form-control">
+								<div class="input-group-prepend">
+									<span class="input-group-text" >Port</span>
+								</div>
+									<input type="text" id="dcPort" class="form-control">
+									<button class="form-control btn btn-secondary" id="dcConnect" style="float:right;max-width: 200px;" >
+										Connect
+									</button>
+							</div>
 						</div>
 					</div>
 				</div>

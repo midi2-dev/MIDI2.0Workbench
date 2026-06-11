@@ -95,7 +95,7 @@ exports.messageType = [
             4:{
                 title:'Delta Clockstamp'
                 ,parts:[
-                    {range:[12,31],title:"Number of Ticks Since Last Event",classes:mtColours.msb}
+                    {range:[16,31],title:"Number of Ticks Since Last Event",classes:mtColours.msb}
                 ]
             }
         }
@@ -473,12 +473,14 @@ exports.messageType = [
         status:{
             0x0:{
                 title: 'Complete System Exclusive 8 Message in One Packet',
+                //useFileUpload: true,
                 parts:[
                     {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
                     {range:[16,23],title:'stream id',classes:mtColours.streamId}
                 ]
             },
             0x1:{
+                skipInBuilder: true,
                 title: 'System Exclusive 8 Start Packet',
                 parts:[
                     {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
@@ -486,6 +488,7 @@ exports.messageType = [
                 ]
             },
             0x2:{
+                skipInBuilder: true,
                 title: 'System Exclusive 8 Continue Packet',
                 parts:[
                     {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
@@ -493,6 +496,7 @@ exports.messageType = [
                 ]
             },
             0x3:{
+                skipInBuilder: true,
                 title: 'System Exclusive End Packet',
                 parts:[
                     {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
@@ -501,12 +505,13 @@ exports.messageType = [
             },
             0x8:{
                 title: 'Mixed Data Set Header',
+                useFileUpload: true,
                 parts:[
-                    {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
-                    {range:[16,23],title:'mds id',classes:mtColours.streamId},
-                    {range:[24,31],title:'number of valid bytes in this message chunk',classes:mtColours.numberOfValidBytes},
-                    {range:[32,47],title:'number of chunks in mixed data set',classes:mtColours.numberOfchunks},
-                    {range:[48,63],title:'number of this chunk',classes:mtColours.numberOfBytes},
+
+                    {range:[12,15],title:'mds id',classes:mtColours.streamId},
+                    {range:[16,31],title:'number of valid bytes in this message chunk',classes:mtColours.numberOfValidBytes,noField:true},
+                    {range:[32,47],title:'number of chunks in mixed data set',classes:mtColours.numberOfchunks,noField:true},
+                    {range:[48,63],title:'number of this chunk',classes:mtColours.numberOfBytes,noField:true},
                     {range:[64,79],title:'manufacturer id',format:'MfrID',classes:mtColours.numberOfValidBytes},
                     {range:[80,95],title:'device id',classes:mtColours.numberOfchunks},
                     {range:[96,111],title:'sub id #1',classes:mtColours.lsb},
@@ -514,11 +519,24 @@ exports.messageType = [
                 ]
             },
             0x9:{
+                skipInBuilder: true,
                 title: 'Mixed Data Set Payload',
                 parts:[
-                    {range:[12,15],title:'# of bytes',classes:mtColours.numberOfBytes},
-                    {range:[16,23],title:'mds id',classes:mtColours.streamId},
-
+                    {range:[12,15],title:'mds id',classes:mtColours.streamId},
+                    {range:[16,23],title:'Byte 1',classes:mtColours.lsb},
+                    {range:[24,31],title:'Byte 2',classes:mtColours.msb},
+                    {range:[32,39],title:'Byte 3',classes:mtColours.lsb},
+                    {range:[40,47],title:'Byte 4',classes:mtColours.msb},
+                    {range:[48,55],title:'Byte 5',classes:mtColours.lsb},
+                    {range:[56,63],title:'Byte 6',classes:mtColours.msb},
+                    {range:[64,71],title:'Byte 7',classes:mtColours.lsb},
+                    {range:[72,79],title:'Byte 8',classes:mtColours.msb},
+                    {range:[80,87],title:'Byte 9',classes:mtColours.lsb},
+                    {range:[88,95],title:'Byte 10',classes:mtColours.msb},
+                    {range:[96,103],title:'Byte 11',classes:mtColours.lsb},
+                    {range:[104,111],title:'Byte 12',classes:mtColours.msb},
+                    {range:[112,119],title:'Byte 13',classes:mtColours.lsb},
+                    {range:[120,127],title:'Byte 14',classes:mtColours.msb}
                 ]
             }
         }
@@ -642,6 +660,9 @@ exports.messageType = [
                     },
                     0x0C:{
                         title: "Recording/Concert Location", parts: byteRangeArr
+                    },
+                    0x0D:{
+                        title: "Instrument Used", parts: byteRangeArr
                     }
                 }
             },

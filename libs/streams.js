@@ -188,7 +188,18 @@ exports.streamOut = function(numberOfStreams,timeOut=5,sysexTimer = 20){
 			}
 			stream.lastUpdate = now() + timeoutIncrease; //Eventually cleanup after x secs
 		}
+		,acknowledgeRecv:(streamId, slidingWindow)=>{
+			const stream = currentStreams[streamId];
+			if(!stream){
+				closeStream(streamId,'terminate');
+				return;
+			}
+			while(slidingWindow>=1){
+				sendNextChunk(streamId,stream);
+				slidingWindow--;
+			}
 
+		}
 		,terminate:(streamId)=>{
 			closeStream(streamId,'terminate');
 		}

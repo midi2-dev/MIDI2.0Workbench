@@ -129,7 +129,12 @@ for(let i=0 ; i<global.configSetting.numberMIDI1UMPs;i++){
 
 require('./libs/UMPusb.js');
 
-
+const {setupMIDI2UDPHost, search_mDNS,
+	removeMIDI2Host, connectToHost,
+	disconnectUDPHost, terminate,
+	connectToHostViaIp, sendSHAPassToHost,
+	pendingClientAccept, pendingClientDeny
+} = require("./libs/UMPudp");
 const {getManufacturer16bit} = require("./libs/manufactuers");
 
 
@@ -174,6 +179,8 @@ function createWindow () {
 	
 	// Emitted when the window is closed.
 	global.indexWindow.on('closed', () => {
+
+		terminate();
 
 		Object.keys(global.umpDevices).map(umpDev=>{
 			global.umpDevices[umpDev].remove();
@@ -432,6 +439,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			whichGlobalMIDICI(xData.umpDev).sendInvalidate(xData.muid);
 			BrowserWindow.fromWebContents(event.sender).close();
 			setTimeout(()=>{
+				search_mDNS();
 				// Object.keys(global.umpDevices).map(umpDev=>{
 				// 	//global.umpDevices[umpDev].getEndpointInfo();
 				// 	//global.umpDevices[umpDev].getFunctionBlocks();
@@ -446,6 +454,7 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			});
 			BrowserWindow.fromWebContents(event.sender).close();
 			setTimeout(()=>{
+				search_mDNS();
 				// Object.keys(global.umpDevices).map(umpDev=>{
 				// 	if(global.umpDevices[umpDev].getEndpointInfo)global.umpDevices[umpDev].getEndpointInfo();
 				// 	//global.umpDevices[umpDev].getFunctionBlocks();
@@ -724,6 +733,77 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			break;
 		}
 
+		case "sendFileOverMDS":{
+			global._editWin.map(editWin=>{
+				if(editWin._umpDev.umpDev===xData.umpDev && editWin._umpDev.remoteEndpoint===true){
+					let options = {
+						title: "My title",
+						properties: ['openFile','dontAddToRecent']
+					}
+
+					// Show the open (folder) dialog.
+					dialog.showOpenDialog(editWin, options)
+						.then((result) => {
+							// Bail early if user cancelled dialog.
+							if (result.canceled) { return }
+
+							// Get the selected path.
+							let path = result.filePaths[0];
+
+							let totalLength = fs.statSync(path).size;
+							let totalChunks = Math.ceil(totalLength / 0xFFFF);
+							let mds = xData["mds id"];
+
+							let readStream = fs.createReadStream(path,
+								{ highWaterMark: 0xFFFF });
+
+							let chunkNum= 1
+							readStream.on('data', function(chunk) {
+								let ump=[0,0,0,0];
+								ump[0] = (0x5<<28) //Message Type
+									+ (xData.umpGroup<< 24) //Group
+									+ (0x8 << 20)
+									+ (mds << 16)
+									+ chunk.length;
+
+								ump[1] = (totalChunks<<16) + (chunkNum++ );
+								ump[2] = (xData["manufacturer id"] << 16) + xData["device id"];
+								ump[3] = (xData["sub id #1"] << 16) + xData["sub id #2"];
+
+
+								global.umpDevices[xData.umpDev].midiOutFunc(xData.umpDev, ump);
+
+								for(let i=0; i<chunk.length;){
+									let ump=[0,0,0,0];
+									ump[0] = (0x5<<28) //Message Type
+										+ (xData.umpGroup<< 24) //Group
+										+ (0x9 << 20)
+										+ (mds << 16);
+
+									ump[0] += (chunk[i++]||0)<<8;
+									ump[0] += chunk[i++]||0;
+									ump[1] = ((chunk[i++]||0)<<24) + ((chunk[i++]||0)<<16) + ((chunk[i++]||0)<<8) + (chunk[i++]||0);
+									ump[2] = ((chunk[i++]||0)<<24) + ((chunk[i++]||0)<<16) + ((chunk[i++]||0)<<8) + (chunk[i++]||0);
+									ump[3] = ((chunk[i++]||0)<<24) + ((chunk[i++]||0)<<16) + ((chunk[i++]||0)<<8) + (chunk[i++]||0);
+
+									global.umpDevices[xData.umpDev].midiOutFunc(xData.umpDev, ump);
+								}
+
+
+							}).on('end', function() {
+								event.reply('asynchronous-reply', 'callback'
+									, {callbackId:xData.callbackId});
+							});
+
+
+
+						});
+				}
+			});
+
+
+			break;
+		}
 		//#### Displaying PDF's
 		case 'generateCertificate': {
 			let rmData = whichGlobalMIDICI(xData.umpDev).remoteDevices[xData.muid];
@@ -809,6 +889,74 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 			break;
 		}
 
+		//#### Networking
+		case 'setupMIDI2UDPHost':{
+			setupMIDI2UDPHost(xData);
+			//global.umpDevices[xData].getEndpointInfo();
+			break;
+		}
+		case 'removeMIDI2UDPHost':{
+			removeMIDI2Host(xData);
+			//global.umpDevices[xData].getEndpointInfo();
+			break;
+		}
+		case 'connectToUDPHost':{
+			connectToHost(xData.id);
+			break;
+		}
+		case 'disconnectUDPHost':{
+			disconnectUDPHost(xData.id,0x01);
+			break;
+		}
+		case 'dcUDPConnect':{
+			connectToHostViaIp(xData);
+			break;
+		}
+		case 'refreshUDPUMPDevices':{
+			search_mDNS();
+			break;
+		}
+		case 'udpConnect':{
+			connectToHost(xData);
+			break;
+		}
+		case 'udpSendUserPass':{
+			sendSHAPassToHost(xData.id,xData.pass,xData.user);
+			break;
+		}
+		case 'udpDisconnect':{
+			disconnectUDPHost(xData,0x01);
+			break;
+		}
+		case 'udpPendingAccept':{
+			pendingClientAccept(xData.umpDev, xData.id);
+			break;
+		}
+		case 'udpPendingDeny':{
+			pendingClientDeny(xData.umpDev, xData.id);
+			break;
+		}
+
+		//### Serial
+		case 'umpSerial_changeBaud':{
+			const baud = parseInt(xData.xData,10);
+			if(baud!==global.umpDevices['umpSerial'].remoteEndpoint.remoteSerialDev.currentBaud){
+				//TODO Send Notify
+				bandwidthsList.map((b,idx)=>{
+					if(b.baud===baud){
+						global.umpDevices['umpSerial'].midiOutFunc('umpSerial',[((0xF << 28) >>> 0) + (0x032<<16), (0x1 << idx) ,0,0]);
+						setTimeout(updateBaudRate_umpSerial,10,baud);
+						setTimeout(()=>{
+							if(baud!==global.umpDevices['umpSerial'].remoteEndpoint.remoteSerialDev.currentBaud){
+								updateBaudRate_umpSerial(global.umpDevices['umpSerial'].remoteEndpoint.remoteSerialDev.currentBaud);
+							}
+						},500);
+					}
+				});
+			}
+
+			break;
+		}
 
 		//### MIDI-CI
 		case 'protocolNegotiation':
@@ -1327,6 +1475,26 @@ function ciEventHandler(umpDev, group, event,...args){
 			this.completeMIDICIMsg(newResponse,umpDev);
 			break;
 		}
+        case 'profileDetailsInquiry':{
+            let [sourceDestination,muidRemote,profile,inquiryTarget] = args;
+            let isActive = profile.sourceDestinations[`${group}_${sourceDestination}`]?.active || false;
+            if(isActive){
+                midi2Tables.profiles.map(rawPF=>{
+                    if(rawPF.bank===profile.bank && rawPF.index===profile.index){
+                        //Great Found match
+                        const newResponse = this.createMIDICIMsg(this._muid,
+                            0x29, sourceDestination,
+                            muidRemote,{
+                                profile,
+                                inquiryTarget,
+                                targetData: rawPF.profileDetailsInquiryProcess(sourceDestination,muidRemote,inquiryTarget)
+                        });
+                        this.completeMIDICIMsg(newResponse,umpDev);
+                    }
+                });
+            }
+            break;
+        }
 		case'profileDetailsReply':
 		case'profileOn':
 		case'profileOff':

@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    $('#umpCCVal').on('change',function(e){
+    $('#umpCCVal').on('input',function(e){
         const umpGroup = parseInt($('#umpKeyGr').val()) - 1;
         const ch = parseInt($('#umpKeyCh').val()) - 1;
         const cvm = parseInt($('#umpKeyCVM').val()) ;
@@ -505,6 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(mt ===-1){ return;}
 
         Object.keys(messageType[mt].status).map(status=>{
+            if(messageType[mt].status[status].skipInBuilder)return;
             $('<option/>',{value:status})
                 .append(messageType[mt].status[status].title)
                 .appendTo(jqst);
@@ -576,6 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
             jqblock.empty();
 
             parts.map(p=>{
+                if(p.noField)return;
                 let val=0;
                 //if(p.title=='Channel')debugger;
                 for(let i = p.range[0]; i<p.range[1]+1;i++){
@@ -695,10 +697,39 @@ document.addEventListener('DOMContentLoaded', () => {
         $('<button/>',{class:"form-control",type:'button'}).text("Send")
             .appendTo(jqbu)
             .on("click",()=>{
+                if(messageType[mt].status[status].useFileUpload){
+                    //Ok Lets build The output
+                    let data = {umpGroup: parseInt($('#umpKeyGr').val()) - 1};
+                    const id=common.getcallBackId();
+                    //console.log("Get Schema "+id +" " +resource);
+                    ipccallbacks[id] = (file)=>{
+                        debugger;
+                        console.log(file);
+                    };
 
-                let ump = calcUMPValue();
-                ipcRenderer.send('asynchronous-message', 'sendUMP',{ump,...window.ump});
+                    $('.partData',jqbu).each((idx,e)=>{
+                        const p = $(e).data('partData');
+                        let pval = parseInt($(e).val(),10);
+                        if(p.format === 'twosComplement'){
+                            let bitDepth = p.range[1] - p.range[0] + 1;
+                            pval = t.ValueToTwosComplement(pval,bitDepth);
+                        }
+                        data[p.title] = pval;
 
+                    })
+
+                    ipcRenderer.send('asynchronous-message'
+                        , 'sendFileOverMDS'
+                        ,{callbackId:id,...window.ump,...data}
+                    );
+
+
+
+
+                }else {
+                    let ump = calcUMPValue();
+                    ipcRenderer.send('asynchronous-message', 'sendUMP', {ump, ...window.ump});
+                }
 
             });
 
@@ -707,6 +738,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     common.setValueOnChange(ipcRenderer);
+
+    const jqSelBw = $('#serialBandwidth').on('change',function(){
+        ipcRenderer.send('asynchronous-message', 'umpSerial_changeBaud',{xData:$(this).val(),...window.ump});
+    });
+
 
     $('#topnav').tab();
 

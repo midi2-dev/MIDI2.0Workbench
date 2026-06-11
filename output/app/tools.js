@@ -9,6 +9,7 @@ const t = require('./../libs/translations.js');
 const d = require('./../libs/debugger.js');
 const common = require('./app/common.js');
 const { prettyPrintJson }= require('pretty-print-json');
+const {getBytesFromNumbers} = require("./../libs/utils");
 
 //TODO Clear button
 
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scale =[];
         $('#BitScale > input').each(function(e){
             let val = $(this).val();
-            val = parseInt(val,10);
+            val = parseInt(val);
             scale.push(val);
         });
         let out;
@@ -75,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             out = t.scaleDown(scale[0],scale[1],scale[2]);
         }
         $('#BitScale > input:eq(3)').val(out);
+        $('#BitScale > input:eq(4)').val('0x'+out.toString(16));
     });
 
 
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             numby.push(val);
         });
 
-        const out = t.getBytesFromNumbers(numby[0],numby[1]);
+        const out = getBytesFromNumbers(numby[0],numby[1]);
 
         $('#NumToBytes > input:eq(2 )').val(d.arrayToHex(out));
     });

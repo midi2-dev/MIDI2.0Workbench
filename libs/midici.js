@@ -18,7 +18,7 @@ const AjvD4 = require('ajv-draft-04');
 const Ajv = require('ajv');
 const draft6MetaSchema = require("ajv/dist/refs/json-schema-draft-06.json");
 
-const {getRandomInt, setRemoteEndpointValueFromMUID} = require("./utils");
+const {getRandomInt, setRemoteEndpointValueFromMUID, getNumberFromBytes, getBytesFromNumbers} = require("./utils");
 const {getManufacturer16bit} = require("./manufactuers");
 const {ciParts} = require("./ciParts");
 const {prettyPrintJson} = require("pretty-print-json");
@@ -69,7 +69,11 @@ class midici {
 	}
 
 	createMIDICIMsg(sourceMUID, subId, sourceDestination, destMuid, oOpts = {}){
-		if(!midi2Tables.ciTypes[subId] ){
+		if(!midi2Tables.ciTypes[subId] ||
+			(
+				midi2Tables.ciTypes[subId].experimental && !this.configSetting.experimentalSpecs
+			)
+		){
 			return;
 		}
 
@@ -90,8 +94,8 @@ class midici {
 		};
 
 		let sysex = [0xF0,0x7E,sourceDestination,0x0D,subId,this.ciVer]
-			.concat(t.getBytesFromNumbers(sourceMUID,4))
-			.concat(t.getBytesFromNumbers(destMuid,4));
+			.concat(getBytesFromNumbers(sourceMUID,4))
+			.concat(getBytesFromNumbers(destMuid,4));
 
 		const ciType= midi2Tables.ciTypes[subId] || '';
 
@@ -170,7 +174,7 @@ class midici {
 							newResponse.sysex.push(...val);
 							offsetLength = val.length;
 						}else{
-							newResponse.sysex.push(...t.getBytesFromNumbers(val, offsetLength));
+							newResponse.sysex.push(...getBytesFromNumbers(val, offsetLength));
 						}
 
 						let debugText = val;
@@ -356,7 +360,9 @@ class midici {
 		const ciType = midi2Tables.ciTypes[msgObj.sysex[4]] || {};
 		msgObj.sourceDestination = msgObj.sysex[2];
 
-		if(!midi2Tables.ciTypes[msgObj.sysex[4]] ){
+		if(!midi2Tables.ciTypes[msgObj.sysex[4]] || (
+			ciType.experimental && !this.configSetting.experimentalSpecs
+		)){
 			msgObj.debug.setTitle('Received unknown CI Type for '
 				+ (msgObj.sourceDestination === 0x7F ? ' the Function Block' : msgObj.sourceDestination === 0x7E?` the Group ${group+1}` : ' the channel ' + (msgObj.sourceDestination + 1))
 			);
@@ -413,8 +419,8 @@ class midici {
 			msgObj.debug.addWarning("MIDI CI Message is deprecated for this version", 0x02);
 		}
 
-		const remotemuid = t.getNumberFromBytes(msgObj.sysex,6,4);//msgObj.sysex.slice(6, 10);
-		const destmuid =  t.getNumberFromBytes(msgObj.sysex,10,4);//msgObj.sysex.slice(10, 14);
+		const remotemuid = getNumberFromBytes(msgObj.sysex,6,4);//msgObj.sysex.slice(6, 10);
+		const destmuid =  getNumberFromBytes(msgObj.sysex,10,4);//msgObj.sysex.slice(10, 14);
 
 		msgObj.debug.addDebug(6,4,"Src. MUID (MIDI Unique Identifier)",remotemuid);
 		msgObj.debug.addDebug(10,4,"Dest. MUID (MIDI Unique Identifier)",destmuid);
@@ -430,7 +436,7 @@ class midici {
 		}
 		//Is this an Invalid MUID Message?
 		if(destmuid===0xFFFFFFF && msgObj.sysex[4] === 0x7E){
-			const targetMuid =  t.getNumberFromBytes(msgObj.sysex,14,4);
+			const targetMuid =  getNumberFromBytes(msgObj.sysex,14,4);
 			msgObj.debug.addDebug(14,4,"Target. MUID (MIDI Unique Identifier)");
 			if(targetMuid===this._muid){
 				//Our MUID has had a collision - We need to change and send out a new discovery message!
@@ -548,7 +554,7 @@ class midici {
 							valPart = msgObj.sysex.slice(offset, offset + lastNumVal);
 							offsetLength = lastNumVal;
 						} else {
-							valPart = t.getNumberFromBytes(msgObj.sysex, offset, offsetLength);
+							valPart = getNumberFromBytes(msgObj.sysex, offset, offsetLength);
 							lastNumVal = valPart;
 						}
 
@@ -624,7 +630,6 @@ class midici {
 				break;
 			}
 			case 'profileInquiry':
-			case 'profileDetailsInquiry':
 			case 'profileOn':
 			case 'profileOff':{
 				if (!(this.ciSupport & 0b100)) {
@@ -914,18 +919,24 @@ class midici {
 							return;
 						}
 					}
-					if(streamObjVals.totalChunks !== streamObjVals.currentChunk && stream.data.reqHeader.flowControl){
-
-							this.sendNAK(msgObj, msgObj.muid,msgObj.sourceDestination,
-								{
-									originalSubId:  msgObj.sysex[4]-1,
-									statusCode: 0x11,
-									isAck: true,
-									statusData: 10,
-									streamObjVals,
-									oOptsForReply
-								}
-							);
+					if(/*streamObjVals.totalChunks !== streamObjVals.currentChunk &&*/
+						stream.data.reqHeader.flowControl){
+						let ackNakDetails = [0,0,0,0,0];
+						ackNakDetails[0] = streamObjVals.requestId;
+						ackNakDetails[1] = streamObjVals.currentChunk & 0x7F;
+						ackNakDetails[2] = (streamObjVals.currentChunk >>7) & 0x7F;
+						this.sendNAK(msgObj, msgObj.muid,msgObj.sourceDestination,
+							{
+								ackNakDetails,
+								//ackNakMessage
+								originalSubId:  msgObj.sysex[4]-1,
+								statusCode: 0x11,
+								isAck: true,
+								statusData: 10,
+								streamObjVals,
+								oOptsForReply
+							}
+						);
 
 
 					}
@@ -1051,7 +1062,11 @@ class midici {
 					case 'ack':{
 						switch (oOptsForReply.statusCode){
 							case 0x10:{ //TimeOut Wait (replaces PE Notify Message with a status of 144)
-								this.remoteDevicesInternal[msgObj.muid].streamsOut.timeoutWait(oOptsForReply.statusData[0], oOptsForReply.statusData * 100);
+								this.remoteDevicesInternal[msgObj.muid].streamsOut.timeoutWait(oOptsForReply.ackNakDetails[0], oOptsForReply.statusData * 100);
+								break;
+							}
+							case 0x11:{ //Flow Control Acceptance
+								this.remoteDevicesInternal[msgObj.muid].streamsOut.acknowledgeRecv(oOptsForReply.ackNakDetails[0], 1);
 								break;
 							}
 						}
@@ -1344,8 +1359,11 @@ class midici {
 					(resBody || []).map((resourceObj) => {
 						if (!resourceObj.resource.match(/^X-/)) { //This is a defined resource
 							let MMADefinition = midi2Tables.resourceSchema[resourceObj.resource];
-							if (!MMADefinition ) {
-								errors.push(resourceObj.resource + " is not a valid defined Resource.");
+
+							if (!MMADefinition ||
+								(MMADefinition.experimental && !this.configSetting.experimentalSpecs)
+							) {
+								errors.push(resourceObj.resource + " is not a valid defined Resource. Is it Experimental? - turn on Experimental mode.");
 								MMADefinition = {schema: {type: "experimental?"}};
 							}
 
@@ -1627,6 +1645,15 @@ class midici {
 				data.reqHeader.mutualEncoding=encType;
 			}
 
+			if(subId===0x34 && resourceObj.fcOnGet){
+				data.reqHeader.flowControl = true;
+				data.awaitAck = true;
+			}
+			if(subId===0x36 && resourceObj.fcOnSet){
+				data.reqHeader.flowControl = true;
+				data.awaitAck = true;
+			}
+
 
 			data.maxPayload = this.remoteDevices[remoteMuid].maxSysex - 24;
 			data.payloadHeader = objectToPayload('ASCII',reqHeader,{});
@@ -1760,6 +1787,10 @@ class midici {
 									return;
 								}
 								Object.assign(schema, resBody);
+								if(resource==="ResourceList"){
+									schema.items.properties['fcOnGet'] = {type:"boolean"};
+									schema.items.properties['fcOnSet'] = {type:"boolean"};
+								}
 								resolve(resourceObj);
 							});
 						})

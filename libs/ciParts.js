@@ -10,6 +10,7 @@ const t = require("./translations");
 const s = require("./streams");
 const {arrayToHex} = require("./debugger");
 const {profiles} = require("./profiles");
+const midi2Tables = require("./midiCITables");
 
 const authorityLevels={
     0x10:{
@@ -504,11 +505,15 @@ exports.ciParts = {
             const profileId = valSysex.join('_');
             let profile = {};
 
+            let lookupProfile = {sysex: valSysex};
+            midiCi.buildProfile(lookupProfile);
+
             if(msgObj.sysex[4] === 0x26){
                 profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId);
                 if (!profile) {
-                    profile = {sysex: valSysex};
-                    midiCi.buildProfile(profile);
+                    //profile = {sysex: valSysex};
+                    //midiCi.buildProfile(profile);
+                    profile = lookupProfile;
                     midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
                     midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'), true);
                 }
@@ -520,8 +525,7 @@ exports.ciParts = {
             if(msgObj.sysex[4] === 0x28 || msgObj.sysex[4] === 0x29){
                 profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId);
                 if (!profile) {
-                    profile = {sysex: valSysex};
-                    midiCi.buildProfile(profile);
+                    profile = lookupProfile;
                     midiCi.setData(msgObj.muid, '/profiles/' + profileId, profile);
                     midiCi.setData(msgObj.muid, '/midi2Supp/pr_' + arrayToHex([profile.bank, profile.index], '_'), true);
                 }
@@ -533,24 +537,24 @@ exports.ciParts = {
             }
 
             if (msgObj.sysex[4] >= 0x22 && msgObj.sysex[4] <= 0x25) {
-                profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId) || {};
+                //profile = midiCi.getData(msgObj.muid, '/profiles/' + profileId) || {};
                 const isEnabled = (msgObj.sysex[4] === 0x24 || msgObj.sysex[4] === 0x22);
 
                 midiCi.setData(msgObj.muid, `/profiles/${profileId}/sourceDestinations/${msgObj.group + '_' +msgObj.sourceDestination}/active`, isEnabled);
 
-                if(msgObj.sourceDestination === 0x7F && profile.type!=='functionBlock'){
-                    msgObj.debug.addWarning("Profile \""+ profile.name +"\" reported on Function Block (0x7F) is not of type Function Block Profile",0x00);
+                if(msgObj.sourceDestination === 0x7F && lookupProfile.type!=='functionBlock'){
+                    msgObj.debug.addWarning("Profile \""+ lookupProfile.name +"\" reported on Function Block (0x7F) is not of type Function Block Profile",0x00);
                 }
-                if(msgObj.sourceDestination === 0x7E && profile.type!=='group'){
-                    msgObj.debug.addWarning("Profile \""+ profile.name +"\" reported on Group (0x7E) is not of type Group Profile",0x00);
+                if(msgObj.sourceDestination === 0x7E && lookupProfile.type!=='group'){
+                    msgObj.debug.addWarning("Profile \""+ lookupProfile.name +"\" reported on Group (0x7E) is not of type Group Profile",0x00);
                 }
-                if(msgObj.sourceDestination <= 15 && profile.type!=='singleChannel'  && profile.type!=='multiChannel'){
-                    msgObj.debug.addWarning("Profile \""+ profile.name +"\" reported on Channel "
+                if(msgObj.sourceDestination <= 15 && lookupProfile.type!=='singleChannel' && lookupProfile.type!=='multiChannel'){
+                    msgObj.debug.addWarning("Profile \""+ lookupProfile.name +"\" reported on Channel "
                         + (msgObj.sourceDestination+1)
                         +" is not of type Single or Multi Channel Profile",0x00);
                 }
             }
-            return profile;
+            return lookupProfile;
         },
         debugValue : (dir, val,oOpts) => {
             return oOpts.profile.name;
@@ -602,6 +606,10 @@ exports.ciParts = {
         title: 'Profile Target Data Length',
         length: 2,
         type: 'number',
+        outValue : (oOpts) => {
+            debugger;
+            return oOpts.targetData.length
+        }
     },
     'targetData':{
         title: 'Profile Target Data',
@@ -691,7 +699,7 @@ exports.ciParts = {
                 if(msgObj.sourceDestination === 0x7E && profile.type!=='group'){
                     msgObj.debug.addWarning("Profile \""+ profile.name +"\" reported on Group (0x7E) is not of type Group Profile",0x00);
                 }
-                if(msgObj.sourceDestination <= 15 && profile.type!=='singleChannel'  && profile.type!=='multiChannel'){
+                if(msgObj.sourceDestination <= 15 && profile.type !=='singleChannel' && profile.type !== 'multiChannel'){
                     msgObj.debug.addWarning("Profile \""+ profile.name +"\" reported on Channel "
                         + (msgObj.sourceDestination+1)
                         +" is not of type Single or Multi Channel Profile",0x00);
@@ -775,7 +783,7 @@ exports.ciParts = {
                 if(msgObj.sourceDestination === 0x7E && profile.type!=='group'){
                     msgObj.debug.addWarning("Profile \""+ profile.name +"\" reported on Group (0x7E) is not of type Group Profile",0x00);
                 }
-                if(msgObj.sourceDestination <= 15 && profile.type!=='singleChannel'  && profile.type!=='multiChannel'){
+                if(msgObj.sourceDestination <= 15 && profile.type !== 'singleChannel' && profile.type!=='multiChannel'){
                     msgObj.debug.addWarning("Profile \""+ profile.name +"\" reported on Channel "
                         + (msgObj.sourceDestination+1)
                         +" is not of type Single or Multi Channel Profile",0x00);

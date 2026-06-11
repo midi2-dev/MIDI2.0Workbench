@@ -406,8 +406,7 @@ function MIDIDeviceBuildInOut(firstbuild){
     output.closePort();
 
     if(firstbuild
-        && global.configSetting.osAPIinUse.platform !== "win32"
-        && global.configSetting.osAPIinUse !== 'coreMIDI'
+        && global.configSetting.osPlatform !== "win32"
         && !app.commandLine.hasSwitch('noVirtualMidi')){
         let virtinput,virtoutput;
         //const name = app.commandLine.getSwitchValue('virtualMidiName') || "MIDI 2.0 Workbench";

@@ -34,6 +34,8 @@ midi2usb.setRemoveDeviceAlert((umpDev)=>{
     removeUMPDevice(umpDev);
 });
 
+midi2usb.startUp(parseInt(global.configSetting.osProtocol));
+
 function addDev(umpDev,m2){
 
     const newDev = addUMPDevice(umpDev,{
@@ -62,6 +64,7 @@ function addDev(umpDev,m2){
 
         },
         midiOutFunc: (umpDev, ump, isFromNetwork=false) => {
+            //This just simulates Group Block only devices to have function blocks
             if(isFromNetwork && !global.umpDevices[umpDev].remoteEndpoint.rawFunctionBlocks
                 && global.umpDevices[umpDev].remoteEndpoint.usbDetails.groupBlocks
             ){

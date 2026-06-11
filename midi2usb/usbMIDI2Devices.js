@@ -217,8 +217,6 @@ function descriptorLookupTrigger(id, dev,ii,uinterface=false){
                     console.log(e);
                     return;
                 }
-                //alertNewUMPData(id, umpArr);
-
             }else{
                 USBDevices[id] = usbEndpoint;
                 alertNewDev(id,usbEndpoint);

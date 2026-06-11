@@ -8,11 +8,36 @@ const {ipcRenderer} = require('electron');
 
 const d = require('./../libs/debugger.js');
 const common = require('./app/common.js');
-const {sendOutUMPBrokenUp} = require("./../libs/utils.js");
+const {processPacket, sendOutUMPBrokenUp} = require("./../libs/utils.js");
 const { prettyPrintJson }= require('pretty-print-json');
 
 let jqdWarn, jqdError;
 
+let UDPByeCodes = {
+    0x00 : "reserved",
+    0x01 : "user terminated session",
+    0x02 : "power down",
+    0x03 : "Too many missing UMP packets - cannot recover.",
+    0x04 : "Timeout, e.g. too many bad/missing ping responses",
+    0x05 : "Session not active (one Endpoint believes it is in an active Session, the other is not in an active Session)",
+    0x40 : "invitation failed: too many opened sessions",
+    0x42 : "invitation rejected: user did not accept session",
+    0x43 : "invitation rejected: authentication failed",
+    0x44 : "invitation rejected: user name not found",
+    0x80 : "Invitation canceled"
+}
+
+let UDPNakCodes = {
+    0x00 : "reserved",
+    0x01 : "Command not supported",
+    0x02 : "Command not expected",
+    0x03 : "Command malformed",
+    0x10 : "Session not active",
+    0x11 : "Authentication not accepted - try again",
+    0x21 : "Bad Ping Reply",
+    0x20 : "Missing UMP packets - warning",
+    0x12 : "No pending Invitation"
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -292,9 +317,187 @@ function logRun(xData){
 
             break;
         }
+        case "udp":
+            udpumpLog(jqtd,xData.data.data);
 
+            if(xData.data.warnings && xData.data.warnings.length){
+                //console.log(data.data.errors);
+                jqtd.parent().addClass('bg-warning');
+
+                const jqspan = $('<span/>')
+                    .css({'white-space':'pre','background-color':'#ff00001c',display: 'inherit'})
+                    .prependTo(jqtd);
+                jqspan.append(xData.data.warnings.join('<br/>'));
+
+                jqdWarn.text(parseInt(jqdWarn.text() || 0,10)+1);
+
+                const jqtdWarn = getRow(xData,'warn');
+                xData.data.title = 'UMP Warning';
+                const jqCardBody = buildRowCard(jqtdWarn, xData,true);
+                jqCardBody.append(xData.data.warnings.join('<br/>'));
+            }
+
+            if(xData.data.errors && xData.data.errors.length){
+                //console.log(data.data.errors);
+                jqtd.parent().addClass('bg-danger');
+
+                $('<span/>')
+                    .css({'white-space': 'pre', 'background-color': '#ff00001c', display: 'inherit'})
+                    .prependTo(jqtd)
+                    .append(xData.data.errors.join("\n"));
+
+                jqdError.text(parseInt(jqdError.text() || 0,10)+1);
+
+                const jqtdWarn = getRow(xData,'error');
+                xData.data.title = 'UMP Error';
+                const jqCardBody = buildRowCard(jqtdWarn, xData,true);
+                jqCardBody.append(xData.data.errors.join('<br/>'));
+            }
+
+            break;
     }
 }
 
+
+udpumpLog = function(jqtd,msg){
+    //show first byte with info
+
+
+    processPacket(msg,{
+        unknown:()=>{
+            debugger;
+        },
+        sessionReset:() =>{
+            jqtd.append(`<b>0x82 Session Reset</b>`);
+        },
+        sessionResetReply:() =>{
+            jqtd.append(`<b>0x83 Session Reset Reply</b>`);
+        },
+        reqAccess: (clientName, productInstId, authOpt) => {
+            jqtd.append(`<b>0x01 Invitation:</b>`);
+            jqtd.append(`${clientName} ${productInstId}`);
+            if(authOpt & 0b1){
+                jqtd.append(` - Client supports sending Invitation with Authentication.`);
+            }
+            if(authOpt & 0b10){
+                jqtd.append(` - Client supports sending Invitation with User Authentication.`);
+            }
+            jqtd.append('<br/>');
+        },
+        approved: (hostName, productInstId) => {
+            jqtd.append(`<b>0x10 Invitation Reply: Accepted:</b>`);
+            jqtd.append(`${hostName} ${productInstId}`);
+            jqtd.append('<br/>');
+        },
+        pending: (hostName) => {
+            jqtd.append(`<b>0x11 Invitation Reply: Pending:</b>`);
+            jqtd.append(hostName);
+            jqtd.append('<br/>');
+        },
+        reqSHAPasscode: (cryptoNonce,name,productInstId,resend) => {
+            jqtd.append(`<b>0x12 Invitation Reply: Authentication Required:</b>`);
+            jqtd.append(`${name} ${productInstId} cryptoNonce:${cryptoNonce}`);
+            jqtd.append('<br/>');
+        },
+        reqUserSHAPasscode: (cryptoNonce,name,productInstId,resend) => {
+            jqtd.append(`<b>0x13 Invitation Reply: User Authentication Required:</b>`);
+            jqtd.append(`${name} ${productInstId} cryptoNonce:${cryptoNonce}`);
+            jqtd.append('<br/>');
+        },
+
+        reqAccessSHABody: (sha256Hash) => {
+            jqtd.append(`<b>0x02 Invitation with Authentication:</b>`);
+            jqtd.append('<br/>');
+        },
+        reqAccessUserSHABody: (sha256Hash,user) => {
+            jqtd.append(`<b>0x03 Invitation with Authentication:</b>`);
+            jqtd.append( ' User: '+user ); //stringCharArr
+            jqtd.append('<br/>');
+        },
+
+
+        pingReq:(pingId)=>{
+            if(!window.configSetting?.debugPingUDP) {
+                jqtd.append(`<b>0x20 Ping:</b>`);
+                jqtd.append(pingId); //stringCharArr
+                jqtd.append('<br/>');
+            }else{
+                jqtd.parent().remove();
+            }
+        },
+        pingRes:(pingId)=>{
+            if(!window.configSetting?.debugPingUDP){
+                jqtd.append(`<b>0x21 Ping Reply:</b>`);
+                jqtd.append( pingId ); //stringCharArr
+                jqtd.append('<br/>');
+            }else{
+                jqtd.parent().remove();
+            }
+
+        },
+
+        // report:(sentSeqNum, recvSeqNum)=>{
+        //     jqtd.append(`<b>0x82 Report:</b>`);
+        //     jqtd.append( ` Sent Seq #: ${sentSeqNum}, Recv. Seq # ${recvSeqNum}`);
+        //     jqtd.append('<br/>');
+        // },
+
+        NAK:(NAKReason, NakCode, Msg)=>{
+            jqtd.append(`<b>0x8F NAK:</b>`);
+            jqtd.append( ` NAK Reason: 0x${NAKReason.toString(16)} ${UDPNakCodes[NAKReason]||''}<br/>NAK’ed Command Header ${NakCode}`);
+            if(Msg)  jqtd.append( '<br/>'+Msg);
+            jqtd.append('<br/>');
+        },
+
+        retransmit:(sentSeqNum, numofCommands)=>{
+            jqtd.append(`<b>0x80 Retransmit:</b>`);
+            jqtd.append( ` Sent Seq #: ${sentSeqNum}, Num. of Commands: ${numofCommands}`);
+            jqtd.append('<br/>');
+        },
+
+        retransmitError:(error, sentSeqNum)=>{
+            jqtd.append(`<b>0x81 Retransmit Error:</b>`);
+            jqtd.append( ` Error Reason: ${error} Seq # that cannot be retranmitted: ${sentSeqNum}` );
+            jqtd.append('<br/>');
+        },
+
+        bye:(reasonCode, reason)=>{
+            jqtd.append(`<b>0xF0 Bye:</b>`);
+            jqtd.append( ` Bye Reason: 0x${reasonCode.toString(16)} ${UDPByeCodes[reasonCode]||''}`);
+            if(reason)  jqtd.append( '<br/>'+reason);
+            jqtd.append('<br/>');
+        },
+        byeReply:()=>{
+            jqtd.append(`<b>0xF1 Bye Reply</b>`);
+            jqtd.append('<br/>');
+        },
+        badPacket:()=>{
+            jqtd.append(`<b>UNKNOWN Packet:</b>`);
+            jqtd.append('<br/>');
+        },
+
+        ump: (seqNum,umpArr) => {
+            jqtd.append(`<b>0xFF UMP:</b>`);
+            //jqtd.append( ` #${seqNum}: ${umpArr.join()}`); //stringCharArr
+            jqtd.append( ` #${seqNum} Payload Length: ${umpArr.length} `); //stringCharArr
+            if(window.configSetting?.debugUMPUDP){
+                sendOutUMPBrokenUp(umpArr,0,(umpSplit,group)=>{
+                    jqtd.append( `<br/>`);
+                    common.umpLog(jqtd,umpSplit);
+                });
+            }
+
+
+            jqtd.append('<br/>');
+        }
+    });
+
+
+
+
+
+   // $('[data-toggle="popover"]').popover({trigger:'hover',placement:'top',boundary:'viewport',animation:false});
+    //Math.floor((inOut=='out'?process.hrtime():message.timeStamp) *1000)/1000
+};
 
 
