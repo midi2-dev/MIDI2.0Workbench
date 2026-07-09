@@ -95,7 +95,7 @@ function createUDPMessage(cCode, opts={}/*seq=0,payloadLength = 0, data = null, 
         if (d.key === 'epNameLength') {
             v = 0;
             mType.bytes.map(dl => {
-                if (dl.type === 'text' && dl.key==-'epName') {
+                if (dl.type === 'text' && dl.key==='epName') {
                     v += Math.ceil((opts[dl.key] || "").length / 4) * 4;
                 }
             });

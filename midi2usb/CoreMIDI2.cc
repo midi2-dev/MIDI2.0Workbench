@@ -77,6 +77,9 @@ NAN_METHOD(get_UMP_Endpoints) {
    uint8_t epFound=0;
 
    char name[128];
+   char entity[128];
+   char devName[128];
+   bool isNetwork=0;
    CFStringRef str;
    str = NULL;
    SInt32 offline;
@@ -89,21 +92,32 @@ NAN_METHOD(get_UMP_Endpoints) {
 
     uint32_t MIDIDeviceRef = MIDIGetDevice(i);
     MIDIObjectGetStringProperty( MIDIDeviceRef, kMIDIPropertyName, &str );
-                if ( str != NULL ) {
-                    CFStringGetCString( str, name, sizeof(name), kCFStringEncodingUTF8 );
-                    std::cout << " entity : " << name <<'\n';
-                    CFRelease( str );
-                }
+    if ( str != NULL ) {
+        CFStringGetCString( str, name, sizeof(name), kCFStringEncodingUTF8 );
+        std::cout << " entity : " << name <<'\n';
+        CFRelease( str );
+    }
+
+    MIDIObjectGetIntegerProperty( MIDIDeviceRef, kMIDIPropertyOffline, &offline );
+    if(offline) continue;
+
+    MIDIObjectGetStringProperty( MIDIDeviceRef, kMIDIPropertyName, &str );
+    if ( str != NULL ) {
+            CFStringGetCString( str, devName, sizeof(devName), kCFStringEncodingUTF8 );
+            std::cout << '\n'<< " Device : " << devName <<'\n';
+            CFRelease( str );
+    }
+    isNetwork = strcmp(devName,"UMP Network")?0:1;
 
     int numEntities = MIDIDeviceGetNumberOfEntities(MIDIDeviceRef);
 
     for(int a=0; a<numEntities; a++){
-    std::cout << "- : " << i <<" : " << a << '\n';
+        std::cout << "- : " << i <<" : " << a << '\n';
         uint32_t lastEntityRef = MIDIDeviceGetEntity(MIDIDeviceRef, a);
         MIDIObjectGetStringProperty( lastEntityRef, kMIDIPropertyName, &str );
         if ( str != NULL ) {
-            CFStringGetCString( str, name, sizeof(name), kCFStringEncodingUTF8 );
-            std::cout << " entity : " << name <<'\n';
+            CFStringGetCString( str, entity, sizeof(entity), kCFStringEncodingUTF8 );
+            std::cout << " entity : " << entity <<'\n';
             CFRelease( str );
         }
 
@@ -118,21 +132,18 @@ NAN_METHOD(get_UMP_Endpoints) {
             MIDIObjectGetIntegerProperty( lastEntityRef, kMIDIPropertyUMPActiveGroupBitmap, &UMPSup );
             std::cout << "listing MIDIDeviceRef : " << i <<" : kMIDIPropertyUMPActiveGroupBitmap " << UMPSup << '\n';
 
-            MIDIObjectGetIntegerProperty( MIDIDeviceRef, kMIDIPropertyOffline, &offline );
+
+
+
            // if(offline || strcmp(name,"MIDI 2.0")){ continue;} //Not a MIDI 2.0 Endpoint
-            if(offline || UMPGroupless!=1 || UMPSup!=15){ continue;} //Not a MIDI 2.0 Endpoint
+            if(!isNetwork && (UMPGroupless!=1 || UMPSup!=15) ){ continue;} //Not a MIDI 2.0 Endpoint
 
             //Ok Add to List of Devices
 
             v8::Local <v8::Object> port = Nan::New<v8::Object>();
             Nan::Set(port,Nan::New("MIDIDeviceRef").ToLocalChecked(),Nan::New(MIDIDeviceRef));
+            Nan::Set(port,Nan::New("clientName").ToLocalChecked(), Nan::New(isNetwork?entity:name).ToLocalChecked());
 
-            MIDIObjectGetStringProperty( MIDIDeviceRef, kMIDIPropertyName, &str );
-            if ( str != NULL ) {
-                CFStringGetCString( str, name, sizeof(name), kCFStringEncodingUTF8 );
-                CFRelease( str );
-                Nan::Set(port,Nan::New("clientName").ToLocalChecked(), Nan::New(name).ToLocalChecked());
-            }
 
             MIDIObjectGetStringProperty( MIDIDeviceRef, kMIDIPropertyModel, &str );
             if ( str != NULL ) {
