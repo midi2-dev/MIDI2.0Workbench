@@ -1166,6 +1166,14 @@ ipcMain.on('asynchronous-message', (event, arg,xData) => {
 						event.reply('asynchronous-reply', 'callback'
 							,{error:eMsg
 								,callbackId:xData.callbackId});
+						// A column link may reference a Resource the device never
+						// advertised (e.g. the hardcoded ChannelList -> ProgramList
+						// column link). That is expected, not a device error, so do
+						// not surface it as a Get Resource Error.
+						if(typeof eMsg === 'string'
+							&& eMsg.startsWith('No Resource in ResourceList called')){
+							return;
+						}
 						d.msg('pe',{
 								title: 'Get Resource Error' , errors: [eMsg]}
 							,'in',xData.umpDev,

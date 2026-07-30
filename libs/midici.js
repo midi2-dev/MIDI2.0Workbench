@@ -1785,6 +1785,30 @@ class midici {
 
 			}else{
 				if(schRef.match(/^(https?.*)/)){
+					// Merge a fetched/loaded schema body into the resource schema.
+					const applySchema = (resBody) => {
+						delete schema['$ref'];
+						Object.assign(schema, resBody);
+						if(resource==="ResourceList"){
+							schema.items.properties['fcOnGet'] = {type:"boolean"};
+							schema.items.properties['fcOnSet'] = {type:"boolean"};
+						}
+						resolve(resourceObj);
+					};
+					// Prefer the locally bundled schema if we ship one. Avoids
+					// fetching the standard schema over http, where some URLs
+					// (e.g. M2-105 ChannelList v1-1) return non-JSON and threw
+					// "Malformed <resource> Schema $ref". Fall back to http only
+					// when the file isn't bundled.
+					const localPath = __dirname + '/schema/' + path.basename(schRef);
+					if(fs.existsSync(localPath)){
+						try{
+							applySchema(JSON.parse(fs.readFileSync(localPath)));
+						}catch(e){
+							reject("Malformed "+resource+" Schema (local) $ref:"+localPath);
+						}
+						return;
+					}
 					http
 						.get(schRef, res => {
 							let body = '';
@@ -1795,7 +1819,6 @@ class midici {
 									reject("Empty "+resource+" Schema $ref:"+schRef);
 									return;
 								}
-								delete schema['$ref'];
 								let resBody;
 								try{
 									resBody = JSON.parse(body);
@@ -1803,23 +1826,10 @@ class midici {
 									reject("Malformed "+resource+" Schema $ref:"+schRef);
 									return;
 								}
-								Object.assign(schema, resBody);
-								if(resource==="ResourceList"){
-									schema.items.properties['fcOnGet'] = {type:"boolean"};
-									schema.items.properties['fcOnSet'] = {type:"boolean"};
-								}
-								resolve(resourceObj);
+								applySchema(resBody);
 							});
 						})
 						.on('error', () => {
-							const jsonPath = __dirname + '/schema/' + path.basename(schRef);
-							if(fs.existsSync(jsonPath)){
-								let resBody = JSON.parse(fs.readFileSync(jsonPath));
-								delete schema['$ref'];
-								Object.assign(schema, resBody);
-								resolve(resourceObj);
-								return;
-							}
 							reject(resource+" Schema not found $ref:"+schRef);
 						});
 				}else{

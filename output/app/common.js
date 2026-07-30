@@ -2197,11 +2197,15 @@ function buildTable(jqbody,resourceObj,oOpts = {}){
                     jqHead.attr("data-ChCtrlList","1");
                 }
 
-                //TODO Look up the link and make sure the Resource Exists - otherwise trigger an error
-
+                // A column link may be hardcoded in the resource definition (e.g.
+                // ChannelList -> ProgramList) even when the device never advertises
+                // that Resource in its ResourceList. Show the column's own title
+                // first, then upgrade to the linked schema title only if the Resource
+                // resolves. On rejection keep the fallback and do not surface an error.
+                jqHead.text(colObj.title || '');
                 getResourceWithSchemaRef(colObj.link).then(([resourceObj])=>{
                     jqHead.text(resourceObj.schema.title);
-                })
+                }).catch(()=>{ /* linked Resource not advertised by this device */ });
             }else{
                 jqHead.text(colObj.title || '');
             }
