@@ -1207,18 +1207,35 @@ class midici {
 		//global.settings.projDevice.profiles={};
 		this.setData(remoteMuid, '/interoperability/pf1.1','',true);
 		this.setData(remoteMuid, '/interoperability/pf1.3','',true);
-		let newResponse = this.createMIDICIMsg(this._muid, 0x20,
-			0x7F, remoteMuid, {group: this.remoteDevicesInternal[remoteMuid].group,
-				cb:cbComplete,
-				cbTimeout:()=>{
-					d.msg('sysex',{title: 'Timeout on ' + midi2Tables.ciTypes[0x20].title,
-							warnings: ['No Response in 3 seconds']}
-						,'out',(this.remoteDevicesInternal[remoteMuid]||{}).umpDev,
-						(this.remoteDevicesInternal[remoteMuid]||{}).group,null,['No Response in 3 seconds']);
-					cbComplete();
-				}
+
+		// mimic_hub local patch (not upstreamed) -- also inquire per-channel
+		// (0x00-0x0F) and group (0x7E), not just Function Block (0x7F): stock
+		// only inquires 0x7F, which misses channel-addressed profiles like the
+		// (unpublished) Drums Profile, registered at a single channel address.
+		// See .buddy-project/midi2-implementation-plan.md M6 in mimic_hub.
+		const addresses = [0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,
+			0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,0x7E,0x7F];
+		let remaining = addresses.length;
+		const joinComplete = () => {
+			remaining--;
+			if (remaining <= 0) {
+				cbComplete();
+			}
+		};
+		addresses.forEach((address) => {
+			let newResponse = this.createMIDICIMsg(this._muid, 0x20,
+				address, remoteMuid, {group: this.remoteDevicesInternal[remoteMuid].group,
+					cb:joinComplete,
+					cbTimeout:()=>{
+						d.msg('sysex',{title: 'Timeout on ' + midi2Tables.ciTypes[0x20].title,
+								warnings: ['No Response in 3 seconds']}
+							,'out',(this.remoteDevicesInternal[remoteMuid]||{}).umpDev,
+							(this.remoteDevicesInternal[remoteMuid]||{}).group,null,['No Response in 3 seconds']);
+						joinComplete();
+					}
+			});
+			this.completeMIDICIMsg(newResponse, this.remoteDevicesInternal[remoteMuid].umpDev);
 		});
-		this.completeMIDICIMsg(newResponse, this.remoteDevicesInternal[remoteMuid].umpDev);
 	}
 
 	protocolNegotiationStart(remoteMuid,cbComplete = function(){}, group ){

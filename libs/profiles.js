@@ -555,6 +555,21 @@ exports.profiles=[
 		]
 	},
 	{
+		// mimic_hub local patch (not upstreamed): recognition-only entry for the
+		// unpublished MIDI-CI Drums Profile (MMA/AMEI doc 268 RC3, co-authored by
+		// KMI, publishing via the MIDI Association in ~30-45 days as of 2026-08-19).
+		// Single-Channel Profile, address 0x00 -- see
+		// .buddy-project/midi2-implementation-plan.md in mimic_hub.
+		bank:0x20
+		,index:0x04
+		,name:'Drums'
+		,type:'singleChannel'
+		,profileLevels:{
+			0x01:'Meets Minimum Requirements'
+		},
+		ctrlList:[]
+	},
+	{
 		bank:0x22
 		,index:0x00
 		,name:'Rotary Speaker Effect'
