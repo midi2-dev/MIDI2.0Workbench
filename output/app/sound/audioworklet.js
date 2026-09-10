@@ -244,7 +244,7 @@ AudioContext = window.AudioContext || window.webkitAudioContext;
         scope.audioWorklet = AWPF.audioWorklet;
         window.AudioWorkletNode = AWPF.AudioWorkletNode;
 
-        fetch(AWPF.origin + "/audioworker.js").then(function (resp) {
+        fetch(AWPF.origin + "/audioworker.js", { integrity: "sha384-fQ9uuU8L45DcKziEUSxY1g/2iSBZ3qGbVP/2XniKFCj+6O4ZwUc+iHi+M4SiKCNp" }).then(function (resp) {
           resp.text().then(function (s) {
             var u = window.URL.createObjectURL(new Blob([s]));
             AWPF.worker = new Worker(u);
