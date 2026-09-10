@@ -1,0 +1,8 @@
+# Node dependencies
+node_modules/
+
+# node-gyp native addon build output (midi2usb/binding.gyp)
+build/
+
+# Generated test/run reports (timestamped, e.g. report.20260821.101000.23688.0.001.json)
+report.*.json
