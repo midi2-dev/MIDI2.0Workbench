@@ -58,6 +58,83 @@ MIDIReceiveBlock receiveBlock = ^(const MIDIEventList* eventList,
    };
 
 
+// Returns the input port connected to SourceRef, creating and connecting
+// one the first time the source is seen. 0 on failure.
+static uint32_t connectSource(uint32_t SourceRef){
+    for(int j=0;j<crPos;j++){
+        if(connectionRefs[j]==SourceRef){
+            return inPointers[j];
+        }
+    }
+    MIDIPortRef inport;
+    OSStatus result = MIDIInputPortCreateWithProtocol(midiclient,
+          CFSTR("IN"),
+          protocol==2?kMIDIProtocol_2_0:kMIDIProtocol_1_0,
+          &inport, receiveBlock);
+    if (result) return 0;
+    inPointers[inPPos] = (uint32_t)inport;
+    result = MIDIPortConnectSource(inport, SourceRef, &inPointers[inPPos]);
+    if (result) return 0;
+    inPPos++;
+    connectionRefs[crPos++]=SourceRef;
+    return (uint32_t)inport;
+}
+
+// A virtual endpoint, made by another client with MIDISourceCreateWithProtocol
+// and MIDIDestinationCreateWithProtocol, belongs to no device, so the device
+// walk above never sees it. List the MIDI 2.0 ones, pairing a source with the
+// destination of the same name.
+static bool isVirtualUMP(MIDIEndpointRef ep, char* name, size_t size){
+    MIDIEntityRef entity = 0;
+    if(MIDIEndpointGetEntity(ep, &entity) == noErr && entity != 0) return false;
+    SInt32 proto = 0;
+    if(MIDIObjectGetIntegerProperty(ep, kMIDIPropertyProtocolID, &proto) != noErr
+        || proto != kMIDIProtocol_2_0) return false;
+    CFStringRef str = NULL;
+    MIDIObjectGetStringProperty(ep, kMIDIPropertyName, &str);
+    if(str == NULL) return false;
+    CFStringGetCString(str, name, size, kCFStringEncodingUTF8);
+    CFRelease(str);
+    return true;
+}
+
+static void addVirtualEndpoints(v8::Local<v8::Array>& eps, uint8_t& epFound){
+    char srcName[128];
+    char dstName[128];
+    int numSources = MIDIGetNumberOfSources();
+    int numDestinations = MIDIGetNumberOfDestinations();
+    for(int i=0;i<numSources;i++){
+        MIDIEndpointRef SourceRef = MIDIGetSource(i);
+        if(!isVirtualUMP(SourceRef, srcName, sizeof(srcName))) continue;
+
+        MIDIEndpointRef DestinationRef = 0;
+        for(int d=0;d<numDestinations;d++){
+            MIDIEndpointRef dst = MIDIGetDestination(d);
+            if(isVirtualUMP(dst, dstName, sizeof(dstName))
+                && !strcmp(srcName, dstName)){
+                DestinationRef = dst;
+                break;
+            }
+        }
+        if(!DestinationRef) continue;
+
+        uint32_t inport = connectSource(SourceRef);
+        if(!inport) continue;
+        std::cout << " Virtual UMP endpoint : " << srcName << '\n';
+
+        // The source stands in for the device it does not have.
+        v8::Local <v8::Object> port = Nan::New<v8::Object>();
+        Nan::Set(port,Nan::New("MIDIDeviceRef").ToLocalChecked(),Nan::New((uint32_t)SourceRef));
+        Nan::Set(port,Nan::New("clientName").ToLocalChecked(), Nan::New(srcName).ToLocalChecked());
+        Nan::Set(port,Nan::New("offline").ToLocalChecked(),Nan::New(0));
+        Nan::Set(port,Nan::New("SourceRef").ToLocalChecked(),Nan::New((uint32_t)SourceRef));
+        Nan::Set(port,Nan::New("DestinationRef").ToLocalChecked(),Nan::New((uint32_t)DestinationRef));
+        Nan::Set(port,Nan::New("InportRef").ToLocalChecked(),Nan::New(inport));
+        Nan::Set(port,Nan::New("blocks").ToLocalChecked(),Nan::New<v8::Array>());
+        Nan::Set(eps, epFound++, port);
+    }
+}
+
 NAN_METHOD(UMPSupported) {
     SInt32 majorVersion;
 
@@ -246,6 +323,8 @@ NAN_METHOD(get_UMP_Endpoints) {
           }
 
     }
+
+  addVirtualEndpoints(eps, epFound);
 
   info.GetReturnValue().Set(eps);
 }
